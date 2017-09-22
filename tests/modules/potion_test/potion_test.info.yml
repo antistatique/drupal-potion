@@ -1,0 +1,8 @@
+name: Potion test
+description: Support module for Potion testing.
+package: Testing
+type: module
+core: 8.x
+
+dependencies:
+  - drupal:potion
