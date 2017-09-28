@@ -1,0 +1,7 @@
+services:
+  potion.commands:
+    class: \Drupal\potion\Commands\PotionCommands
+    arguments:
+      - '@potion.twig_extractor'
+    tags:
+      - { name: drush.command }
