@@ -1,4 +1,5 @@
 <?php
+
 namespace Drupal\potion\Twig\NodeVisitor;
 
 use Drupal\Core\Template\TwigNodeTrans;
@@ -8,39 +9,42 @@ use Twig\NodeVisitor\AbstractNodeVisitor;
  * TranslationNodeVisitor extracts translation messages.
  *
  * Inspired from Symfony TwigBridge
- * https://github.com/symfony/twig-bridge/blob/2.8/NodeVisitor/TranslationNodeVisitor.php
+ * https://github.com/symfony/twig-bridge/blob/2.8/NodeVisitor/TranslationNodeVisitor.php.
  */
-class TranslationNodeVisitor extends AbstractNodeVisitor
-{
-  private $enabled = false;
-  private $messages = array();
+class TranslationNodeVisitor extends AbstractNodeVisitor {
+  private $enabled = FALSE;
+  private $messages = [];
 
-  public function enable()
-  {
-    $this->enabled = true;
-    $this->messages = array();
-  }
-
-  public function disable()
-  {
-    $this->enabled = false;
-    $this->messages = array();
+  /**
+   * Enable the visitor.
+   */
+  public function enable() {
+    $this->enabled = TRUE;
+    $this->messages = [];
   }
 
   /**
-   * Return the list of translation messages key extracted from Twig
-   * @return array
+   * Disable the visitor.
    */
-  public function getMessages()
-  {
+  public function disable() {
+    $this->enabled = FALSE;
+    $this->messages = [];
+  }
+
+  /**
+   * Return the list of translation messages key extracted from Twig.
+   *
+   * @return array
+   *   string translations keys.
+   */
+  public function getMessages() {
     return $this->messages;
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function doEnterNode(\Twig_Node $node, \Twig_Environment $env)
-  {
+  protected function doEnterNode(\Twig_Node $node, \Twig_Environment $env) {
     if (!$this->enabled) {
       return $node;
     }
@@ -50,25 +54,28 @@ class TranslationNodeVisitor extends AbstractNodeVisitor
       in_array($node->getNode('filter')->getAttribute('value'), ['trans', 't']) &&
       $node->getNode('node') instanceof \Twig_Node_Expression_Constant
     ) {
-      // extract constant nodes with a trans filter
+      // Extract constant nodes with a trans filter.
       $this->messages[] = $node->getNode('node')->getAttribute('value');
-    } elseif (
+    }
+    elseif (
       $node instanceof \Twig_Node_Expression_Filter &&
       'transchoice' === $node->getNode('filter')->getAttribute('value') &&
       $node->getNode('node') instanceof \Twig_Node_Expression_Constant
     ) {
-      // extract constant nodes with a trans filter
+      // Extract constant nodes with a trans filter.
       $this->messages[] = $node->getNode('node')->getAttribute('value');
-    } elseif ($node instanceof TwigNodeTrans) {
+    }
+    elseif ($node instanceof TwigNodeTrans) {
 
       $body = $node->getNode('body');
-      $message = null;
+      $message = NULL;
 
       if ($node->getNode('body')->hasAttribute('data')) {
         $message = $node->getNode('body')->getAttribute('data');
-      } else {
-        // complex code block like `{% trans %} my.string {{ node.value }} {% endtrans %}`
-        // code copied from Drupal\Core\Template\TwigNodeTrans::compileString
+      }
+      else {
+        // Complex code block like `{% trans %} my.string {{ node.value }} {% endtrans %}`
+        // code copied from Drupal\Core\Template\TwigNodeTrans::compileString.
         foreach ($body as $node) {
           if (get_class($node) === 'Twig_Node' && $node->getNode(0) instanceof \Twig_Node_SetTemp) {
             $node = $node->getNode(1);
@@ -112,14 +119,16 @@ class TranslationNodeVisitor extends AbstractNodeVisitor
                 $args = $args->getNode('node');
                 if ($args instanceof \Twig_Node_Expression_Name) {
                   $argName[] = $args->getAttribute('name');
-                } else {
+                }
+                else {
                   $argName[] = $args->getNode('attribute')
                     ->getAttribute('value');
                 }
               }
               $argName = array_reverse($argName);
               $argName = implode('.', $argName);
-            } else {
+            }
+            else {
               $argName = $n->getAttribute('name');
               if (!is_null($args)) {
                 $argName = $args->getAttribute('name');
@@ -127,13 +136,14 @@ class TranslationNodeVisitor extends AbstractNodeVisitor
             }
             $placeholder = sprintf('%s%s', $argPrefix, $argName);
             $message .= $placeholder;
-          } else {
+          }
+          else {
             $message .= $node->getAttribute('data');
           }
         }
       }
 
-      // extract trans nodes
+      // Extract trans nodes.
       $this->messages[] = $message;
     }
 
@@ -143,17 +153,15 @@ class TranslationNodeVisitor extends AbstractNodeVisitor
   /**
    * {@inheritdoc}
    */
-  protected function doLeaveNode(\Twig_Node $node, \Twig_Environment $env)
-  {
+  protected function doLeaveNode(\Twig_Node $node, \Twig_Environment $env) {
     return $node;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getPriority()
-  {
+  public function getPriority() {
     return 0;
   }
-}
 
+}

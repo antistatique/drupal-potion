@@ -9,10 +9,9 @@ use Twig_Source;
 use Symfony\Component\Finder\Finder;
 
 /**
- * Extract Translations from Twig template
+ * Extract Translations from Twig template.
  */
-class TwigExtractor implements TranslationExtractorInterface
-{
+class TwigExtractor implements TranslationExtractorInterface {
   /**
    * The twig environment.
    *
@@ -24,17 +23,16 @@ class TwigExtractor implements TranslationExtractorInterface
    * TwigExtractor constructor.
    *
    * @param \Twig_Environment $twig
+   *   Twig Env.
    */
-  public function __construct(Twig_Environment $twig)
-  {
+  public function __construct(Twig_Environment $twig) {
     $this->twig = $twig;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function extract($path)
-  {
+  public function extract($path) {
     $translations = [];
     $files = $this->extractFiles($path);
     foreach ($files as $file) {
@@ -42,13 +40,15 @@ class TwigExtractor implements TranslationExtractorInterface
       try {
         $trans = $this->extractTemplate(file_get_contents($file->getPathname()));
         $translations = array_merge($translations, $trans);
-      } catch (Twig_Error $e) {
+      }
+      catch (Twig_Error $e) {
         if ($file instanceof \SplFileInfo) {
           $pathname = $file->getRealPath() ?: $file->getPathname();
           $name = $file instanceof \SplFileInfo ? $file->getRelativePathname() : $pathname;
           if (method_exists($e, 'setSourceContext')) {
             $e->setSourceContext(new Twig_Source('', $name, $pathname));
-          } else {
+          }
+          else {
             $e->setTemplateName($name);
           }
         }
@@ -61,22 +61,27 @@ class TwigExtractor implements TranslationExtractorInterface
   }
 
   /**
-   * @param string|array $resource files, a file or a directory
+   * Extract string translations from a resource.
+   *
+   * @param string|array $resource
+   *   Files, a file or a directory.
    *
    * @return array
+   *   array of string translations
    */
-  private function extractFiles($resource)
-  {
+  private function extractFiles($resource) {
     if (is_array($resource) || $resource instanceof \Traversable) {
-      $files = array();
+      $files = [];
       foreach ($resource as $file) {
         if ($this->canBeExtracted($file)) {
           $files[] = $this->toSplFileInfo($file);
         }
       }
-    } elseif (is_file($resource)) {
-      $files = $this->canBeExtracted($resource) ? array($this->toSplFileInfo($resource)) : array();
-    } else {
+    }
+    elseif (is_file($resource)) {
+      $files = $this->canBeExtracted($resource) ? [$this->toSplFileInfo($resource)] : [];
+    }
+    else {
       $files = $this->extractFromDirectory($resource);
     }
 
@@ -84,12 +89,15 @@ class TwigExtractor implements TranslationExtractorInterface
   }
 
   /**
-   * @param $template
+   * Extract from a Twig template.
+   *
+   * @param string $template
+   *   Twig content template.
    *
    * @return array
+   *   string translations.
    */
-  protected function extractTemplate($template)
-  {
+  protected function extractTemplate($template) {
     /** @var \Drupal\potion\Twig\NodeVisitor\TranslationNodeVisitor $visitor */
     $visitor = $this->twig->getExtension('potion_translation_extractor')->getTranslationNodeVisitor();
     $visitor->enable();
@@ -108,8 +116,7 @@ class TwigExtractor implements TranslationExtractorInterface
    *
    * @return \SplFileInfo
    */
-  private function toSplFileInfo($file)
-  {
+  private function toSplFileInfo($file) {
     return ($file instanceof \SplFileInfo) ? $file : new \SplFileInfo($file);
   }
 
@@ -120,13 +127,12 @@ class TwigExtractor implements TranslationExtractorInterface
    *
    * @throws \InvalidArgumentException
    */
-  private function isFile($file)
-  {
+  private function isFile($file) {
     if (!is_file($file)) {
       throw new \InvalidArgumentException(sprintf('The "%s" file does not exist.', $file));
     }
 
-    return true;
+    return TRUE;
   }
 
   /**
@@ -134,8 +140,7 @@ class TwigExtractor implements TranslationExtractorInterface
    *
    * @return bool
    */
-  private function canBeExtracted($file)
-  {
+  private function canBeExtracted($file) {
     return $this->isFile($file) && 'twig' === pathinfo($file, PATHINFO_EXTENSION);
   }
 
@@ -144,10 +149,10 @@ class TwigExtractor implements TranslationExtractorInterface
    *
    * @return mixed
    */
-  private function extractFromDirectory($directory)
-  {
+  private function extractFromDirectory($directory) {
     $finder = new Finder();
 
     return $finder->files()->name('*.twig')->in($directory);
   }
+
 }

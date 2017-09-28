@@ -1,20 +1,22 @@
 <?php
+
 namespace Drupal\potion\Twig\Extension;
 
 use Drupal\potion\Twig\NodeVisitor\TranslationNodeVisitor;
 
-class TwigTranslationExtractorExtension extends \Twig_Extension
-{
+/**
+ *
+ */
+class TwigTranslationExtractorExtension extends \Twig_Extension {
   /**
-   * @var TranslationNodeVisitor
+   * @var \Drupal\potion\Twig\NodeVisitor\TranslationNodeVisitor
    */
   protected $translationNodeVisitor;
 
   /**
    * TwigTranslationExtractorExtension constructor.
    */
-  public function __construct()
-  {
+  public function __construct() {
     $this->translationNodeVisitor = new TranslationNodeVisitor();
   }
 
@@ -25,23 +27,24 @@ class TwigTranslationExtractorExtension extends \Twig_Extension
    *
    * @deprecated since 1.26 (to be removed in 2.0), not used anymore internally
    */
-  public function getName()
-  {
+  public function getName() {
     return 'potion_translation_extractor';
   }
 
-  public function getNodeVisitors()
-  {
+  /**
+   *
+   */
+  public function getNodeVisitors() {
     return [$this->translationNodeVisitor];
   }
 
   /**
    * Expose the translation Node Visitor to be accessible by the extractor.
    *
-   * @return TranslationNodeVisitor
+   * @return \Drupal\potion\Twig\NodeVisitor\TranslationNodeVisitor
    */
-  public function getTranslationNodeVisitor()
-  {
+  public function getTranslationNodeVisitor() {
     return $this->translationNodeVisitor;
   }
+
 }
