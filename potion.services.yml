@@ -1,1 +1,10 @@
 services:
+  potion.twig_extractor:
+    class: Drupal\potion\Extractor\TwigExtractor
+    arguments:
+      - '@twig'
+
+  potion.twig_translation_node_visitor:
+    class: Drupal\potion\Twig\Extension\TwigTranslationExtractorExtension
+    tags:
+      - { name: twig.extension }
