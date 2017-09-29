@@ -28,7 +28,8 @@ class TwigTranslationExtractorExtension extends \Twig_Extension {
    * @deprecated since 1.26 (to be removed in 2.0), not used anymore internally
    */
   public function getName() {
-    return 'potion_translation_extractor';
+    // for backward compatibility
+    return self::class;
   }
 
   /**

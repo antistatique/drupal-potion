@@ -99,7 +99,7 @@ class TwigExtractor implements TranslationExtractorInterface {
    */
   protected function extractTemplate($template) {
     /** @var \Drupal\potion\Twig\NodeVisitor\TranslationNodeVisitor $visitor */
-    $visitor = $this->twig->getExtension('potion_translation_extractor')->getTranslationNodeVisitor();
+    $visitor = $this->twig->getExtension('\Drupal\potion\Twig\Extension\TwigTranslationExtractorExtension')->getTranslationNodeVisitor();
     $visitor->enable();
 
     $this->twig->parse($this->twig->tokenize(new Twig_Source($template, '')));

@@ -10,6 +10,8 @@ use Twig\NodeVisitor\AbstractNodeVisitor;
  *
  * Inspired from Symfony TwigBridge
  * https://github.com/symfony/twig-bridge/blob/2.8/NodeVisitor/TranslationNodeVisitor.php.
+ *
+ * @see \Drupal\Core\Template\TwigNodeTrans
  */
 class TranslationNodeVisitor extends AbstractNodeVisitor {
   private $enabled = FALSE;
