@@ -14,7 +14,9 @@ class TwigExtractorTest extends KernelTestBase  {
 
   public static $modules = [
     'locale',
-    'language'
+    'language',
+    'potion',
+    'potion_test',
   ];
 
   /**
@@ -41,8 +43,6 @@ class TwigExtractorTest extends KernelTestBase  {
       'Hello @count stars.',
       'foo.file2',
     ];
-
-    var_dump($this->twig->getExtensions());
 
     $extractor = new TwigExtractor($this->twig);
     $path = __DIR__ . '/../../../modules/potion_test/templates';
