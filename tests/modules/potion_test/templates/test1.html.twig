@@ -1,0 +1,29 @@
+{# This is the first twig template for testing Potion #}
+
+{% set complex_object = { 'foo': 'bar' } %}
+{% set count = 2 %}
+{% set string = 'bar' %}
+
+<p>{{ 'foo.t'|t }}</p>
+<p>{{ 'foo.trans'|trans }}</p>
+<p>{{ 'foo.bar @baz'|t({'@baz': 'hello'}) }}</p>
+
+{% trans %}foo.trans_tag{% endtrans %}
+{% trans %}foo trans block {{ complex_object.foo }}{% endtrans %}
+{% trans %}foo trans block {{ complex_object.foo }} and {{ count }}{% endtrans %}
+
+{# a second time the same key #}
+<p>{{ 'foo.trans'|trans }}</p>
+
+
+{% trans %}foo trans with placeholder {{ string|placeholder }}{% endtrans %}
+
+{% trans %}
+foo trans with raw {{ string|raw }} and space
+{% endtrans %}
+
+{% trans %}
+Hello star.
+{% plural count %}
+Hello {{ count }} stars.
+{% endtrans %}
