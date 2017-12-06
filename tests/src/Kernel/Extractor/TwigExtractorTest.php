@@ -33,12 +33,12 @@ class TwigExtractorTest extends KernelTestBase  {
   public function testExtract() {
     $expected = [
       'foo.t',
-      //'foo.trans',
+      'foo.trans',
       'foo.bar @baz',
       'foo trans block @complex_object.foo',
       'foo trans block @complex_object.foo and @count',
       'foo trans with placeholder @string', // @TODO: is this is expected behavior ? no more '!string'?
-      "\nfoo trans with raw @string and space\n",
+      "foo trans with raw @string and on multiple line",
       'Hello star.',
       'Hello @count stars.',
       'foo.file2',
