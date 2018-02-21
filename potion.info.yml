@@ -4,6 +4,6 @@ package: Multilingual
 type: module
 core: 8.x
 dependencies:
-  - drupal:local
+  - drupal:locale
   - drupal:language
   - drupal:file
