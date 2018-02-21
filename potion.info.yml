@@ -1,5 +1,5 @@
 name: Potion
-description: 'Provides a normalized way to exports, merge & create .po files from versatile sources such as Twig, PHP or YML files.'
+description: 'Provides a normalized way to collect internationalization strings to export, merge & create .po files from versatile sources such as Twig, PHP or YML files.'
 package: Multilingual
 type: module
 core: 8.x

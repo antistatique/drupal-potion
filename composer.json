@@ -1,12 +1,12 @@
 {
   "name": "drupal/potion",
-  "description": "Provides a normalized way to exports, merge & create .po files from versatile sources such as Twig, PHP or YML files.",
+  "description": "Provides a normalized way to collect internationalization strings to export, merge & create .po files from versatile sources such as Twig, PHP or YML files.",
   "type": "drupal-module",
   "homepage": "https://www.drupal.org/project/potion",
   "authors": [
     {
       "name": "Antistatique",
-      "email": "info@antistaique.net",
+      "email": "info@antistatique.net",
       "homepage": "https://www.antistatique.net",
       "role": "Sponsor"
     },
