@@ -29,14 +29,21 @@ globally on your environment:
 
 ## 🏆 Tests
 
+Potion us PHPUnit to run test coverage.
+
+*Run Unit tests*
+
   ```bash
-  cd core
-  ../../vendor/bin/phpunit --group potion
+  # You must be on the drupal-root folder - usually /web.
+  cd web
+  ../vendor/bin/phpunit -c core \
+  --group potion_unit
   ```
 
-For kernel tests you need a working database connection and for browser tests
-your Drupal installation needs to be reachable via a web server.
+*Run Functional tests*
 
+For some tests you need a working database connection and for browser tests
+your Drupal installation needs to be reachable via a web server.
 Copy the phpunit config file:
 
   ```bash
@@ -45,13 +52,27 @@ Copy the phpunit config file:
   ```
 
 You must provide `SIMPLETEST_BASE_URL`, Eg. `http://localhost`.
-You must provide `SIMPLETEST_DB`, Eg. `sqlite://localhost/build/potion.sqlite`.
+You must provide `SIMPLETEST_DB`,
+Eg. `sqlite://localhost/build/template_whisperer.sqlite`.
+
+  ```bash
+  # You must be on the drupal-root folder - usually /web.
+  cd web
+  SIMPLETEST_DB="sqlite://localhost//tmp/tw.sqlite" \
+  SIMPLETEST_BASE_URL='http://d8.test' \
+  ../vendor/bin/phpunit -c core \
+  --group potion_functionnal
+  ```
 
 Debug using
 
   ```bash
-  cd core
-  ../../vendor/bin/phpunit --group potion \
+  # You must be on the drupal-root folder - usually /web.
+  cd web
+  SIMPLETEST_DB="sqlite://localhost//tmp/tw.sqlite" \
+  SIMPLETEST_BASE_URL='http://d8.test' \
+  ../vendor/bin/phpunit -c core \
+  --group potion \
   --printer="\Drupal\Tests\Listeners\HtmlOutputPrinter" --stop-on-error
   ```
 
