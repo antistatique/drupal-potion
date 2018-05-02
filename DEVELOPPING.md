@@ -93,7 +93,7 @@ Check Drupal coding standards:
   ```bash
   ./vendor/bin/phpcs --standard=Drupal --colors \
   --extensions=php,module,inc,install,test,profile,theme,css,info,md \
-  --ignore=*/vendor/*,*/node_modules/* ./
+  --ignore=*/vendor/*,*/node_modules/*,*/scripts/* ./
   ```
 
 Check Drupal best practices:
@@ -101,7 +101,7 @@ Check Drupal best practices:
   ```bash
   ./vendor/bin/phpcs --standard=DrupalPractice --colors \
   --extensions=php,module,inc,install,test,profile,theme,css,info,md \
-  --ignore=*/vendor/*,*/node_modules/* ./
+  --ignore=*/vendor/*,*/node_modules/*,*/scripts/* ./
   ```
 
 Automatically fix coding standards
@@ -109,7 +109,7 @@ Automatically fix coding standards
   ```bash
   ./vendor/bin/phpcbf --standard=Drupal --colors \
   --extensions=php,module,inc,install,test,profile,theme,css,info \
-  --ignore=*/vendor/*,*/node_modules/* ./
+  --ignore=*/vendor/*,*/node_modules/*,*/scripts/* ./
   ```
 
 ### Improve global code quality using PHPCPD & PHPMD
@@ -123,13 +123,18 @@ Add requirements if necessary using `composer`:
 Detect overcomplicated expressions & Unused parameters, methods, properties
 
   ```bash
-  ./vendor/bin/phpmd ./web/modules/custom text ./phpmd.xml
+  ./vendor/bin/phpmd ./ text ./phpmd.xml --suffixes \
+  php,module,inc,install,test,profile,theme,css,info,txt \
+  --exclude vendor,scripts
   ```
 
 Copy/Paste Detector
 
   ```bash
-  ./vendor/bin/phpcpd ./web/modules/custom
+  ./vendor/bin/phpcpd ./ \
+  --names=*.php,*.module,*.inc,*.install,*.test,*.profile,*.theme,*.css,*.info,*.txt \
+  --names-exclude=*.md,*.info.yml --progress --ansi \
+  --exclude=scripts --exclude=vendor
   ```
 
 ### Enforce code standards with git hooks
