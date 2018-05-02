@@ -12,93 +12,124 @@ No user interface, everything is done via CLI.
 
 ### CLI - Import standard po files into Drupal database
 
-Expose the [Core feature of translation importation](/admin/config/regional/translate/import) from .po as a command. 
+Expose the [Core feature of translation importation](/admin/config/regional/translate/import) from .po as a command line.
+
+*Usage*
+```
+drush potion-import [--mode mode] [--overwrite] [--progress] [--verbose] [--quiet] [--dry-run] langcode source
+```
 
 *Errors handling*
 - Warning on wrong langcode
 - Warning on malformed po file
 - Use Interactive question for mandatory parameters such as:
-  - `--source` 
-  - `--langcode`
+  - `langcode`
+  - `source`
 
 *Parameters*
-- `--no-interaction`: Do not ask any interactive question
-- `--source`: The source po file
-- `--langcode`: Import the po into the given langcode
+- `source`: The source po file
+- `langcode`: Import the po into the given langcode
 - `--mode`: define the importation mode from 'custom' or 'core'. `custom` is used by default.
 - `--overwrite`: Overwrite existing translations with value in the source file.
 - `--progress`: Show progress bar during the importation
 - `--verbose`: Summarise table when finish (imported, skipped, updated ...)
+- `--quiet`: Do not ask any interactive question
+- `--dry-run`: Give a preview of what the command will do
 
 ### CLI - Export standard po files from Drupal database
 
-Expose the [Core feature of translation exportation](/admin/config/regional/translate/export) from .po as a command. 
+Expose the [Core feature of translation exportation](/admin/config/regional/translate/export) from .po as a command.
+
+*Usage*
+```
+drush potion-export [--include-core] [--include-custom] [--include-untranslated] [--progress] [--verbose] [--quiet] [--dry-run] langcode dest
+```
 
 *Errors handling*
 - Warning on wrong langcode
+- Warning on malformed existing po file
 - Use Interactive question for mandatory parameters such as:
-  - `--dest` 
-  - `--langcode`
+  - `langcode`
+  - `dest`
 
 *Parameters*
-- `--no-interaction`: Do not ask any interactive question
-- `--dest`: The destination folder of po file
+- `langcode`: The langcode to export
+- `dest`: The destination folder of po file
 - `--include-core`: Export the core translations.
 - `--include-custom`: Export the custom translations
 - `--include-untranslated`: Export untranslated string
 - `--progress`: Show progress bar during the importation
 - `--verbose`: Summarise table when finish (n° customs, n° core, n° translated, n° untranslated ...)
+- `--quiet`: Do not ask any interactive question
+- `--dry-run`: Give a preview of what the command will do
 
 ### CLI - Generate po file from code
 
-Parse all the files in into the given `--source` & generate a fresh `langcode`.po file.
+Parse all the files in into the given `source` & generate a fresh `langcode`.po file.
 If a `langcode`.po already exists in the `dest` dir, merge them & remove duplicates.
+
+*Usage*
+```
+drush potion-generate [--exclude-yaml] [--exclude-twig] [--exclude-php] [--progress] [--verbose] [--quiet] langcode source dest
+```
 
 *Errors handling*
 - Warning on wrong langcode
-- Warning source is not a dir 
-- Warning dest is not a dir 
+- Warning source is not a dir
+- Warning dest is not a dir
 - Use Interactive question for mandatory parameters such as:
-  - `--source`
-  - `--dest`
-  - `--langcode`
+  - `langcode`
+  - `source`
+  - `dest`
 
 *Parameters*
-- `--no-interaction`: Do not ask any interactive question
-- `--source`: The source folder to scan for translations
-- `--dest`: The destination folder of po file
+- `langcode`: The langcode to generate
+- `source`: The source folder to scan for translations
+- `dest`: The destination folder of po file
 - `--exclude-yaml`: Exclude YAML files (.yaml) to be scanned for translations
 - `--exclude-twig`: Exclude TWIG files (.twig) to be scanned for translations
 - `--exclude-php`: Exclude PHP files (.php, .module) to be scanned for translations
 - `--progress`: Show progress bar during the importation
 - `--verbose`: Summarise table when finish (merged or not with the previous file, n° strings found, n° of new strings)
+- `--quiet`: Do not ask any interactive question
 
 ### CLI - Fill po file from database
 
-From a given `--source` po file into a `--langcode` read the whole database & fill the same po file with data.
+*Usage*
+```
+drush potion-fill [--overwrite] [--verbose] [--quiet] langcode source
+```
+
+From a given `source` po file into a `langcode` read the whole database & fill the same po file with data.
 
 *Errors handling*
 - Warning on wrong langcode
-- Warning source is not a compatible po file 
+- Warning source is not a compatible po file
   - Use Interactive question for mandatory parameters such as:
-  - `--source`
-  - `--langcode`
+  - `langcode`
+  - `source`
 
 *Parameters*
-- `--no-interaction`: Do not ask any interactive question
-- `--source`: The source folder to scan for translations
-- `--overwrite`: Overwrite existing translations with value in the database.
+- `langcode`: The langcode to generate from database
+- `source`: The source folder to scan for translations
+- `--overwrite`: Overwrite existing translations in the po with value from the database.
 - `--verbose`: Summarise table when finish (translated, untranslated, overwritten)
+- `--quiet`: Do not ask any interactive question
 
 ### CLI - Validate po file
 
-From a given `--source` po file check his validity.
+*Usage*
+```
+drush potion-validate [--verbose] [--dry-run] source
+```
+
+From a given `source` po file check his validity.
 
 *Errors handling*
-- Warning source is not a po file 
+- Warning source is not a po file
 
 *Parameters*
-- `--source`: The source po file to validate
+- `source`: The source po file to validate
 - `--verbose`: Summarise table when finish (strings, translated, untranslated)
 
 # Phase 2 - Enhanced Product
