@@ -29,11 +29,19 @@ drush potion-import [--mode mode] [--overwrite] [--progress] [--verbose] [--quie
 *Parameters*
 - `source`: The source po file
 - `langcode`: Import the po into the given langcode
-- `--mode`: define the importation mode from 'custom' or 'core'. `custom` is used by default.
+- `--mode`: Define the importation mode from 'customized' or 'non-customized'.
+            Use 'non-customized' when translations are imported from .po files
+            downloaded from localize.drupal.org for example.
+            Use 'customized' when translations are edited from their imported
+            originals on the user interface or are imported as customized.
+            [default: "customized"]
 - `--overwrite`: Overwrite existing translations with value in the source file.
+- `--verbose`: Report table when finish (total, additions, updates, deletes, skips ...).
+- `-q|--quiet`: Do not ask any interactive question.
+- `-h|--help`: Display usage details.
+
+*Out of Scope parameters*
 - `--progress`: Show progress bar during the importation
-- `--verbose`: Summarise table when finish (imported, skipped, updated ...)
-- `--quiet`: Do not ask any interactive question
 - `--dry-run`: Give a preview of what the command will do
 
 ### CLI - Export standard po files from Drupal database
@@ -59,9 +67,10 @@ drush potion-export [--include-core] [--include-custom] [--include-untranslated]
 - `--include-custom`: Export the custom translations
 - `--include-untranslated`: Export untranslated string
 - `--progress`: Show progress bar during the importation
-- `--verbose`: Summarise table when finish (n° customs, n° core, n° translated, n° untranslated ...)
-- `--quiet`: Do not ask any interactive question
+- `--verbose`: Report table when finish (n° customs, n° core, n° translated, n° untranslated ...)
+- `-q|--quiet`: Do not ask any interactive question.
 - `--dry-run`: Give a preview of what the command will do
+- `-h|--help`: Display usage details.
 
 ### CLI - Generate po file from code
 
@@ -90,8 +99,9 @@ drush potion-generate [--exclude-yaml] [--exclude-twig] [--exclude-php] [--progr
 - `--exclude-twig`: Exclude TWIG files (.twig) to be scanned for translations
 - `--exclude-php`: Exclude PHP files (.php, .module) to be scanned for translations
 - `--progress`: Show progress bar during the importation
-- `--verbose`: Summarise table when finish (merged or not with the previous file, n° strings found, n° of new strings)
-- `--quiet`: Do not ask any interactive question
+- `--verbose`: Report table when finish (merged or not with the previous file, n° strings found, n° of new strings)
+- `-q|--quiet`: Do not ask any interactive question.
+- `-h|--help`: Display usage details.
 
 ### CLI - Fill po file from database
 
@@ -113,8 +123,9 @@ From a given `source` po file into a `langcode` read the whole database & fill t
 - `langcode`: The langcode to generate from database
 - `source`: The source folder to scan for translations
 - `--overwrite`: Overwrite existing translations in the po with value from the database.
-- `--verbose`: Summarise table when finish (translated, untranslated, overwritten)
-- `--quiet`: Do not ask any interactive question
+- `--verbose`: Report table when finish (translated, untranslated, overwritten)
+- `-q|--quiet`: Do not ask any interactive question.
+- `-h|--help`: Display usage details.
 
 ### CLI - Validate po file
 
@@ -130,7 +141,8 @@ From a given `source` po file check his validity.
 
 *Parameters*
 - `source`: The source po file to validate
-- `--verbose`: Summarise table when finish (strings, translated, untranslated)
+- `--verbose`: Report table when finish (strings, translated, untranslated)
+- `-h|--help`: Display usage details.
 
 # Phase 2 - Enhanced Product
 
@@ -138,4 +150,3 @@ Implements User Interface for new features:
 - Generate po file from code
 - Fill po file from database
 - Validate po file
-
