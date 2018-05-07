@@ -2,7 +2,8 @@
 
 > Put your translations in motion.
 
-Provides an enhanced Developer Experience (DX) when dealing with translations & multilingual websites.
+Provides a normalized way to collect internationalization strings to export, merge & create .po files from versatile sources such as Twig, PHP or YML files.
+Ensure an better Developer Experience (DX) when dealing with translations & multilingual websites.
 
 |       Travis-CI        |        Style-CI         |        Downloads        |         Releases         |
 |:----------------------:|:-----------------------:|:-----------------------:|:------------------------:|
@@ -12,6 +13,10 @@ Provides an enhanced Developer Experience (DX) when dealing with translations & 
 
 * You want to use the Drupal Core built-in translation importation feature directly from your CLI,
 * You want to use the Drupal Core built-in translation exportation feature directly from your CLI,
+* You want to use a module based on the Core [Translation API](https://www.drupal.org/docs/8/api/translation-api/overview),
+* You want to retrieive translation strings from your [Twig templates](https://www.drupal.org/docs/8/api/translation-api/overview) in theme(s),
+* You want to retrieive translation strings from code,
+* You want to retrieive translation strings from your shipped configuration and configuration schemas files formatted in YML(s),
 * You want to make your life easier by generating final client-friendly .po files by scrapping your code looking for custom translations,
 * You want to be able to re-play a .po file by filling it with data from your database,
 * You are a CLI lover & don't like to click in an UI to deal with translations.
@@ -33,7 +38,7 @@ Give it a try and feel free to send us feedback in the issue thread.
 ### Import standard po files into Drupal database
 
 ```bash
-drush potion-import [--mode mode] [--overwrite] [--progress] [--verbose] [--quiet] [--dry-run] langcode source
+drush potion-import [--mode mode] [--overwrite] [-q|--quiet] [-h|--help] langcode source
 ```
 
 ### Export standard po files from Drupal database
@@ -64,7 +69,7 @@ and it is always recommended keeping Drupal core installations up to date.
 
 ## Dependencies
 
-The Drupal 8 version of Potion requires [gettext]() & the [Symfony Process Component](https://symfony.com/doc/current/components/process.html).
+The Drupal 8 version of Potion requires [gettext](https://www.gnu.org/software/gettext/) & the [Symfony Process Component](https://symfony.com/doc/current/components/process.html).
 
 * `Gettext` is a binary library embedded in the module to prevent version incompatibility & other mishandled behaviours.
 * `Symfony Process Component` is an external PHP library. The recommended way of solving this dependency is using composer, running the following from the command line:
@@ -84,15 +89,15 @@ Visit us at [www.antistatique.net](https://www.antistatique.net) or
 We highly recommend you to install the module using `composer`.
 
   ```bash
-  $ composer require drupal/potion
+  composer require drupal/potion
   ```
 
 You can also install it using the `drush` or `drupal console` cli.
 
   ```bash
-  $ drush dl potion
+  drush dl potion
   ```
 
   ```bash
-  $ drupal module:install potion
+  drupal module:install potion
   ```
