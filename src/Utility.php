@@ -3,6 +3,7 @@
 namespace Drupal\potion;
 
 use Drupal\Core\Language\LanguageManagerInterface;
+use Symfony\Component\Process\Process;
 
 /**
  * Contains utility methods for the Potion module.
@@ -57,8 +58,16 @@ class Utility {
       return FALSE;
     }
 
-    exec($msgfmt . ' --check ' . $src . ' 2>&1', $output, $result);
-    if ($result > 0) {
+    try {
+      $cmd = $msgfmt . ' --check ' . $src;
+
+      $process = new Process($cmd);
+      $process->run();
+    } catch (\Exception $e) {
+      $this->fail($e);
+    }
+
+    if ($process->getExitCode() > 0) {
       return FALSE;
     }
 

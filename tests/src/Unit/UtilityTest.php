@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\extranet_automatic_import\Unit;
+namespace Drupal\Tests\potion\Unit;
 
 use Drupal\Tests\UnitTestCase;
 use Drupal\potion\Utility;

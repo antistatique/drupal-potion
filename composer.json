@@ -38,5 +38,8 @@
     "drupal/coder": "^8.2.10",
     "phpmd/phpmd": "^2.6",
     "sebastian/phpcpd": "^3.0"
+  },
+  "require": {
+    "symfony/process": "^3.4"
   }
 }
