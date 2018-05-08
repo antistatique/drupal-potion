@@ -134,7 +134,7 @@ Copy/Paste Detector
   ./vendor/bin/phpcpd ./ \
   --names=*.php,*.module,*.inc,*.install,*.test,*.profile,*.theme,*.css,*.info,*.txt \
   --names-exclude=*.md,*.info.yml --progress --ansi \
-  --exclude=scripts --exclude=vendor
+  --exclude=scripts --exclude=vendor --exclude=tests
   ```
 
 ### Enforce code standards with git hooks
