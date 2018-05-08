@@ -6,15 +6,41 @@ msgstr ""
 "X-Generator: Potion\n"
 "Project-Id-Version: Potion\n"
 "Language: de-ch\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-msgid "this year"
-msgstr "dieses Jahr"
+msgid "Monday"
+msgstr "Montag"
 
-msgid "Yesterday"
-msgstr "Gestern"
+msgid "Tuesday"
+msgstr "Dienstag"
 
-msgid "Today"
-msgstr "Heute"
+msgid "Wednesday"
+msgstr "Mittwoch"
 
-msgid "Tomorrow"
-msgstr "Morge"
+msgid "Thursday"
+msgstr "Donnerstag"
+
+msgid "Friday"
+msgstr "Freitag"
+
+msgid "Saturday"
+msgstr "Samstag"
+
+msgid "Sunday"
+msgstr "Sonntag"
+
+msgctxt "Long month name"
+msgid "March"
+msgstr "Mars"
+
+msgctxt "Abbreviated month name"
+msgid "Jul"
+msgstr "Juil."
+
+msgid "@count doctor"
+msgid_plural "@count doctors"
+msgstr[0] "@count médecin"
+msgstr[1] "@count médecins"
+
+msgid "I love @color car"
+msgstr "J'adore les voitures @color"
