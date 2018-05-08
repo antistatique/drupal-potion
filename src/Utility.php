@@ -4,13 +4,12 @@ namespace Drupal\potion;
 
 use Drupal\Core\Language\LanguageManagerInterface;
 use Symfony\Component\Process\Process;
+use Drupal\potion\GettextWrapper;
 
 /**
  * Contains utility methods for the Potion module.
  */
 class Utility {
-  const GETTEXT_VERSION = '0.19.8.1';
-
   /**
    * The language Manager.
    *
@@ -50,28 +49,16 @@ class Utility {
    *
    * @return bool
    *   TRUE if the given file is valid, FALSE otherwise.
+   *
+   * @throws \Drupal\potion\Exception\GettextException
    */
   public function isValidPo($src) {
-    $msgfmt = __DIR__ . '/../scripts/gettext/' . self::GETTEXT_VERSION . '/bin/msgfmt';
 
     if (!is_file($src)) {
       return FALSE;
     }
 
-    try {
-      $cmd = $msgfmt . ' --check ' . $src;
-
-      $process = new Process($cmd);
-      $process->run();
-    } catch (\Exception $e) {
-      $this->fail($e);
-    }
-
-    if ($process->getExitCode() > 0) {
-      return FALSE;
-    }
-
-    return TRUE;
+    return GettextWrapper::msgfmt($src);
   }
 
   /**
