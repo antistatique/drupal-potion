@@ -1,0 +1,8 @@
+services:
+  potion.commands:
+    class: \Drupal\potion\Commands\PotionCommands
+    arguments:
+      - '@potion.utility'
+      - '@potion.translations.import'
+    tags:
+      - { name: drush.command }
