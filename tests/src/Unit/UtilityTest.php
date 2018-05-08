@@ -78,7 +78,7 @@ class UtilityTest extends UnitTestCase {
       [$dir . '/de.po', TRUE],
       [$dir_malformed . '/missing-msgid.po', FALSE],
       [$dir_malformed . '/missing-msgstr.po', FALSE],
-      [$dir_malformed . '/no-header.po', FALSE],
+      [$dir_malformed . '/missing-header.po', FALSE],
       [$dir_malformed . '/quote.po', FALSE],
     ];
   }

@@ -21,7 +21,7 @@ msgid "next month"
 msgstr "le mois prochain"
 
 msgid "last week"
-msgstr 'la semaine dernière'
+msgstr "la semaine dernière"
 
 msgid "this week"
 msgstr "cette semaine"
