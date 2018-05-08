@@ -5,6 +5,9 @@ namespace Drupal\Tests\potion\Kernel;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 
+/**
+ * Base class for Translations kernel integration tests.
+ */
 abstract class TranslationsTestsBase extends KernelTestBase {
 
   /**
@@ -28,13 +31,17 @@ abstract class TranslationsTestsBase extends KernelTestBase {
    */
   protected $localStorage;
 
-    /**
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
 
-    $this->installSchema('locale', ['locales_location', 'locales_source', 'locales_target']);
+    $this->installSchema('locale', [
+      'locales_location',
+      'locales_source',
+      'locales_target',
+    ]);
 
     $this->translationsPath = drupal_get_path('module', 'potion_test') . DIRECTORY_SEPARATOR . 'assets';
     $this->setUpLanguages();
@@ -44,13 +51,16 @@ abstract class TranslationsTestsBase extends KernelTestBase {
   }
 
   /**
-   * Sets up languages needed for this test.
+   * Sets up languages needed for test.
    */
   protected function setUpLanguages() {
     ConfigurableLanguage::createFromLangcode('fr')->save();
     ConfigurableLanguage::createFromLangcode('de')->save();
   }
 
+  /**
+   * Sets up translations strings needed for test.
+   */
   protected function setUpTranslations() {
     $source1 = $this->localStorage->createString([
       'source' => 'last year',
@@ -60,7 +70,7 @@ abstract class TranslationsTestsBase extends KernelTestBase {
       'lid'         => $source1->lid,
       'language'    => 'fr',
       'translation' => $this->randomMachineName(20),
-      'customized'  => LOCALE_NOT_CUSTOMIZED
+      'customized'  => LOCALE_NOT_CUSTOMIZED,
     ])->save();
 
     $source2 = $this->localStorage->createString([
@@ -71,7 +81,7 @@ abstract class TranslationsTestsBase extends KernelTestBase {
       'lid'         => $source2->lid,
       'language'    => 'fr',
       'translation' => $this->randomMachineName(20),
-      'customized'  => LOCALE_CUSTOMIZED
+      'customized'  => LOCALE_CUSTOMIZED,
     ])->save();
 
     $source3 = $this->localStorage->createString([
@@ -83,7 +93,7 @@ abstract class TranslationsTestsBase extends KernelTestBase {
       'lid'         => $source3->lid,
       'language'    => 'fr',
       'translation' => $this->randomMachineName(20),
-      'customized'  => LOCALE_NOT_CUSTOMIZED
+      'customized'  => LOCALE_NOT_CUSTOMIZED,
     ])->save();
 
     $source4 = $this->localStorage->createString([
@@ -95,7 +105,7 @@ abstract class TranslationsTestsBase extends KernelTestBase {
       'lid'         => $source4->lid,
       'language'    => 'fr',
       'translation' => $this->randomMachineName(20),
-      'customized'  => LOCALE_CUSTOMIZED
+      'customized'  => LOCALE_CUSTOMIZED,
     ])->save();
 
     $source5 = $this->localStorage->createString([
@@ -106,7 +116,7 @@ abstract class TranslationsTestsBase extends KernelTestBase {
       'lid'         => $source5->lid,
       'language'    => 'fr',
       'translation' => $this->randomMachineName(20),
-      'customized'  => LOCALE_NOT_CUSTOMIZED
+      'customized'  => LOCALE_NOT_CUSTOMIZED,
     ])->save();
 
     $source6 = $this->localStorage->createString([
@@ -117,7 +127,7 @@ abstract class TranslationsTestsBase extends KernelTestBase {
       'lid'         => $source6->lid,
       'language'    => 'fr',
       'translation' => $this->randomMachineName(20),
-      'customized'  => LOCALE_CUSTOMIZED
+      'customized'  => LOCALE_CUSTOMIZED,
     ])->save();
 
     $source7 = $this->localStorage->createString([
@@ -128,7 +138,7 @@ abstract class TranslationsTestsBase extends KernelTestBase {
       'lid'         => $source7->lid,
       'language'    => 'fr',
       'translation' => $this->randomMachineName(20),
-      'customized'  => LOCALE_CUSTOMIZED
+      'customized'  => LOCALE_CUSTOMIZED,
     ])->save();
 
     $source8 = $this->localStorage->createString([
@@ -139,7 +149,7 @@ abstract class TranslationsTestsBase extends KernelTestBase {
       'lid'         => $source8->lid,
       'language'    => 'fr',
       'translation' => $this->randomMachineName(20),
-      'customized'  => LOCALE_NOT_CUSTOMIZED
+      'customized'  => LOCALE_NOT_CUSTOMIZED,
     ])->save();
   }
 

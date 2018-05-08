@@ -37,7 +37,7 @@ class PotionException extends \Exception {
    * Invalid mode for importation has been given.
    *
    * @param string $mode
-   *   the invalid mode given.
+   *   The invalid mode given.
    *
    * @return PotionException
    *   The invalid mode exception.

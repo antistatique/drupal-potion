@@ -30,7 +30,7 @@ class TranslationsImport {
    *
    * @param \Drupal\potion\Utility $utility
    *   Utility methods for Potion.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $utility
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler service.
    */
   public function __construct(Utility $utility, ModuleHandlerInterface $module_handler) {
@@ -45,11 +45,17 @@ class TranslationsImport {
    *   Language code of the language being written to the database.
    * @param string $source
    *   The .po file's path.
+   * @param array $options
+   *   The Options.
+   *   $options = [
+   *     'customized' => (integer)
+   *     'overwrite' => (bool)
+   *   ].
    *
    * @return array
    *   Report array as defined in Drupal\locale\PoDatabaseWriter.
    */
-  public function importFromFile($langcode, $source, $options = []) {
+  public function importFromFile($langcode, $source, array $options = []) {
     // Check for existing & enabled langcode.
     if (!$this->utility->isLangcodeEnabled($langcode)) {
       throw PotionException::invalidLangcode($langcode);
