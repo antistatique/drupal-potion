@@ -1,1 +1,11 @@
 services:
+  potion.utility:
+    class: Drupal\potion\Utility
+    arguments:
+      - '@language_manager'
+
+  potion.translations.import:
+    class: \Drupal\potion\TranslationsImport
+    arguments:
+      - '@potion.utility'
+      - '@module_handler'
