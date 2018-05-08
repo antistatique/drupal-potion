@@ -29,7 +29,7 @@ class GettextWrapper {
    */
   public static function msgfmt($src) {
     try {
-      $cmd = rtrim(self::BIN,'/') . '/msgfmt --check ' . $src;
+      $cmd = rtrim(self::BIN, '/') . '/msgfmt --check ' . $src;
       $process = new Process($cmd);
       $process->run();
     }
@@ -43,4 +43,5 @@ class GettextWrapper {
 
     return TRUE;
   }
+
 }

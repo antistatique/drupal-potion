@@ -3,8 +3,6 @@
 namespace Drupal\potion;
 
 use Drupal\Core\Language\LanguageManagerInterface;
-use Symfony\Component\Process\Process;
-use Drupal\potion\GettextWrapper;
 
 /**
  * Contains utility methods for the Potion module.
