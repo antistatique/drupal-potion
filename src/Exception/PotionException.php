@@ -33,4 +33,17 @@ class PotionException extends \Exception {
     return new static('File ' . $file . ' is a malformed .po file.');
   }
 
+  /**
+   * Invalid mode for importation has been given.
+   *
+   * @param string $mode
+   *   the invalid mode given.
+   *
+   * @return PotionException
+   *   The invalid mode exception.
+   */
+  public static function invalidMode($mode) {
+    return new static('Mode ' . $mode . ' is invalid. Only "customized" & "non-customized" are allowed.');
+  }
+
 }
