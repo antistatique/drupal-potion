@@ -2,7 +2,8 @@
 
 /**
  * @file
- * Drush integration for the potion module.
+ * Drush 7.x & 8.x legacy commands integration for the potion module.
+ * Check the `./src/Commands` directory for new Commands.
  */
 
 /**
