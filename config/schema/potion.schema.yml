@@ -1,0 +1,7 @@
+potion.settings:
+  type: config_object
+  label: 'Potion settings'
+  mapping:
+    path:
+      type: string
+      label: 'Path to gettext binaries files'

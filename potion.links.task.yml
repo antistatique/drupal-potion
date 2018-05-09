@@ -1,0 +1,4 @@
+potion.settings.gettext:
+  route_name: potion.settings.gettext
+  title: Gettext
+  base_route: potion.settings.gettext
