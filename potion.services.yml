@@ -1,8 +1,14 @@
 services:
+  potion.gettext_wrapper:
+    class: \Drupal\potion\GettextWrapper
+    arguments:
+      - '@config.factory'
+
   potion.utility:
     class: Drupal\potion\Utility
     arguments:
       - '@language_manager'
+      - '@potion.gettext_wrapper'
 
   potion.translations.import:
     class: \Drupal\potion\TranslationsImport
