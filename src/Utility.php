@@ -16,13 +16,23 @@ class Utility {
   protected $languageManager;
 
   /**
+   * The Gettext wrapper.
+   *
+   * @var \Drupal\potion\GettextWrapper
+   */
+  protected $gettextWrapper;
+
+  /**
    * Class constructor.
    *
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
+   * @param \Drupal\potion\GettextWrapper $gettext_wrapper
+   *   The Gettext wrapper.
    */
-  public function __construct(LanguageManagerInterface $language_manager) {
+  public function __construct(LanguageManagerInterface $language_manager, GettextWrapper $gettext_wrapper) {
     $this->languageManager = $language_manager;
+    $this->gettextWrapper = $gettext_wrapper;
   }
 
   /**
@@ -51,12 +61,11 @@ class Utility {
    * @throws \Drupal\potion\Exception\GettextException
    */
   public function isValidPo($src) {
-
     if (!is_file($src)) {
       return FALSE;
     }
 
-    return GettextWrapper::msgfmt($src);
+    return $this->gettextWrapper->msgfmt($src);
   }
 
   /**

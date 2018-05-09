@@ -7,3 +7,4 @@ dependencies:
   - drupal:locale
   - drupal:language
   - drupal:file
+configure: potion

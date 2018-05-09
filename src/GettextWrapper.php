@@ -4,13 +4,45 @@ namespace Drupal\potion;
 
 use Symfony\Component\Process\Process;
 use Drupal\potion\Exception\GettextException;
+use Drupal\Core\Config\ConfigFactoryInterface;
 
 /**
  * Contains wrapper methods for the Gettext libraries.
  */
 class GettextWrapper {
-  const VERSION = '0.19.8.1';
-  const BIN = __DIR__ . '/../scripts/gettext/' . self::VERSION . '/bin';
+
+  /**
+   * Path to gettext binaries files.
+   *
+   * This can be changed in settings.php or in the Potion Configuration Form.
+   * When empty, the $PATH values are used.
+   *
+   * @var string
+   */
+  protected $path;
+
+  /**
+   * The gettext settings config object.
+   *
+   * @var \Drupal\Core\Config\Config
+   */
+  protected $gettextConfig;
+
+  /**
+   * Construct the GettextWrapper object.
+   *
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory.
+   */
+  public function __construct(ConfigFactoryInterface $config_factory) {
+    $this->gettextConfig = $config_factory->get('potion.gettext.settings');
+
+    $this->path = '';
+    // Get path from config & sanitize it with a trailing directory separator.
+    if (!empty($this->gettextConfig->get('path'))) {
+      $this->path = rtrim($this->gettextConfig->get('path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+    }
+  }
 
   /**
    * Assert file integrity: format, header, domain.
@@ -27,10 +59,17 @@ class GettextWrapper {
    *
    * @throws \Drupal\potion\Exception\GettextException
    */
-  public static function msgfmt($src) {
+  public function msgfmt($src) {
+    $cmd = $this->path . 'msgfmt';
+
+    // When the path is forced (a.k.a not resolved by $PATH env)
+    // asserts the command exists & is executable.
+    if (!empty($this->path) && (!is_file($cmd) || !is_executable($cmd))) {
+      throw GettextException::commandNotFound($cmd);
+    }
+
     try {
-      $cmd = rtrim(self::BIN, '/') . '/msgfmt --check ' . $src;
-      $process = new Process($cmd);
+      $process = new Process([$cmd, '--check', $src]);
       $process->run();
     }
     catch (\Exception $e) {

@@ -69,14 +69,13 @@ and it is always recommended keeping Drupal core installations up to date.
 
 ## Dependencies
 
-The Drupal 8 version of Potion requires [gettext](https://www.gnu.org/software/gettext/) & the [Symfony Process Component](https://symfony.com/doc/current/components/process.html).
+This module relies on the [GNU gettext toolset](https://www.gnu.org/software/gettext/) & the [Symfony Process Component](https://symfony.com/doc/current/components/process.html).
 
-* `Gettext` is a binary library embedded in the module to prevent version incompatibility & other mishandled behaviours.
-* `Symfony Process Component` is an external PHP library. The recommended way of solving this dependency is using composer, running the following from the command line:
+* `Symfony Process Component` is an external PHP library to execute binaries ;
+* `Gettext` utilities are a set of tools that provides a framework to help other packages produce multi-lingual messages. The minimum version of the `gettext` utilities supported is `0.19.8.1`.
 
-  ```bash
-  composer require symfony/process:^3.4
-  ```
+We assume, that you have installed `symfony/process` & `gettex`. We also assume `gettext` utilities are accessible throught your `$PATH`.
+Otherwise, please see [How to install & setup Gettext](https://www.drupal.org/docs/8/modules/potion/how-to-install-setup-gettext) for more information,
 
 ## Supporting organizations
 

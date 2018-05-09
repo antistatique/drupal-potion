@@ -1,0 +1,15 @@
+potion:
+  path: '/admin/config/regional/potion'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Potion'
+  requirements:
+    _permission: 'administer potion'
+
+potion.settings.gettext:
+  path: '/admin/config/regional/potion/gettext'
+  defaults:
+    _form: '\Drupal\potion\Form\GettextSettingsForm'
+    _title: 'Gettext'
+  requirements:
+    _permission: 'administer potion'
