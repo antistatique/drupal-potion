@@ -102,7 +102,7 @@ function potion_requirements($phase) {
         'title'       => t('Gettext libraries'),
         'value'       => t('Missing libraries'),
         'severity'    => REQUIREMENT_ERROR,
-        'description' => t('The following utilities are not found: <code>:utilities</code>. See <a href="" target="_blank">How to install Gettext</a> for more information.', [
+        'description' => t('The following utilities are not found: <code>:utilities</code>. See <a href="https://www.drupal.org/docs/8/modules/potion/how-to-install-setup-gettext" target="_blank">How to install & setup Gettext</a> for more information.', [
           ':utilities'   => implode($not_found, ', '),
         ]),
       ];
@@ -113,7 +113,7 @@ function potion_requirements($phase) {
         'title'       => t('Gettext libraries'),
         'value'       => t('Not executable libraries'),
         'severity'    => REQUIREMENT_ERROR,
-        'description' => t('The following utilities are not executable: <code>:utilities</code>. See <a href="" target="_blank">How to install Gettext</a> for more information.', [
+        'description' => t('The following utilities are not executable: <code>:utilities</code>. See <a href="https://www.drupal.org/docs/8/modules/potion/how-to-install-setup-gettext" target="_blank">How to install & setup Gettext</a> for more information.', [
           ':utilities'   => implode($not_executable, ', '),
         ]),
       ];
