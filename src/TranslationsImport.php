@@ -39,7 +39,7 @@ class TranslationsImport {
   }
 
   /**
-   * Translation(s) exportation from database to .po file.
+   * Translation(s) importation from .po file in the database.
    *
    * @param string $langcode
    *   Language code of the language being written to the database.
