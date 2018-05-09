@@ -5,22 +5,35 @@
  * Contains potion.install.
  */
 
+use Drupal\Core\Url;
+
 /**
  * Implements hook_install().
  */
 function potion_install() {
   drupal_set_message(t("Potion is installed and ready for action."));
+
+  // Rebuild the route cache before accessing new route.
+  \Drupal::service("router.builder")->rebuild();
+
+  // Display the new route for configuration.
+  $url = Url::fromRoute('potion.settings.gettext');
+  drupal_set_message(t('Potion settings are available under <a href="@administer-page">Administer > Configuration > Regional and language > Potion</a>', ['@administer-page' => $url->toString()]));
 }
 
 /**
  * Implements hook_requirements().
  */
 function potion_requirements($phase) {
+  /** @var \Drupal\Core\Config\Config $gettextConfig */
+  $gettextConfig = \Drupal::service('config.factory')->get('potion.gettext.settings');
+
   $requirements = [];
   if ($phase == 'install') {
+    // Asserts symfony/process is installed.
     if (!class_exists('Symfony\Component\Process\Process')) {
       $requirements['potion_process_library'] = [
-        'description' => t('Potion requires the <a href=":component-url">external Symfony Process Component</a>. The recommended way of solving this dependency is using <a href=":composer-url">Composer</a> running the following from the command line: <br /><code>composer require symfony/process:^3.4</code>.', [
+        'description' => t('Potion requires the <a href=":component-url" target="_blank">external Symfony Process Component</a>. The recommended way of solving this dependency is using <a href=":composer-url" target="_blank">Composer</a> running the following from the command line: <br /><code>composer require symfony/process:^3.4</code>.', [
           ':component-url' => 'https://symfony.com/doc/current/components/process.html',
           ':composer-url' => 'https://getcomposer.org',
         ]),
@@ -28,5 +41,84 @@ function potion_requirements($phase) {
       ];
     }
   }
+
+  // Collection of gettext utilities that must be executable.
+  $utilities = [
+    'autopoint',
+    'gettext',
+    'gettextize',
+    'msgcat',
+    'msgcomm',
+    'msgen',
+    'msgfilter',
+    'msggrep',
+    'msgmerge',
+    'msguniq',
+    'recode-sr-latin',
+    'envsubst',
+    'msgattrib',
+    'msgcmp',
+    'msgconv',
+    'msgexec',
+    'msgfmt',
+    'msginit',
+    'msgunfmt',
+    'ngettext',
+    'xgettext',
+  ];
+
+  // Path to gettext binaries files. When empty, the $PATH values are used.
+  $path = $gettextConfig->get('path');
+
+  // Asserts `gettext` utilities are reacheable & executable.
+  if ($phase == 'runtime') {
+    $potion_config = Url::fromRoute('potion.settings.gettext');
+    $not_found = [];
+    $not_executable = [];
+
+    if (!empty($path)) {
+      $requirements['potion_gettext_path'] = [
+        'title'       => t('Gettext'),
+        'value'       => t('Configured'),
+        'severity'    => REQUIREMENT_INFO,
+        'description' => t('The path <code>:path</code> is used to reach gettext binaries. Update it the <a href=":config-url">Potion configuration</a> page.', [
+          ':path'       => $path,
+          ':config-url' => $potion_config->toString(),
+        ]),
+      ];
+    }
+
+    foreach ($utilities as $utility) {
+      if (!is_file($path . $utility)) {
+        $not_found[$utility] = $utility;
+      }
+      if (!is_executable($path . $utility)) {
+        $not_executable[$utility] = $utility;
+      }
+    }
+
+    if (!empty($not_found)) {
+      $requirements['potion_gettext_utility_not_found'] = [
+        'title'       => t('Gettext libraries'),
+        'value'       => t('Missing libraries'),
+        'severity'    => REQUIREMENT_ERROR,
+        'description' => t('The following utilities are not found: <code>:utilities</code>. See <a href="" target="_blank">How to install Gettext</a> for more information.', [
+          ':utilities'   => implode($not_found, ', '),
+        ]),
+      ];
+    }
+
+    if (!empty($not_executable)) {
+      $requirements['potion_gettext_utility_not_executable'] = [
+        'title'       => t('Gettext libraries'),
+        'value'       => t('Not executable libraries'),
+        'severity'    => REQUIREMENT_ERROR,
+        'description' => t('The following utilities are not executable: <code>:utilities</code>. See <a href="" target="_blank">How to install Gettext</a> for more information.', [
+          ':utilities'   => implode($not_executable, ', '),
+        ]),
+      ];
+    }
+  }
+
   return $requirements;
 }
