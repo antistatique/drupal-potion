@@ -36,6 +36,20 @@ class Utility {
   }
 
   /**
+   * From a given langcode, retreive the langname.
+   *
+   * @param string $langcode
+   *   The langcode.
+   *
+   * @return string|null
+   *   The common langname of this langcode. Otherwise NULL
+   */
+  public function getLangName($langcode) {
+    $languages = $this->languageManager->getLanguages();
+    return isset($languages[$langcode]) ? $languages[$langcode]->getName() : NULL;
+  }
+
+  /**
    * Check if the given langcode is installed & enabled.
    *
    * @param string $langcode
