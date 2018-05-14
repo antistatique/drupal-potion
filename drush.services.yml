@@ -4,5 +4,6 @@ services:
     arguments:
       - '@potion.utility'
       - '@potion.translations.import'
+      - '@potion.translations.export'
     tags:
       - { name: drush.command }
