@@ -46,4 +46,30 @@ class PotionException extends \Exception {
     return new static('Mode ' . $mode . ' is invalid. Only "customized" & "non-customized" are allowed.');
   }
 
+  /**
+   * The destination path not found.
+   *
+   * @param string $destination
+   *   The destination path not exists.
+   *
+   * @return PotionException
+   *   Exception because the destination file already exists..
+   */
+  public static function notFound($destination) {
+    return new static('No such directory ' . $destination);
+  }
+
+  /**
+   * The destination path is not writable.
+   *
+   * @param string $destination
+   *   The destination path.
+   *
+   * @return PotionException
+   *   Exception because the destination path is not writable.
+   */
+  public static function isNotWritable($destination) {
+    return new static('The destination ' . $destination . ' is not writable.');
+  }
+
 }
