@@ -44,7 +44,7 @@ drush potion-import [--mode mode] [--overwrite] [-q|--quiet] [-h|--help] langcod
 ### Export standard po files from Drupal database
 
 ```bash
-drush potion-export [--include-core] [--include-custom] [--include-untranslated] [--progress] [--verbose] [--quiet] [--dry-run] langcode dest
+drush potion-export [--non-customized] [--customized] [--untranslated] [--progress] [-q|--quiet] [-h|--help] langcode dest
 ```
 
 ### Generate, scrape & parse your code to generate po file
