@@ -9,6 +9,7 @@ services:
     arguments:
       - '@language_manager'
       - '@potion.gettext_wrapper'
+      - '@file_system'
 
   potion.translations.import:
     class: \Drupal\potion\TranslationsImport

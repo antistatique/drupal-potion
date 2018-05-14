@@ -5,6 +5,7 @@ namespace Drupal\Tests\potion\Unit;
 use Drupal\Tests\UnitTestCase;
 use Drupal\potion\Utility;
 use Drupal\potion\GettextWrapper;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -62,7 +63,10 @@ class UtilityTest extends UnitTestCase {
     /** @var \Drupal\Core\Language\LanguageManagerInterface|\Prophecy\Prophecy\ProphecyInterface $language_manager */
     $language_manager = $this->prophesize(LanguageManagerInterface::class);
 
-    $this->utility = new Utility($language_manager->reveal(), $gettext_wrapper);
+    /** @var \Drupal\Core\File\FileSystemInterface|\Prophecy\Prophecy\ProphecyInterface $file_system */
+    $file_system = $this->prophesize(FileSystemInterface::class);
+
+    $this->utility = new Utility($language_manager->reveal(), $gettext_wrapper, $file_system->reveal());
     $language_manager->getLanguages()
       ->willReturn(['en' => $en, 'fr' => $fr]);
   }

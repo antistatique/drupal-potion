@@ -3,6 +3,7 @@
 namespace Drupal\potion;
 
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\File\FileSystemInterface;
 
 /**
  * Contains utility methods for the Potion module.
@@ -23,16 +24,26 @@ class Utility {
   protected $gettextWrapper;
 
   /**
+   * The file system service.
+   *
+   * @var \Drupal\Core\File\FileSystemInterface
+   */
+  protected $fileSystem;
+
+  /**
    * Class constructor.
    *
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
    * @param \Drupal\potion\GettextWrapper $gettext_wrapper
    *   The Gettext wrapper.
+   * @param \Drupal\Core\File\FileSystemInterface $file_system
+   *   The file system service.
    */
-  public function __construct(LanguageManagerInterface $language_manager, GettextWrapper $gettext_wrapper) {
+  public function __construct(LanguageManagerInterface $language_manager, GettextWrapper $gettext_wrapper, FileSystemInterface $file_system) {
     $this->languageManager = $language_manager;
-    $this->gettextWrapper = $gettext_wrapper;
+    $this->gettextWrapper  = $gettext_wrapper;
+    $this->fileSystem      = $file_system;
   }
 
   /**
@@ -90,6 +101,23 @@ class Utility {
    */
   public static function isRunningInCli() {
     return php_sapi_name() === 'cli';
+  }
+
+  /**
+   * Sanitize the given path to append a trailing director separator.
+   *
+   * @param mixed $path
+   *   A given path string or a stream.
+   *
+   * @return string
+   *   The path with a trailing director separator when needed.
+   */
+  public function sanitizePath($path) {
+    // Only trim if we're not dealing with a stream.
+    if (!file_stream_wrapper_valid_scheme($this->fileSystem->uriScheme($path))) {
+      $path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+    }
+    return $path;
   }
 
 }
