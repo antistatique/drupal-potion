@@ -6,6 +6,7 @@ use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\potion\Utility;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Potion - Gettext configuration form.
