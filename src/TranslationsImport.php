@@ -55,7 +55,10 @@ class TranslationsImport {
    * @return array
    *   Report array as defined in Drupal\locale\PoDatabaseWriter.
    */
-  public function importFromFile($langcode, $source, array $options = []) {
+  public function importFromFile($langcode, $source, array $options = [
+    'customized' => LOCALE_NOT_CUSTOMIZED,
+    'overwrite' => FALSE,
+  ]) {
     // Check for existing & enabled langcode.
     if (!$this->utility->isLangcodeEnabled($langcode)) {
       throw PotionException::invalidLangcode($langcode);
