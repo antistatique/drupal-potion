@@ -16,3 +16,10 @@ services:
     arguments:
       - '@potion.utility'
       - '@module_handler'
+
+  potion.translations.export:
+    class: \Drupal\potion\TranslationsExport
+    arguments:
+      - '@potion.utility'
+      - '@config.factory'
+      - '@file_system'
