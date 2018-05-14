@@ -20,6 +20,13 @@ class TranslationsExportTests extends TranslationsTestsBase {
   protected $translationExport;
 
   /**
+   * The file system service.
+   *
+   * @var \Drupal\Core\File\FileSystemInterface
+   */
+  protected $fileSystem;
+
+  /**
    * {@inheritdoc}
    */
   public static $modules = [
@@ -37,6 +44,9 @@ class TranslationsExportTests extends TranslationsTestsBase {
 
     /** @var \Drupal\potion\TranslationsExport $translationExport */
     $this->translationExport = $this->container->get('potion.translations.export');
+
+    /** @var \Drupal\Core\File\FileSystemInterface $fileSystem */
+    $this->fileSystem = $this->container->get('file_system');
   }
 
   /**
@@ -79,6 +89,34 @@ class TranslationsExportTests extends TranslationsTestsBase {
   public function testExportInvalidLangcode() {
     $this->setExpectedException(PotionException::class, "The langcode ru is not defined. Please create & enabled it before trying to use it.");
     $this->translationExport->exportFromDatabase('ru', 'temporary://');
+  }
+
+  /**
+   * @covers \Drupal\potion\TranslationsExport::exportFromDatabase
+   */
+  public function testTranslationsExportUriDest() {
+    $this->setUpTranslations();
+    $this->setUpNonTranslations();
+
+    $dest = $this->fileSystem->realpath('temporary://');
+    $file = $dest . DIRECTORY_SEPARATOR . 'fr.po';
+    unlink($file);
+    $this->assertFalse(file_exists($file));
+    $this->translationExport->exportFromDatabase('fr', $dest);
+    $this->assertTrue(file_exists($file));
+  }
+
+  /**
+   * @covers \Drupal\potion\TranslationsExport::exportFromDatabase
+   */
+  public function testTranslationsExportPathDest() {
+    $this->setUpTranslations();
+    $this->setUpNonTranslations();
+
+    unlink('temporary://fr.po');
+    $this->assertFalse(file_exists('temporary://fr.po'));
+    $this->translationExport->exportFromDatabase('fr', 'temporary://');
+    $this->assertTrue(file_exists('temporary://fr.po'));
   }
 
   /**

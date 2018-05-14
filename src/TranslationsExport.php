@@ -182,10 +182,11 @@ class TranslationsExport {
 
     $writer->close();
 
-    $fullpath = $this->utility->sanitizePath($destination) . $langcode . '.po';
+    // Get the final destination path.
+    $fullpath = $this->utility->sanitizePath($this->fileSystem->realpath($destination)) . $langcode . '.po';
 
-    // Write the stream in the destination file.
-    file_put_contents($fullpath, $uri);
+    // Perform the move operation.
+    rename($this->fileSystem->realpath($uri), $fullpath);
 
     return $this->report;
   }
