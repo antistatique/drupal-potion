@@ -4,11 +4,43 @@ namespace Drupal\potion\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\potion\Utility;
 
 /**
  * Potion - Gettext configuration form.
  */
 class GettextSettingsForm extends ConfigFormBase {
+
+  /**
+   * The Utility service of Potion.
+   *
+   * @var \Drupal\potion\Utility
+   */
+  protected $utility;
+
+  /**
+   * GettextSettingsForm constructor.
+   *
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory.
+   * @param \Drupal\potion\Utility $utility
+   *   Utility methods for Potion.
+   */
+  public function __construct(ConfigFactoryInterface $config_factory, Utility $utility) {
+    parent::__construct($config_factory);
+    $this->utility = $utility;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('config.factory'),
+      $container->get('potion.utility')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -57,7 +89,7 @@ class GettextSettingsForm extends ConfigFormBase {
     }
 
     // Get the path from user input & add trailing director separator.
-    $path = rtrim($form_state->getValue('path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+    $path = $this->utility->sanitizePath($form_state->getValue('path'));
 
     // Collection of utilities that must be executable in the given $path.
     $utilities = [
@@ -108,7 +140,7 @@ class GettextSettingsForm extends ConfigFormBase {
     $path = '';
     if (!empty($form_state->getValue('path'))) {
       // Get the path from user input & add trailing director separator.
-      $path = rtrim($form_state->getValue('path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+      $path = $this->utility->sanitizePath($form_state->getValue('path'));
     }
 
     $this->config('potion.gettext.settings')
