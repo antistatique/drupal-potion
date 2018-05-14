@@ -202,7 +202,7 @@ class PotionCommands extends DrushCommands {
     $fullpath = $this->utility->sanitizePath($destination) . $langcode . '.po';
 
     // If file already exists in dest, ask questions before overwrite.
-    $msg = dt('You are about to overwrite the @file. Do you want to continue?', ['@file' => $fullpath]);
+    $msg = $this->t('You are about to overwrite the @file. Do you want to continue?', ['@file' => $fullpath]);
     if (is_file($fullpath) && !$this->io()->confirm($msg)) {
       throw new UserAbortException();
     }
