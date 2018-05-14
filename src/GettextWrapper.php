@@ -10,6 +10,12 @@ use Drupal\Core\Config\ConfigFactoryInterface;
  * Contains wrapper methods for the Gettext libraries.
  */
 class GettextWrapper {
+  /**
+   * The gettext settings config object.
+   *
+   * @var \Drupal\Core\Config\Config
+   */
+  protected $gettextConfig;
 
   /**
    * Path to gettext binaries files.
@@ -20,13 +26,6 @@ class GettextWrapper {
    * @var string
    */
   protected $path;
-
-  /**
-   * The gettext settings config object.
-   *
-   * @var \Drupal\Core\Config\Config
-   */
-  protected $gettextConfig;
 
   /**
    * Construct the GettextWrapper object.
@@ -40,7 +39,7 @@ class GettextWrapper {
     $this->path = '';
     // Get path from config & sanitize it with a trailing directory separator.
     if (!empty($this->gettextConfig->get('path'))) {
-      $this->path = rtrim($this->gettextConfig->get('path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+      $this->path = $this->gettextConfig->get('path');
     }
   }
 
