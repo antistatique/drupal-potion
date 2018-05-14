@@ -61,14 +61,14 @@ abstract class TranslationsTestsBase extends KernelTestBase {
   /**
    * Sets up translations strings needed for test.
    */
-  protected function setUpTranslations() {
+  protected function setUpTranslations($langcode = 'fr') {
     $source1 = $this->localStorage->createString([
       'source' => 'last year',
     ]);
     $source1->save();
     $this->translationsStrings[] = $this->localStorage->createTranslation([
       'lid'         => $source1->lid,
-      'language'    => 'fr',
+      'language'    => $langcode,
       'translation' => $this->randomMachineName(20),
       'customized'  => LOCALE_NOT_CUSTOMIZED,
     ])->save();
@@ -79,7 +79,7 @@ abstract class TranslationsTestsBase extends KernelTestBase {
     $source2->save();
     $this->translationsStrings[] = $this->localStorage->createTranslation([
       'lid'         => $source2->lid,
-      'language'    => 'fr',
+      'language'    => $langcode,
       'translation' => $this->randomMachineName(20),
       'customized'  => LOCALE_CUSTOMIZED,
     ])->save();
@@ -91,7 +91,7 @@ abstract class TranslationsTestsBase extends KernelTestBase {
     $source3->save();
     $this->translationsStrings[] = $this->localStorage->createTranslation([
       'lid'         => $source3->lid,
-      'language'    => 'fr',
+      'language'    => $langcode,
       'translation' => $this->randomMachineName(20),
       'customized'  => LOCALE_NOT_CUSTOMIZED,
     ])->save();
@@ -103,7 +103,7 @@ abstract class TranslationsTestsBase extends KernelTestBase {
     $source4->save();
     $this->translationsStrings[] = $this->localStorage->createTranslation([
       'lid'         => $source4->lid,
-      'language'    => 'fr',
+      'language'    => $langcode,
       'translation' => $this->randomMachineName(20),
       'customized'  => LOCALE_CUSTOMIZED,
     ])->save();
@@ -114,7 +114,7 @@ abstract class TranslationsTestsBase extends KernelTestBase {
     $source5->save();
     $this->translationsStrings[] = $this->localStorage->createTranslation([
       'lid'         => $source5->lid,
-      'language'    => 'fr',
+      'language'    => $langcode,
       'translation' => $this->randomMachineName(20),
       'customized'  => LOCALE_NOT_CUSTOMIZED,
     ])->save();
@@ -125,7 +125,7 @@ abstract class TranslationsTestsBase extends KernelTestBase {
     $source6->save();
     $this->translationsStrings[] = $this->localStorage->createTranslation([
       'lid'         => $source6->lid,
-      'language'    => 'fr',
+      'language'    => $langcode,
       'translation' => $this->randomMachineName(20),
       'customized'  => LOCALE_CUSTOMIZED,
     ])->save();
@@ -136,7 +136,7 @@ abstract class TranslationsTestsBase extends KernelTestBase {
     $source7->save();
     $this->translationsStrings[] = $this->localStorage->createTranslation([
       'lid'         => $source7->lid,
-      'language'    => 'fr',
+      'language'    => $langcode,
       'translation' => $this->randomMachineName(20),
       'customized'  => LOCALE_CUSTOMIZED,
     ])->save();
@@ -147,10 +147,24 @@ abstract class TranslationsTestsBase extends KernelTestBase {
     $source8->save();
     $this->translationsStrings[] = $this->localStorage->createTranslation([
       'lid'         => $source8->lid,
-      'language'    => 'fr',
+      'language'    => $langcode,
       'translation' => $this->randomMachineName(20),
       'customized'  => LOCALE_NOT_CUSTOMIZED,
     ])->save();
+  }
+
+  /**
+   * Sets up unstranslated strings needed for test.
+   */
+  protected function setUpNonTranslations() {
+    $source1 = $this->localStorage->createString([
+      'source' => 'submarin',
+    ]);
+    $source1->save();
+    $source2 = $this->localStorage->createString([
+      'source' => 'yellow',
+    ]);
+    $source2->save();
   }
 
 }
