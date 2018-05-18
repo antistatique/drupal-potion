@@ -2,6 +2,10 @@ services:
   potion.commands:
     class: \Drupal\potion\Commands\PotionCommands
     arguments:
-      - '@potion.twig_extractor'
+      - '@potion.utility'
+      - '@potion.translations.import'
+      - '@potion.translations.export'
+      - '@potion.extractor.twig'
+
     tags:
       - { name: drush.command }

@@ -46,7 +46,7 @@
   </rule>
   <rule ref="rulesets/naming.xml/ShortVariable">
     <properties>
-      <property name="exceptions" value="id,q,i,j,v,e,f,fp,dn,me,ip,dt,d" />
+      <property name="exceptions" value="id,q,i,j,v,e,f,fp,dn,me,ip,dt,d,fr,en" />
     </properties>
   </rule>
   <rule ref="rulesets/naming.xml/ShortMethodName">

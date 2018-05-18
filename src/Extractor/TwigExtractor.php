@@ -5,8 +5,8 @@ namespace Drupal\potion\Extractor;
 use Twig_Environment;
 use Twig_Error;
 use Twig_Source;
-// @TODO: Add it to composer or not necessary as already in Drupal Core?
 use Symfony\Component\Finder\Finder;
+use Drupal\potion\Exception\ExtractorException;
 
 /**
  * Extract Translations from Twig template.
@@ -20,7 +20,7 @@ class TwigExtractor implements TranslationExtractorInterface {
   private $twig;
 
   /**
-   * TwigExtractor constructor.
+   * Constructor.
    *
    * @param \Twig_Environment $twig
    *   Twig Env.
@@ -32,60 +32,23 @@ class TwigExtractor implements TranslationExtractorInterface {
   /**
    * {@inheritdoc}
    */
-  public function extract($path) {
+  public function extract($path, $recursive = FALSE) {
+    // Collection of unique translations strings.
     $translations = [];
-    $files = $this->extractFiles($path);
-    foreach ($files as $file) {
 
+    $files = $this->getFilesFromDirectory($path, $recursive);
+    foreach ($files as $file) {
       try {
-        $trans = $this->extractTemplate(file_get_contents($file->getPathname()));
+        // Attempts to extracts translations key from the template.
+        $trans = $this->extractFromTemplate($file->getContents());
         $translations = array_merge($translations, $trans);
       }
       catch (Twig_Error $e) {
-        if ($file instanceof \SplFileInfo) {
-          $pathname = $file->getRealPath() ?: $file->getPathname();
-          $name = $file instanceof \SplFileInfo ? $file->getRelativePathname() : $pathname;
-          if (method_exists($e, 'setSourceContext')) {
-            $e->setSourceContext(new Twig_Source('', $name, $pathname));
-          }
-          else {
-            $e->setTemplateName($name);
-          }
-        }
-
-        throw $e;
+        throw new ExtractorException($e->getMessage(), $e->getCode(), $e);
       }
     }
 
     return array_unique($translations);
-  }
-
-  /**
-   * Extract string translations from a resource.
-   *
-   * @param string|array $resource
-   *   Files, a file or a directory.
-   *
-   * @return array
-   *   array of string translations
-   */
-  private function extractFiles($resource) {
-    if (is_array($resource) || $resource instanceof \Traversable) {
-      $files = [];
-      foreach ($resource as $file) {
-        if ($this->canBeExtracted($file)) {
-          $files[] = $this->toSplFileInfo($file);
-        }
-      }
-    }
-    elseif (is_file($resource)) {
-      $files = $this->canBeExtracted($resource) ? [$this->toSplFileInfo($resource)] : [];
-    }
-    else {
-      $files = $this->extractFromDirectory($resource);
-    }
-
-    return $files;
   }
 
   /**
@@ -97,9 +60,10 @@ class TwigExtractor implements TranslationExtractorInterface {
    * @return array
    *   string translations.
    */
-  protected function extractTemplate($template) {
+  protected function extractFromTemplate($template) {
     /** @var \Drupal\potion\Twig\NodeVisitor\TranslationNodeVisitor $visitor */
-    $visitor = $this->twig->getExtension('\Drupal\potion\Twig\Extension\TwigTranslationExtractorExtension')->getTranslationNodeVisitor();
+    $visitor = $this->twig->getExtension('\Drupal\potion\Twig\Extension\TransExtractorExtension')
+      ->getTranslationNodeVisitor();
     $visitor->enable();
 
     $this->twig->parse($this->twig->tokenize(new Twig_Source($template, '')));
@@ -112,47 +76,23 @@ class TwigExtractor implements TranslationExtractorInterface {
   }
 
   /**
-   * @param string $file
+   * Lookup for twig files in the directory.
    *
-   * @return \SplFileInfo
+   * @param string $directory
+   *   Directory to dig in.
+   * @param bool $recursive
+   *   Enable or disable scan with recusrsion.
+   *
+   * @return \Iterator|SplFileInfo[]
+   *   An iterator.
    */
-  private function toSplFileInfo($file) {
-    return ($file instanceof \SplFileInfo) ? $file : new \SplFileInfo($file);
-  }
-
-  /**
-   * @param string $file
-   *
-   * @return bool
-   *
-   * @throws \InvalidArgumentException
-   */
-  private function isFile($file) {
-    if (!is_file($file)) {
-      throw new \InvalidArgumentException(sprintf('The "%s" file does not exist.', $file));
-    }
-
-    return TRUE;
-  }
-
-  /**
-   * @param string $file
-   *
-   * @return bool
-   */
-  private function canBeExtracted($file) {
-    return $this->isFile($file) && 'twig' === pathinfo($file, PATHINFO_EXTENSION);
-  }
-
-  /**
-   * @param string|array $directory
-   *
-   * @return mixed
-   */
-  private function extractFromDirectory($directory) {
+  private function getFilesFromDirectory($directory, $recursive = FALSE) {
     $finder = new Finder();
-
-    return $finder->files()->name('*.twig')->in($directory);
+    $finder->files()->name('*.twig');
+    if (!$recursive) {
+      $finder->depth('== 0');
+    }
+    return $finder->in($directory);
   }
 
 }

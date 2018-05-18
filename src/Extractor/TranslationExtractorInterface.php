@@ -11,11 +11,13 @@ interface TranslationExtractorInterface {
    * Extract translations string.
    *
    * @param string $path
-   *   base path directory to lookup for Twig files.
+   *   Base path directory to lookup for files.
+   * @param bool $recursive
+   *   Does the extractor should recursively lookup for files.
    *
-   * @return array
-   *   of translations keys
+   * @return string[]
+   *   Collection of translations keys
    */
-  public function extract($path);
+  public function extract($path, $recursive = FALSE);
 
 }

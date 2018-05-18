@@ -1,10 +1,38 @@
 services:
-  potion.twig_extractor:
+
+  potion.gettext_wrapper:
+    class: \Drupal\potion\GettextWrapper
+    arguments:
+      - '@config.factory'
+
+  potion.utility:
+    class: Drupal\potion\Utility
+    arguments:
+      - '@language_manager'
+      - '@potion.gettext_wrapper'
+      - '@file_system'
+
+  potion.translations.import:
+    class: \Drupal\potion\TranslationsImport
+    arguments:
+      - '@potion.utility'
+      - '@module_handler'
+
+  potion.translations.export:
+    class: \Drupal\potion\TranslationsExport
+    arguments:
+      - '@potion.utility'
+      - '@config.factory'
+      - '@file_system'
+
+  # Extractors
+  potion.extractor.twig:
     class: Drupal\potion\Extractor\TwigExtractor
     arguments:
       - '@twig'
 
-  potion.twig_translation_node_visitor:
-    class: Drupal\potion\Twig\Extension\TwigTranslationExtractorExtension
+  # Twig Extensions
+  potion.twig.extractor_extension:
+    class: Drupal\potion\Twig\Extension\TransExtractorExtension
     tags:
       - { name: twig.extension }

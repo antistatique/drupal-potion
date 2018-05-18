@@ -1,14 +1,20 @@
 {
   "name": "drupal/potion",
-  "description": "Provides a normalized way to exports, merge & create .po files from versatile sources such as Twig, PHP or YML files.",
+  "description": "Provides a normalized way to collect internationalization strings to export, merge & create .po files from versatile sources such as Twig, PHP or YML files.",
   "type": "drupal-module",
   "homepage": "https://www.drupal.org/project/potion",
   "authors": [
     {
       "name": "Antistatique",
-      "email": "info@antistaique.net",
+      "email": "info@antistatique.net",
       "homepage": "https://www.antistatique.net",
       "role": "Sponsor"
+    },
+    {
+      "name": "Toni Fisler",
+      "email": "mail@toni.io",
+      "homepage": "https://www.drupal.org/u/tonifisler",
+      "role": "Author & Maintainer"
     },
     {
       "name": "Gilles Doge",
@@ -26,11 +32,15 @@
   "support": {
     "issues": "https://www.drupal.org/project/issues/potion"
   },
-  "license": "GPL-2.0+",
+  "license": "GPL-2.0-or-later",
   "require-dev": {
     "squizlabs/php_codesniffer": "^2.7",
     "drupal/coder": "^8.2.10",
     "phpmd/phpmd": "^2.6",
     "sebastian/phpcpd": "^3.0"
+  },
+  "require": {
+    "symfony/process": "^3.4",
+    "symfony/finder": "^3.4"
   }
 }

@@ -1,0 +1,12 @@
+potion:
+  title: 'Potion'
+  route_name: potion.settings.gettext
+  description: 'Configure the Potion module.'
+  parent: system.admin_config_regional
+
+potion.settings.gettext:
+  title: 'Gettext'
+  route_name: potion.settings.gettext
+  description: 'Configure how Potion will interact with <code>gettext</code>.'
+  parent: potion
+  weight: 10

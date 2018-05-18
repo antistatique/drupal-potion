@@ -1,0 +1,46 @@
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Potion\n"
+"Project-Id-Version: Potion\n"
+"Language: de-ch\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Monday"
+msgstr "Montag"
+
+msgid "Tuesday"
+msgstr "Dienstag"
+
+msgid "Wednesday"
+msgstr "Mittwoch"
+
+msgid "Thursday"
+msgstr "Donnerstag"
+
+msgid "Friday"
+msgstr "Freitag"
+
+msgid "Saturday"
+msgstr "Samstag"
+
+msgid "Sunday"
+msgstr "Sonntag"
+
+msgctxt "Long month name"
+msgid "March"
+msgstr "Mars"
+
+msgctxt "Abbreviated month name"
+msgid "Jul"
+msgstr "Juil."
+
+msgid "@count doctor"
+msgid_plural "@count doctors"
+msgstr[0] "@count médecin"
+msgstr[1] "@count médecins"
+
+msgid "I love @color car"
+msgstr "J'adore les voitures @color"

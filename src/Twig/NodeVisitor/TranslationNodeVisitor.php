@@ -6,7 +6,7 @@ use Drupal\Core\Template\TwigNodeTrans;
 use Twig\NodeVisitor\AbstractNodeVisitor;
 
 /**
- * TranslationNodeVisitor extracts translation messages.
+ * Extracts translation messages from twig.
  *
  * Inspired from Symfony TwigBridge
  * https://github.com/symfony/twig-bridge/blob/2.8/NodeVisitor/TranslationNodeVisitor.php.
@@ -76,7 +76,8 @@ class TranslationNodeVisitor extends AbstractNodeVisitor {
         $message = $node->getNode('body')->getAttribute('data');
       }
       else {
-        // Complex code block like `{% trans %} my.string {{ node.value }} {% endtrans %}`
+        // Complex code block like
+        // `{% trans %} my.string {{ node.value }} {% endtrans %}`
         // code copied from Drupal\Core\Template\TwigNodeTrans::compileString.
         foreach ($body as $node) {
           if (get_class($node) === 'Twig_Node' && $node->getNode(0) instanceof \Twig_Node_SetTemp) {
@@ -98,8 +99,8 @@ class TranslationNodeVisitor extends AbstractNodeVisitor {
 
             // Detect if a token implements one of the filters reserved for
             // modifying the prefix of a token. The default prefix used for
-            // translations is "@". This escapes the printed token and makes them
-            // safe for templates.
+            // translations is "@". This escapes the printed token and makes
+            // them // safe for templates.
             // @see TwigExtension::getFilters()
             $argPrefix = '@';
             while ($args instanceof \Twig_Node_Expression_Filter) {
@@ -114,7 +115,7 @@ class TranslationNodeVisitor extends AbstractNodeVisitor {
             }
             if ($args instanceof \Twig_Node_Expression_GetAttr) {
               $argName = [];
-              // Assemble a valid argument name by walking through the expression.
+              // Assemble a valid argument name by walking through expression.
               $argName[] = $args->getNode('attribute')
                 ->getAttribute('value');
               while ($args->hasNode('node')) {
