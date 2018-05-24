@@ -6,7 +6,7 @@ use Drush\Commands\DrushCommands;
 use Drupal\potion\Utility;
 use Drupal\potion\TranslationsImport;
 use Drupal\potion\TranslationsExport;
-use Drupal\potion\Extractor\TwigExtractor;
+use Drupal\potion\TranslationsExtractor;
 use Drupal\potion\Exception\ConsoleException;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Consolidation\OutputFormatters\StructuredData\RowsOfFields;
@@ -30,21 +30,21 @@ class PotionCommands extends DrushCommands {
    *
    * @var \Drupal\potion\TranslationsImport
    */
-  protected $translationsImport;
+  protected $transImport;
 
   /**
    * The Translation exporter.
    *
    * @var \Drupal\potion\TranslationsExport
    */
-  protected $translationsExport;
+  protected $transExport;
 
   /**
-   * The Translation Twig extractor.
+   * The Translation extractor service.
    *
-   * @var \Drupal\potion\Extractor\TwigExtractor
+   * @var \Drupal\potion\TranslationsExtractor
    */
-  protected $twigExtractor;
+  protected $transExtractor;
 
   /**
    * Class constructor.
@@ -55,14 +55,14 @@ class PotionCommands extends DrushCommands {
    *   The Translation importer service.
    * @param \Drupal\potion\TranslationsExport $translations_export
    *   The Translation exporter service.
-   * @param \Drupal\potion\Extractor\TwigExtractor $twig_extractor
-   *   The Translation Twig extractor.
+   * @param \Drupal\potion\TranslationsExtractor $translations_extractor
+   *   The Translation extractor service.
    */
-  public function __construct(Utility $utility, TranslationsImport $translations_import, TranslationsExport $translations_export, TwigExtractor $twig_extractor) {
-    $this->utility = $utility;
-    $this->translationsImport = $translations_import;
-    $this->translationsExport = $translations_export;
-    $this->twigExtractor = $twig_extractor;
+  public function __construct(Utility $utility, TranslationsImport $translations_import, TranslationsExport $translations_export, TranslationsExtractor $translations_extractor) {
+    $this->utility        = $utility;
+    $this->transImport    = $translations_import;
+    $this->transExport    = $translations_export;
+    $this->transExtractor = $translations_extractor;
   }
 
   /**
@@ -131,7 +131,7 @@ class PotionCommands extends DrushCommands {
     $options['customized'] = $options['mode'] == 'customized' ? LOCALE_CUSTOMIZED : LOCALE_NOT_CUSTOMIZED;
     unset($options['mode']);
 
-    $report = $this->translationsImport->importFromFile($langcode, $source, $options);
+    $report = $this->transImport->importFromFile($langcode, $source, $options);
 
     $rows = [];
     $rows[] = [
@@ -218,7 +218,7 @@ class PotionCommands extends DrushCommands {
       throw new UserAbortException();
     }
 
-    $report = $this->translationsExport->exportFromDatabase($langcode, $destination, $options);
+    $report = $this->transExport->exportFromDatabase($langcode, $destination, $options);
     $rows = [];
     $rows[] = [
       'total'        => count($report['strings']),
@@ -324,11 +324,24 @@ class PotionCommands extends DrushCommands {
       throw ConsoleException::isNotWritable($destination);
     }
 
-    $translations = $this->twigExtractor->extract($source, $options['recursive']);
-
-    $this->output()->writeln($translations);
-
+    // @TODO - Ask questions to merge files togethers in the destination.
+    // If file already exists in dest, ask questions before merging.
+    // $msg = $this->t('You are about to overwrite the @file. Do you want to continue?', ['@file' => $fullpath]);
+    // if (is_file($fullpath) && !$this->io()->confirm($msg)) {
+    //   throw new UserAbortException();
+    // }
+    $report = $this->transExtractor->extract($langcode, $source, $destination, $options['recursive'], [
+      'exclude-yaml' => $options['exclude-yaml'],
+      'exclude-twig' => $options['exclude-twig'],
+      'exclude-php'  => $options['exclude-php'],
+    ]);
     $rows = [];
+    $rows[] = [
+      'total' => count($report['strings']),
+      'twig'  => $report['twig'],
+      'php'   => $report['php'],
+      'yml'   => $report['yml'],
+    ];
     return new RowsOfFields($rows);
   }
 

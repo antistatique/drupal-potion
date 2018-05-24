@@ -3,9 +3,9 @@
 namespace Drupal\potion\Extractor;
 
 /**
- * Interface TranslationExtractorInterface.
+ * Interface ExtractorInterface.
  */
-interface TranslationExtractorInterface {
+interface ExtractorInterface {
 
   /**
    * Extract translations string.

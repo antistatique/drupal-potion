@@ -70,7 +70,7 @@ class TranslationsExportTests extends TranslationsTestsBase {
    * @covers \Drupal\potion\TranslationsExport::exportFromDatabase
    */
   public function testExportDestinationNotFound() {
-    $this->setExpectedException(PotionException::class, "No such directory temporary://not-found");
+    $this->setExpectedException(PotionException::class, "No such file or directory temporary://not-found");
     $this->translationExport->exportFromDatabase('fr', 'temporary://not-found');
   }
 
@@ -83,7 +83,7 @@ class TranslationsExportTests extends TranslationsTestsBase {
     file_prepare_directory($dest, FILE_CREATE_DIRECTORY);
     @chmod($dest, 0000);
 
-    $this->setExpectedException(PotionException::class, "The destination temporary://not-writable is not writable.");
+    $this->setExpectedException(PotionException::class, "The path temporary://not-writable is not writable.");
     $this->translationExport->exportFromDatabase('fr', $dest);
   }
 

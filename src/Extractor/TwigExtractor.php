@@ -11,7 +11,7 @@ use Drupal\potion\Exception\ExtractorException;
 /**
  * Extract Translations from Twig template.
  */
-class TwigExtractor implements TranslationExtractorInterface {
+class TwigExtractor implements ExtractorInterface {
   /**
    * The twig environment.
    *
