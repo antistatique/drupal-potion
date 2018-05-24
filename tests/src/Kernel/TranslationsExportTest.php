@@ -105,7 +105,7 @@ class TranslationsExportTest extends TranslationsTestsBase {
 
     $dest = $this->fileSystem->realpath('temporary://');
     $file = $dest . DIRECTORY_SEPARATOR . 'fr.po';
-    unlink($file);
+    @unlink($file);
     $this->assertFalse(file_exists($file));
     $this->translationExport->exportFromDatabase('fr', $dest);
     $this->assertTrue(file_exists($file));
@@ -118,7 +118,7 @@ class TranslationsExportTest extends TranslationsTestsBase {
     $this->setUpTranslations();
     $this->setUpNonTranslations();
 
-    unlink('temporary://fr.po');
+    @unlink('temporary://fr.po');
     $this->assertFalse(file_exists('temporary://fr.po'));
     $this->translationExport->exportFromDatabase('fr', 'temporary://');
     $this->assertTrue(file_exists('temporary://fr.po'));
