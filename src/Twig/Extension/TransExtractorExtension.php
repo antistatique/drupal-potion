@@ -18,13 +18,13 @@ class TransExtractorExtension extends \Twig_Extension {
    *
    * @var \Drupal\potion\Twig\NodeVisitor\TranslationNodeVisitor
    */
-  protected $translationNodeVisitor;
+  protected $transNodeVisitor;
 
   /**
    * {@inheritdoc}
    */
   public function __construct() {
-    $this->translationNodeVisitor = new TranslationNodeVisitor();
+    $this->transNodeVisitor = new TranslationNodeVisitor();
   }
 
   /**
@@ -47,7 +47,7 @@ class TransExtractorExtension extends \Twig_Extension {
    *   A collection of NodeVisitor.
    */
   public function getNodeVisitors() {
-    return [$this->translationNodeVisitor];
+    return [$this->transNodeVisitor];
   }
 
   /**
@@ -57,7 +57,7 @@ class TransExtractorExtension extends \Twig_Extension {
    *   The NodeVisitor to extracts translation messages from twig.
    */
   public function getTranslationNodeVisitor() {
-    return $this->translationNodeVisitor;
+    return $this->transNodeVisitor;
   }
 
 }

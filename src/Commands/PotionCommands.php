@@ -324,7 +324,7 @@ class PotionCommands extends DrushCommands {
       throw ConsoleException::isNotWritable($destination);
     }
 
-    $translations = $this->twigExtractor->extract($source);
+    $translations = $this->twigExtractor->extract($source, $options['recursive']);
 
     $this->output()->writeln($translations);
 
