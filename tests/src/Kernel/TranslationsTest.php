@@ -9,7 +9,7 @@ namespace Drupal\Tests\potion\Kernel;
  * @group potion_kernel
  * @group potion_kernel_translations
  */
-class TranslationsTests extends TranslationsTestsBase {
+class TranslationsTest extends TranslationsTestsBase {
 
   /**
    * The Translation importer.
