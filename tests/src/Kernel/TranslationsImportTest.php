@@ -6,11 +6,12 @@ use Drupal\potion\Exception\PotionException;
 
 /**
  * @coversDefaultClass \Drupal\potion\TranslationsImport
+ *
  * @group potion
  * @group potion_kernel
  * @group potion_kernel_translations_import
  */
-class TranslationsImportTests extends TranslationsTestsBase {
+class TranslationsImportTest extends TranslationsTestsBase {
 
   /**
    * The Translation importer.

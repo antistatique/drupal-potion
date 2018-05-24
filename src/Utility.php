@@ -47,7 +47,7 @@ class Utility {
   }
 
   /**
-   * From a given langcode, retreive the langname.
+   * From a given langcode, retrieve the langname.
    *
    * @param string $langcode
    *   The langcode.

@@ -1,0 +1,7 @@
+{# Test trans filter in a sub file. #}
+<div>
+  {{ 'Hello Mars.'|trans }}
+</div>
+
+{# Test a duplicate trans filter, original is on test1.html.twig. #}
+<p>{{ 'foo.trans'|trans }}</p>

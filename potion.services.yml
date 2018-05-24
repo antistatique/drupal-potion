@@ -1,4 +1,5 @@
 services:
+
   potion.gettext_wrapper:
     class: \Drupal\potion\GettextWrapper
     arguments:
@@ -23,3 +24,23 @@ services:
       - '@potion.utility'
       - '@config.factory'
       - '@file_system'
+
+  potion.translations.extractor:
+    class: \Drupal\potion\TranslationsExtractor
+    arguments:
+      - '@potion.utility'
+      - '@config.factory'
+      - '@file_system'
+      - '@potion.extractor.twig'
+
+  # Extractors
+  potion.extractor.twig:
+    class: Drupal\potion\Extractor\TwigExtractor
+    arguments:
+      - '@twig'
+
+  # Twig Extensions
+  potion.twig.extractor_extension:
+    class: Drupal\potion\Twig\Extension\TransExtractorExtension
+    tags:
+      - { name: twig.extension }

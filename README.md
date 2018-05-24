@@ -50,7 +50,7 @@ drush potion-export [--non-customized] [--customized] [--untranslated] [--progre
 ### Generate, scrape & parse your code to generate po file
 
 ```bash
-drush potion-generate [--exclude-yaml] [--exclude-twig] [--exclude-php] [--progress] [--verbose] [--quiet] langcode source dest
+drush potion-generate [--exclude-yaml] [--exclude-twig] [--exclude-php] [--recursive] [-q|--quiet] [-h|--help] langcode source dest
 ```
 
 ### Re-fill an existing po file with translations from Drupal database
@@ -69,12 +69,13 @@ and it is always recommended keeping Drupal core installations up to date.
 
 ## Dependencies
 
-This module relies on the [GNU gettext toolset](https://www.gnu.org/software/gettext/) & the [Symfony Process Component](https://symfony.com/doc/current/components/process.html).
+This module relies on the [GNU gettext toolset](https://www.gnu.org/software/gettext/), the [Symfony Process Component](https://symfony.com/doc/current/components/process.html) & the [Symfony Finder Component](https://symfony.com/doc/current/components/finder.html).
 
 * `Symfony Process Component` is an external PHP library to execute binaries ;
+* `Symfony Finder Component` is an external PHP library to execute binaries ;
 * `Gettext` utilities are a set of tools that provides a framework to help other packages produce multi-lingual messages. The minimum version of the `gettext` utilities supported is `0.19.8.1`.
 
-We assume, that you have installed `symfony/process` & `gettex`. We also assume `gettext` utilities are accessible throught your `$PATH`.
+We assume, that you have installed `symfony/process`, `symfony/finder` & `gettex`. We also assume `gettext` utilities are accessible throught your `$PATH`.
 Otherwise, please see [How to install & setup Gettext](https://www.drupal.org/docs/8/modules/potion/how-to-install-setup-gettext) for more information,
 
 ## Supporting organizations
