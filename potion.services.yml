@@ -32,12 +32,18 @@ services:
       - '@config.factory'
       - '@file_system'
       - '@potion.extractor.twig'
+      - '@potion.extractor.php'
 
   # Extractors
   potion.extractor.twig:
     class: Drupal\potion\Extractor\TwigExtractor
     arguments:
       - '@twig'
+
+  potion.extractor.php:
+    class: Drupal\potion\Extractor\PhpExtractor
+    arguments:
+      - '@potion.utility'
 
   # Twig Extensions
   potion.twig.extractor_extension:
