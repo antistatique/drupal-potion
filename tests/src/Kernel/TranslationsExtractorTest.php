@@ -58,7 +58,7 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
     $this->fileSystem = $this->container->get('file_system');
 
     /** @var string $extractionPath */
-    $this->extractionPath = drupal_get_path('module', 'potion_test') . DIRECTORY_SEPARATOR . 'templates';
+    $this->extractionPath = drupal_get_path('module', 'potion_test');
   }
 
   /**
@@ -185,7 +185,11 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
     $this->setUpTranslations();
     $this->setUpNonTranslations();
 
-    $this->translationExtractor->extract('fr', $this->extractionPath, 'temporary://', FALSE);
+    $this->translationExtractor->extract('fr', $this->extractionPath . DIRECTORY_SEPARATOR . 'templates', 'temporary://', FALSE, FALSE, [
+      'exclude-yaml' => TRUE,
+      'exclude-twig' => FALSE,
+      'exclude-php'  => TRUE,
+    ]);
 
     $report = $this->translationExtractor->getReport();
     $this->assertEquals(24, $report['twig']);
