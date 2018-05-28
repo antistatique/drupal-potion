@@ -165,7 +165,11 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
     $this->setUpTranslations();
     $this->setUpNonTranslations();
 
-    $this->translationExtractor->extract('fr', $this->extractionPath, 'temporary://', TRUE);
+    $this->translationExtractor->extract('fr', $this->extractionPath, 'temporary://', TRUE, FALSE, [
+      'exclude-yaml' => TRUE,
+      'exclude-twig' => FALSE,
+      'exclude-php'  => TRUE,
+    ]);
 
     $report = $this->translationExtractor->getReport();
     $this->assertEquals(25, $report['twig']);

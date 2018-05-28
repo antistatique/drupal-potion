@@ -4,7 +4,6 @@ namespace Drupal\potion\Twig\NodeVisitor;
 
 use Drupal\Core\Template\TwigNodeTrans;
 use Twig\NodeVisitor\AbstractNodeVisitor;
-use Drupal\Component\Gettext\PoItem;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 
 /**
@@ -16,8 +15,33 @@ use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
  * @see \Drupal\Core\Template\TwigNodeTrans
  */
 class TranslationNodeVisitor extends AbstractNodeVisitor {
+  /**
+   * Define the visitor state - enabled or disabled.
+   *
+   * @var boolean
+   */
   private $enabled = FALSE;
+
+  /**
+   * list of translation messages key extracted from Twig.
+   *
+   * @var \Drupal\Component\Gettext\PoItem[]
+   */
   private $messages = [];
+
+  /**
+   * The Utility service of Potion.
+   *
+   * @var \Drupal\potion\Utility
+   */
+  protected $utility;
+
+  /**
+   * Constructor.
+   */
+  public function __construct() {
+    $this->utility = \Drupal::service('potion.utility');
+  }
 
   /**
    * Enable the visitor.
@@ -39,7 +63,7 @@ class TranslationNodeVisitor extends AbstractNodeVisitor {
    * Return the list of translation messages key extracted from Twig.
    *
    * @return \Drupal\Component\Gettext\PoItem[]
-   *   collection of PoItem translations keys.
+   *   Collection of PoItem translations keys.
    */
   public function getMessages() {
     return $this->messages;
@@ -59,7 +83,9 @@ class TranslationNodeVisitor extends AbstractNodeVisitor {
       in_array($node->getNode('filter')->getAttribute('value'), ['trans', 't']) &&
       $node->getNode('node') instanceof \Twig_Node_Expression_Constant
     ) {
-      $this->setItem($node->getNode('node')->getAttribute('value'));
+      // Save the extracted translations in the messages collection.
+      $this->messages = array_merge($this->messages, $this->utility->setItem($node->getNode('node')->getAttribute('value')));
+
       return $node;
     }
 
@@ -79,14 +105,16 @@ class TranslationNodeVisitor extends AbstractNodeVisitor {
     // If we are on a simple `% trans '' %` whitout token or plural form.
     // Eg. `{% trans 'Hello sun' %}`.
     if ($node->getNode('body')->hasAttribute('value') && is_null($node->getNode('plural'))) {
-      $this->setItem($node->getNode('body')->getAttribute('value'), $context);
+      // Save the extracted translations in the messages collection.
+      $this->messages = array_merge($this->messages, $this->utility->setItem($node->getNode('body')->getAttribute('value'), $context));
       return $node;
     }
 
     // If we are on a simple `% trans %` whitout token or plural form.
     // Eg. `{% trans %}Hello moon.{% endtrans %}`.
     if ($node->getNode('body')->hasAttribute('data') && is_null($node->getNode('plural'))) {
-      $this->setItem($node->getNode('body')->getAttribute('data'), $context);
+      // Save the extracted translations in the messages collection.
+      $this->messages = array_merge($this->messages, $this->utility->setItem($node->getNode('body')->getAttribute('data'), $context));
       return $node;
     }
 
@@ -99,7 +127,8 @@ class TranslationNodeVisitor extends AbstractNodeVisitor {
       }
 
       $message .= $this->compileString($node->getNode('body'));
-      $this->setItem($message, $context);
+      // Save the extracted translations in the messages collection.
+      $this->messages = array_merge($this->messages, $this->utility->setItem($message, $context));
       return $node;
     }
 
@@ -115,7 +144,9 @@ class TranslationNodeVisitor extends AbstractNodeVisitor {
       }
       $singular .= $this->compileString($node->getNode('body'));
       $plural = $this->compileString($node->getNode('plural'));
-      $this->setItem([0 => trim($singular), 1 => trim($plural)], $context);
+      // Save the extracted translations in the messages collection.
+      $this->messages = array_merge($this->messages, $this->utility->setItem([0 => trim($singular), 1 => trim($plural)], $context));
+
       return $node;
     }
 
