@@ -19,4 +19,5 @@ interface ExtractorInterface {
    *   Collection of translations keys.
    */
   public function extract($path, $recursive = FALSE);
+
 }

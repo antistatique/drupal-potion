@@ -18,12 +18,12 @@ class TranslationNodeVisitor extends AbstractNodeVisitor {
   /**
    * Define the visitor state - enabled or disabled.
    *
-   * @var boolean
+   * @var bool
    */
   private $enabled = FALSE;
 
   /**
-   * list of translation messages key extracted from Twig.
+   * List of translation messages key extracted from Twig.
    *
    * @var \Drupal\Component\Gettext\PoItem[]
    */

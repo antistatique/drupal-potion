@@ -58,7 +58,7 @@ class TwigExtractor implements ExtractorInterface {
    *   Twig content template.
    *
    * @return \Drupal\Component\Gettext\PoItem[]
-  *    List of translation messages key extracted from twig files.
+   *   List of translation messages key extracted from twig files.
    */
   protected function extractFromTemplate($template) {
     /** @var \Drupal\potion\Twig\NodeVisitor\TranslationNodeVisitor $visitor */
