@@ -111,12 +111,6 @@ class PhpExtractor implements ExtractorInterface {
          ',',
          self::METHOD_OPTIONS_TOKEN,
        ],
-      [
-        '->',
-        'trans',
-        '(',
-        self::MESSAGE_TOKEN,
-      ],
   ];
 
   /**
