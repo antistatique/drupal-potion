@@ -198,4 +198,64 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
     $this->assertCount(24, $report['strings']);
   }
 
+  /**
+   * @covers \Drupal\potion\TranslationsExtractor::extract
+   */
+  public function testTranslationsExportPhpOnly() {
+    $this->setUpTranslations();
+    $this->setUpNonTranslations();
+
+    $this->translationExtractor->extract('fr', $this->extractionPath, 'temporary://', TRUE, FALSE, [
+      'exclude-yaml' => TRUE,
+      'exclude-twig' => TRUE,
+      'exclude-php'  => FALSE,
+    ]);
+
+    $report = $this->translationExtractor->getReport();
+    $this->assertEquals(0, $report['twig']);
+    $this->assertEquals(25, $report['php']);
+    $this->assertEquals(0, $report['yml']);
+    $this->assertCount(25, $report['strings']);
+  }
+
+  /**
+   * @covers \Drupal\potion\TranslationsExtractor::extract
+   */
+  public function testTranslationsExportTwigPhpNotRecusrive() {
+    $this->setUpTranslations();
+    $this->setUpNonTranslations();
+
+    $this->translationExtractor->extract('fr', $this->extractionPath, 'temporary://', FALSE, FALSE, [
+      'exclude-yaml' => TRUE,
+      'exclude-twig' => TRUE,
+      'exclude-php'  => FALSE,
+    ]);
+
+    $report = $this->translationExtractor->getReport();
+    $this->assertEquals(0, $report['twig']);
+    $this->assertEquals(2, $report['php']);
+    $this->assertEquals(0, $report['yml']);
+    $this->assertCount(2, $report['strings']);
+  }
+
+  /**
+   * @covers \Drupal\potion\TranslationsExtractor::extract
+   */
+  public function testTranslationsExportPhpTwigOnly() {
+    $this->setUpTranslations();
+    $this->setUpNonTranslations();
+
+    $this->translationExtractor->extract('fr', $this->extractionPath, 'temporary://', TRUE, FALSE, [
+      'exclude-yaml' => TRUE,
+      'exclude-twig' => FALSE,
+      'exclude-php'  => FALSE,
+    ]);
+
+    $report = $this->translationExtractor->getReport();
+    $this->assertEquals(25, $report['twig']);
+    $this->assertEquals(25, $report['php']);
+    $this->assertEquals(0, $report['yml']);
+    $this->assertCount(50, $report['strings']);
+  }
+
 }
