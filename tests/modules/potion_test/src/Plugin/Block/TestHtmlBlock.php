@@ -10,6 +10,10 @@ use Drupal\Core\Block\BlockBase;
  * @Block(
  *   id = "test_html",
  *   admin_label = @Translation("php.annotation")
+ *   label_count = @PluralTranslation(
+ *     singular = "@count html block",
+ *     plural = "@count html blocks",
+ *   ),
  * )
  *
  * @see Drupal\block_test\Plugin\Block\TestHtmlBlock

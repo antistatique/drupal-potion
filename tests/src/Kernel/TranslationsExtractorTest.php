@@ -213,9 +213,9 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
 
     $report = $this->translationExtractor->getReport();
     $this->assertEquals(0, $report['twig']);
-    $this->assertEquals(25, $report['php']);
+    $this->assertEquals(32, $report['php']);
     $this->assertEquals(0, $report['yml']);
-    $this->assertCount(25, $report['strings']);
+    $this->assertCount(32, $report['strings']);
   }
 
   /**
@@ -253,9 +253,9 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
 
     $report = $this->translationExtractor->getReport();
     $this->assertEquals(25, $report['twig']);
-    $this->assertEquals(25, $report['php']);
+    $this->assertEquals(32, $report['php']);
     $this->assertEquals(0, $report['yml']);
-    $this->assertCount(50, $report['strings']);
+    $this->assertCount(57, $report['strings']);
   }
 
 }
