@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Provide test potion.
+ */
+
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+
+/**
+ * Implements hook_block_alter().
+ */
+function potion_test_block_alter(&$block_info) {
+  new TranslatableMarkup('php.foo.module', [], []);
+}
+
+require_once 'inc/hooks.inc';

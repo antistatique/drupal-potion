@@ -5,6 +5,8 @@ namespace Drupal\potion;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\potion\Extractor\TwigExtractor;
+use Drupal\potion\Extractor\PhpExtractor;
+use Drupal\potion\Extractor\AnnotationExtractor;
 use Drupal\locale\PoDatabaseReader;
 use Drupal\potion\Exception\PotionException;
 use Drupal\Component\Gettext\PoStreamWriter;
@@ -36,11 +38,25 @@ class TranslationsExtractor {
   protected $fileSystem;
 
   /**
-   * Extract Translations from Twig template.
+   * Extract Translations from Twig templates.
    *
    * @var \Drupal\potion\Extractor\TwigExtractor
    */
   protected $twigExtractor;
+
+  /**
+   * Extract Translations from PHP files.
+   *
+   * @var \Drupal\potion\Extractor\PhpExtractor
+   */
+  protected $phpExtractor;
+
+  /**
+   * Extract Translations Annotation from PHP Class files.
+   *
+   * @var \Drupal\potion\Extractor\AnnotationExtractor
+   */
+  protected $annotationExtractor;
 
   /**
    * Class constructor.
@@ -52,13 +68,21 @@ class TranslationsExtractor {
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The file system service.
    * @param \Drupal\potion\Extractor\TwigExtractor $twig_extractor
-   *   The file system service.
+   *   Extract Translations from Twig templates.
+   * @param \Drupal\potion\Extractor\PhpExtractor $php_extractor
+   *   Extract Translations from PHP files.
+   * @param \Drupal\potion\Extractor\AnnotationExtractor $annotation_extractor
+   *   Extract Translations Annotation from PHP Class files.
    */
-  public function __construct(Utility $utility, ConfigFactoryInterface $config_factory, FileSystemInterface $file_system, TwigExtractor $twig_extractor) {
-    $this->utility       = $utility;
-    $this->siteConfig    = $config_factory->get('system.site');
-    $this->fileSystem    = $file_system;
-    $this->twigExtractor = $twig_extractor;
+  public function __construct(Utility $utility, ConfigFactoryInterface $config_factory, FileSystemInterface $file_system, TwigExtractor $twig_extractor, PhpExtractor $php_extractor, AnnotationExtractor $annotation_extractor) {
+    $this->utility    = $utility;
+    $this->siteConfig = $config_factory->get('system.site');
+    $this->fileSystem = $file_system;
+
+    // Extractors.
+    $this->twigExtractor       = $twig_extractor;
+    $this->phpExtractor        = $php_extractor;
+    $this->annotationExtractor = $annotation_extractor;
 
     $this->setReport();
   }
@@ -165,8 +189,21 @@ class TranslationsExtractor {
       $this->report['twig'] = count($twig_translations);
     }
 
+    $php_translations = [];
+    $annotation_translations = [];
+    if (!$exclusion['exclude-php']) {
+      $php_translations = $this->phpExtractor->extract($source, $recursive);
+      $annotation_translations = $this->annotationExtractor->extract($source, $recursive);
+      $this->report['php'] = count($php_translations) + count($annotation_translations);
+    }
+
+    $yaml_translations = [];
+    if (!$exclusion['exclude-yaml']) {
+      $this->report['yml'] = count($yaml_translations);
+    }
+
     // Concat every extractors into a single array for write processing.
-    $items = $twig_translations;
+    $items = array_merge($twig_translations, $php_translations, $annotation_translations, $yaml_translations);
 
     $uri = $this->fileSystem->tempnam('temporary://', 'po_');
 

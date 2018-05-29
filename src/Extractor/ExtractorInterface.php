@@ -15,8 +15,8 @@ interface ExtractorInterface {
    * @param bool $recursive
    *   Does the extractor should recursively lookup for files.
    *
-   * @return string[]
-   *   Collection of translations keys
+   * @return \Drupal\Component\Gettext\PoItem[]
+   *   Collection of translations keys.
    */
   public function extract($path, $recursive = FALSE);
 
