@@ -71,12 +71,12 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
     $this->assertArraySubset(array_keys($report), [
       'twig',
       'php',
-      'yml',
+      'yaml',
       'strings',
     ]);
     $this->assertInternalType('integer', $report['twig']);
     $this->assertInternalType('integer', $report['php']);
-    $this->assertInternalType('integer', $report['yml']);
+    $this->assertInternalType('integer', $report['yaml']);
     $this->assertInternalType('array', $report['strings']);
   }
 
@@ -161,6 +161,66 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
   /**
    * @covers \Drupal\potion\TranslationsExtractor::extract
    */
+  public function testTranslationsExportAll() {
+    $this->setUpTranslations();
+    $this->setUpNonTranslations();
+
+    $this->translationExtractor->extract('fr', $this->extractionPath, 'temporary://', TRUE, FALSE, [
+      'exclude-yaml' => FALSE,
+      'exclude-twig' => FALSE,
+      'exclude-php'  => FALSE,
+    ]);
+
+    $report = $this->translationExtractor->getReport();
+    $this->assertEquals(25, $report['twig']);
+    $this->assertEquals(32, $report['php']);
+    $this->assertEquals(7, $report['yaml']);
+    $this->assertCount(64, $report['strings']);
+  }
+
+  /**
+   * @covers \Drupal\potion\TranslationsExtractor::extract
+   */
+  public function testTranslationsExportRecursivity() {
+    $this->setUpTranslations();
+    $this->setUpNonTranslations();
+
+    $this->translationExtractor->extract('fr', $this->extractionPath, 'temporary://', FALSE, FALSE, [
+      'exclude-yaml' => FALSE,
+      'exclude-twig' => FALSE,
+      'exclude-php'  => FALSE,
+    ]);
+
+    $report = $this->translationExtractor->getReport();
+    $this->assertEquals(0, $report['twig']);
+    $this->assertEquals(2, $report['php']);
+    $this->assertEquals(7, $report['yaml']);
+    $this->assertCount(9, $report['strings']);
+  }
+
+  /**
+   * @covers \Drupal\potion\TranslationsExtractor::extract
+   */
+  public function testTranslationsExportNone() {
+    $this->setUpTranslations();
+    $this->setUpNonTranslations();
+
+    $this->translationExtractor->extract('fr', $this->extractionPath, 'temporary://', TRUE, FALSE, [
+      'exclude-yaml' => TRUE,
+      'exclude-twig' => TRUE,
+      'exclude-php'  => TRUE,
+    ]);
+
+    $report = $this->translationExtractor->getReport();
+    $this->assertEquals(0, $report['twig']);
+    $this->assertEquals(0, $report['php']);
+    $this->assertEquals(0, $report['yaml']);
+    $this->assertCount(0, $report['strings']);
+  }
+
+  /**
+   * @covers \Drupal\potion\TranslationsExtractor::extract
+   */
   public function testTranslationsExportTwigOnly() {
     $this->setUpTranslations();
     $this->setUpNonTranslations();
@@ -174,28 +234,8 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
     $report = $this->translationExtractor->getReport();
     $this->assertEquals(25, $report['twig']);
     $this->assertEquals(0, $report['php']);
-    $this->assertEquals(0, $report['yml']);
+    $this->assertEquals(0, $report['yaml']);
     $this->assertCount(25, $report['strings']);
-  }
-
-  /**
-   * @covers \Drupal\potion\TranslationsExtractor::extract
-   */
-  public function testTranslationsExportTwigOnlyNotRecusrive() {
-    $this->setUpTranslations();
-    $this->setUpNonTranslations();
-
-    $this->translationExtractor->extract('fr', $this->extractionPath . DIRECTORY_SEPARATOR . 'templates', 'temporary://', FALSE, FALSE, [
-      'exclude-yaml' => TRUE,
-      'exclude-twig' => FALSE,
-      'exclude-php'  => TRUE,
-    ]);
-
-    $report = $this->translationExtractor->getReport();
-    $this->assertEquals(24, $report['twig']);
-    $this->assertEquals(0, $report['php']);
-    $this->assertEquals(0, $report['yml']);
-    $this->assertCount(24, $report['strings']);
   }
 
   /**
@@ -214,28 +254,28 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
     $report = $this->translationExtractor->getReport();
     $this->assertEquals(0, $report['twig']);
     $this->assertEquals(32, $report['php']);
-    $this->assertEquals(0, $report['yml']);
+    $this->assertEquals(0, $report['yaml']);
     $this->assertCount(32, $report['strings']);
   }
 
   /**
    * @covers \Drupal\potion\TranslationsExtractor::extract
    */
-  public function testTranslationsExportTwigPhpNotRecusrive() {
+  public function testTranslationsExportYamlOnly() {
     $this->setUpTranslations();
     $this->setUpNonTranslations();
 
-    $this->translationExtractor->extract('fr', $this->extractionPath, 'temporary://', FALSE, FALSE, [
-      'exclude-yaml' => TRUE,
+    $this->translationExtractor->extract('fr', $this->extractionPath, 'temporary://', TRUE, FALSE, [
+      'exclude-yaml' => FALSE,
       'exclude-twig' => TRUE,
-      'exclude-php'  => FALSE,
+      'exclude-php'  => TRUE,
     ]);
 
     $report = $this->translationExtractor->getReport();
     $this->assertEquals(0, $report['twig']);
-    $this->assertEquals(2, $report['php']);
-    $this->assertEquals(0, $report['yml']);
-    $this->assertCount(2, $report['strings']);
+    $this->assertEquals(0, $report['php']);
+    $this->assertEquals(7, $report['yaml']);
+    $this->assertCount(7, $report['strings']);
   }
 
   /**
@@ -254,8 +294,48 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
     $report = $this->translationExtractor->getReport();
     $this->assertEquals(25, $report['twig']);
     $this->assertEquals(32, $report['php']);
-    $this->assertEquals(0, $report['yml']);
+    $this->assertEquals(0, $report['yaml']);
     $this->assertCount(57, $report['strings']);
+  }
+
+  /**
+   * @covers \Drupal\potion\TranslationsExtractor::extract
+   */
+  public function testTranslationsExportPhpYamlOnly() {
+    $this->setUpTranslations();
+    $this->setUpNonTranslations();
+
+    $this->translationExtractor->extract('fr', $this->extractionPath, 'temporary://', TRUE, FALSE, [
+      'exclude-yaml' => FALSE,
+      'exclude-twig' => TRUE,
+      'exclude-php'  => FALSE,
+    ]);
+
+    $report = $this->translationExtractor->getReport();
+    $this->assertEquals(0, $report['twig']);
+    $this->assertEquals(32, $report['php']);
+    $this->assertEquals(7, $report['yaml']);
+    $this->assertCount(39, $report['strings']);
+  }
+
+  /**
+   * @covers \Drupal\potion\TranslationsExtractor::extract
+   */
+  public function testTranslationsExportYamlTwigOnly() {
+    $this->setUpTranslations();
+    $this->setUpNonTranslations();
+
+    $this->translationExtractor->extract('fr', $this->extractionPath, 'temporary://', TRUE, FALSE, [
+      'exclude-yaml' => FALSE,
+      'exclude-twig' => FALSE,
+      'exclude-php'  => TRUE,
+    ]);
+
+    $report = $this->translationExtractor->getReport();
+    $this->assertEquals(25, $report['twig']);
+    $this->assertEquals(0, $report['php']);
+    $this->assertEquals(7, $report['yaml']);
+    $this->assertCount(32, $report['strings']);
   }
 
 }

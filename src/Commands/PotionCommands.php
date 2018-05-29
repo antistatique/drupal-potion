@@ -340,7 +340,7 @@ class PotionCommands extends DrushCommands {
       'total' => count($report['strings']),
       'twig'  => $report['twig'],
       'php'   => $report['php'],
-      'yml'   => $report['yml'],
+      'yaml'  => $report['yaml'],
     ];
     return new RowsOfFields($rows);
   }

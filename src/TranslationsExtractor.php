@@ -7,6 +7,7 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\potion\Extractor\TwigExtractor;
 use Drupal\potion\Extractor\PhpExtractor;
 use Drupal\potion\Extractor\AnnotationExtractor;
+use Drupal\potion\Extractor\YamlExtractor;
 use Drupal\locale\PoDatabaseReader;
 use Drupal\potion\Exception\PotionException;
 use Drupal\Component\Gettext\PoStreamWriter;
@@ -59,6 +60,13 @@ class TranslationsExtractor {
   protected $annotationExtractor;
 
   /**
+   * Extract Translations from YAML files.
+   *
+   * @var \Drupal\potion\Extractor\YamlExtractor
+   */
+  protected $yamlExtractor;
+
+  /**
    * Class constructor.
    *
    * @param \Drupal\potion\Utility $utility
@@ -73,8 +81,10 @@ class TranslationsExtractor {
    *   Extract Translations from PHP files.
    * @param \Drupal\potion\Extractor\AnnotationExtractor $annotation_extractor
    *   Extract Translations Annotation from PHP Class files.
+   * @param \Drupal\potion\Extractor\YamlExtractor $yaml_extractor
+   *   Extract Translations Annotation from PHP Class files.
    */
-  public function __construct(Utility $utility, ConfigFactoryInterface $config_factory, FileSystemInterface $file_system, TwigExtractor $twig_extractor, PhpExtractor $php_extractor, AnnotationExtractor $annotation_extractor) {
+  public function __construct(Utility $utility, ConfigFactoryInterface $config_factory, FileSystemInterface $file_system, TwigExtractor $twig_extractor, PhpExtractor $php_extractor, AnnotationExtractor $annotation_extractor, YamlExtractor $yaml_extractor) {
     $this->utility    = $utility;
     $this->siteConfig = $config_factory->get('system.site');
     $this->fileSystem = $file_system;
@@ -83,6 +93,7 @@ class TranslationsExtractor {
     $this->twigExtractor       = $twig_extractor;
     $this->phpExtractor        = $php_extractor;
     $this->annotationExtractor = $annotation_extractor;
+    $this->yamlExtractor       = $yaml_extractor;
 
     $this->setReport();
   }
@@ -94,7 +105,7 @@ class TranslationsExtractor {
    *  - strings: source strings extracted.
    *  - twig: number of source strings founded on twig file.
    *  - php: number of source strings founded on php files.
-   *  - yml: number of source strings founded on yml files.
+   *  - yaml: number of source strings founded on yaml files.
    *
    * @var array
    */
@@ -117,7 +128,7 @@ class TranslationsExtractor {
     $report += [
       'twig'    => 0,
       'php'     => 0,
-      'yml'     => 0,
+      'yaml'    => 0,
       'strings' => [],
     ];
     $this->report = $report;
@@ -199,7 +210,8 @@ class TranslationsExtractor {
 
     $yaml_translations = [];
     if (!$exclusion['exclude-yaml']) {
-      $this->report['yml'] = count($yaml_translations);
+      $yaml_translations = $this->yamlExtractor->extract($source, $recursive);
+      $this->report['yaml'] = count($yaml_translations);
     }
 
     // Concat every extractors into a single array for write processing.

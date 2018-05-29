@@ -34,6 +34,7 @@ services:
       - '@potion.extractor.twig'
       - '@potion.extractor.php'
       - '@potion.extractor.annotation'
+      - '@potion.extractor.yaml'
 
   # Extractors
   potion.extractor.twig:
@@ -48,6 +49,11 @@ services:
     class: Drupal\potion\Extractor\AnnotationExtractor
     arguments:
       - '@potion.utility'
+  potion.extractor.yaml:
+    class: Drupal\potion\Extractor\YamlExtractor
+    arguments:
+      - '@potion.utility'
+      - '@serialization.yaml'
 
   # Twig Extensions
   potion.twig.extractor_extension:

@@ -1,0 +1,12 @@
+potion_test.lorem:
+  route_name: potion_test.lorem
+  title: 'Lorem'
+  appears_on:
+    - potion_test.overview_page
+
+potion_test.ipsum:
+  route_name: potion_test.ipsum
+  title: 'Ipsum'
+  title_context: 'Lolspeak'
+  appears_on:
+    - potion_test.overview_page
