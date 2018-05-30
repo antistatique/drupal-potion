@@ -82,4 +82,53 @@ class GettextWrapper {
     return TRUE;
   }
 
+  /**
+   * Concatenates and merges the specified PO files.
+   *
+   * It finds messages which are common to two or more of the specified PO
+   * files.
+   * Translations, comments, extracted comments, and file positions will
+   * be cumulated.
+   *
+   * @param array $files
+   *   The files to merges.
+   * @param string $output
+   *   The destination of merging file.
+   *
+   * @return bool
+   *   TRUE if the given file is valid, FALSE otherwise.
+   *
+   * @throws \Drupal\potion\Exception\GettextException
+   */
+  public function msgcat(array $files, $output) {
+    $cmd = $this->path . 'msgcat';
+
+    // When the path is forced (a.k.a not resolved by $PATH env)
+    // asserts the command exists & is executable.
+    if (!empty($this->path) && (!is_file($cmd) || !is_executable($cmd))) {
+      throw GettextException::commandNotFound($cmd);
+    }
+
+    // Generate the commande line.
+    $processus = [$cmd];
+    foreach ($files as $file) {
+      $processus[] = $file;
+    }
+    $processus[] = '--output-file=' . $output;
+
+    try {
+      $process = new Process($processus);
+      $process->run();
+    }
+    catch (\Exception $e) {
+      throw new GettextException($e->getMessage(), $e->getCode(), $e);
+    }
+
+    if ($process->getExitCode() > 0) {
+      return FALSE;
+    }
+
+    return TRUE;
+  }
+
 }

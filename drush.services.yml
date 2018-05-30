@@ -3,9 +3,9 @@ services:
     class: \Drupal\potion\Commands\PotionCommands
     arguments:
       - '@potion.utility'
+      - '@file_system'
       - '@potion.translations.import'
       - '@potion.translations.export'
       - '@potion.translations.extractor'
-
     tags:
       - { name: drush.command }

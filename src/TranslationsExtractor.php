@@ -141,12 +141,8 @@ class TranslationsExtractor {
    *   Language code for extractions.
    * @param string $source
    *   Base path directory to lookup for files.
-   * @param string $destination
-   *   The destination .po file.
    * @param bool $recursive
    *   Should recursively lookup for files.
-   * @param bool $merge
-   *   Should merge the .po w/ an existing .po file in the destination.
    * @param array $exclusion
    *   The exclusions options.
    *   $options = [
@@ -155,10 +151,10 @@ class TranslationsExtractor {
    *     'exclude-php'  => (bool)
    *   ].
    *
-   * @return array
-   *   Report array..
+   * @return SplFileInfo|null
+   *   The temporary file containing all the extracted translations.
    */
-  public function extract($langcode, $source, $destination, $recursive = FALSE, $merge = FALSE, array $exclusion = [
+  public function extract($langcode, $source, $recursive = FALSE, array $exclusion = [
     'exclude-yaml' => FALSE,
     'exclude-twig' => FALSE,
     'exclude-php'  => FALSE,
@@ -176,16 +172,6 @@ class TranslationsExtractor {
 
     if (!is_readable($source)) {
       throw PotionException::isNotReadable($source);
-    }
-
-    // Check for existing destination file.
-    if (!is_dir($destination)) {
-      throw PotionException::notFound($destination);
-    }
-
-    // Check for writable destination.
-    if (!is_writable($destination)) {
-      throw PotionException::isNotWritable($destination);
     }
 
     $reader = new PoDatabaseReader();
@@ -217,6 +203,10 @@ class TranslationsExtractor {
     // Concat every extractors into a single array for write processing.
     $items = array_merge($twig_translations, $php_translations, $annotation_translations, $yaml_translations);
 
+    if (empty($items)) {
+      return NULL;
+    }
+
     $uri = $this->fileSystem->tempnam('temporary://', 'po_');
 
     $writer = new PoStreamWriter();
@@ -232,13 +222,7 @@ class TranslationsExtractor {
 
     $writer->close();
 
-    // Get the final destination path.
-    $fullpath = $this->utility->sanitizePath($this->fileSystem->realpath($destination)) . $langcode . '.po';
-
-    // Perform the move operation.
-    rename($this->fileSystem->realpath($uri), $fullpath);
-
-    return $this->report;
+    return new \SplFileInfo($this->fileSystem->realpath($uri));
   }
 
 }

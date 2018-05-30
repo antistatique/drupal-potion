@@ -65,7 +65,7 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
    * @covers \Drupal\potion\TranslationsExtractor::extract
    */
   public function testReportFormat() {
-    $this->translationExtractor->extract('fr', $this->extractionPath, 'temporary://', TRUE);
+    $this->translationExtractor->extract('fr', $this->extractionPath, TRUE);
     $report = $this->translationExtractor->getReport();
 
     $this->assertArraySubset(array_keys($report), [
@@ -83,22 +83,21 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
   /**
    * @covers \Drupal\potion\TranslationsExtractor::extract
    */
-  public function testExtractDestinationNotFound() {
-    $this->setExpectedException(PotionException::class, "No such file or directory temporary://not-found");
-    $this->translationExtractor->extract('fr', $this->extractionPath, 'temporary://not-found', TRUE);
+  public function testExtractorReturnTemporaryFile() {
+    $file = $this->translationExtractor->extract('fr', $this->extractionPath, TRUE);
+    $this->assertInstanceOf('SplFileInfo', $file);
   }
 
   /**
    * @covers \Drupal\potion\TranslationsExtractor::extract
    */
-  public function testExtractDestinationNotWritable() {
-    $dest = 'temporary://not-writable';
-    // Prepare a non writable directory.
+  public function testExtractorReturnNull() {
+    $dest = 'temporary://empty';
+    // Prepare a non readable directory.
     file_prepare_directory($dest, FILE_CREATE_DIRECTORY);
-    @chmod($dest, 0000);
 
-    $this->setExpectedException(PotionException::class, "The path temporary://not-writable is not writable.");
-    $this->translationExtractor->extract('fr', $this->extractionPath, 'temporary://not-writable', TRUE);
+    $file = $this->translationExtractor->extract('fr', 'temporary://empty', TRUE);
+    $this->assertNull($file);
   }
 
   /**
@@ -106,7 +105,7 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
    */
   public function testExtractSourceNotFound() {
     $this->setExpectedException(PotionException::class, "No such file or directory temporary://not-found");
-    $this->translationExtractor->extract('fr', 'temporary://not-found', 'temporary://', TRUE);
+    $this->translationExtractor->extract('fr', 'temporary://not-found', TRUE);
   }
 
   /**
@@ -119,7 +118,7 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
     @chmod($dest, 0000);
 
     $this->setExpectedException(PotionException::class, "The path temporary://not-readable is not readable.");
-    $this->translationExtractor->extract('fr', 'temporary://not-readable', 'temporary://', TRUE);
+    $this->translationExtractor->extract('fr', 'temporary://not-readable', TRUE);
   }
 
   /**
@@ -127,35 +126,7 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
    */
   public function testExtractInvalidLangcode() {
     $this->setExpectedException(PotionException::class, "The langcode ru is not defined. Please create & enabled it before trying to use it.");
-    $this->translationExtractor->extract('ru', $this->extractionPath, 'temporary://', TRUE);
-  }
-
-  /**
-   * @covers \Drupal\potion\TranslationsExtractor::extract
-   */
-  public function testTranslationsExportUriDest() {
-    $this->setUpTranslations();
-    $this->setUpNonTranslations();
-
-    $dest = $this->fileSystem->realpath('temporary://');
-    $file = $dest . DIRECTORY_SEPARATOR . 'fr.po';
-    @unlink($file);
-    $this->assertFalse(file_exists($file));
-    $this->translationExtractor->extract('fr', $this->extractionPath, $dest, TRUE);
-    $this->assertTrue(file_exists($file));
-  }
-
-  /**
-   * @covers \Drupal\potion\TranslationsExtractor::extract
-   */
-  public function testTranslationsExportPathDest() {
-    $this->setUpTranslations();
-    $this->setUpNonTranslations();
-
-    @unlink('temporary://fr.po');
-    $this->assertFalse(file_exists('temporary://fr.po'));
-    $this->translationExtractor->extract('fr', $this->extractionPath, 'temporary://', TRUE);
-    $this->assertTrue(file_exists('temporary://fr.po'));
+    $this->translationExtractor->extract('ru', $this->extractionPath, TRUE);
   }
 
   /**
@@ -165,7 +136,7 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
     $this->setUpTranslations();
     $this->setUpNonTranslations();
 
-    $this->translationExtractor->extract('fr', $this->extractionPath, 'temporary://', TRUE, FALSE, [
+    $this->translationExtractor->extract('fr', $this->extractionPath, TRUE, [
       'exclude-yaml' => FALSE,
       'exclude-twig' => FALSE,
       'exclude-php'  => FALSE,
@@ -185,7 +156,7 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
     $this->setUpTranslations();
     $this->setUpNonTranslations();
 
-    $this->translationExtractor->extract('fr', $this->extractionPath, 'temporary://', FALSE, FALSE, [
+    $this->translationExtractor->extract('fr', $this->extractionPath, FALSE, [
       'exclude-yaml' => FALSE,
       'exclude-twig' => FALSE,
       'exclude-php'  => FALSE,
@@ -205,7 +176,7 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
     $this->setUpTranslations();
     $this->setUpNonTranslations();
 
-    $this->translationExtractor->extract('fr', $this->extractionPath, 'temporary://', TRUE, FALSE, [
+    $this->translationExtractor->extract('fr', $this->extractionPath, TRUE, [
       'exclude-yaml' => TRUE,
       'exclude-twig' => TRUE,
       'exclude-php'  => TRUE,
@@ -225,7 +196,7 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
     $this->setUpTranslations();
     $this->setUpNonTranslations();
 
-    $this->translationExtractor->extract('fr', $this->extractionPath, 'temporary://', TRUE, FALSE, [
+    $this->translationExtractor->extract('fr', $this->extractionPath, TRUE, [
       'exclude-yaml' => TRUE,
       'exclude-twig' => FALSE,
       'exclude-php'  => TRUE,
@@ -245,7 +216,7 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
     $this->setUpTranslations();
     $this->setUpNonTranslations();
 
-    $this->translationExtractor->extract('fr', $this->extractionPath, 'temporary://', TRUE, FALSE, [
+    $this->translationExtractor->extract('fr', $this->extractionPath, TRUE, [
       'exclude-yaml' => TRUE,
       'exclude-twig' => TRUE,
       'exclude-php'  => FALSE,
@@ -265,7 +236,7 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
     $this->setUpTranslations();
     $this->setUpNonTranslations();
 
-    $this->translationExtractor->extract('fr', $this->extractionPath, 'temporary://', TRUE, FALSE, [
+    $this->translationExtractor->extract('fr', $this->extractionPath, TRUE, [
       'exclude-yaml' => FALSE,
       'exclude-twig' => TRUE,
       'exclude-php'  => TRUE,
@@ -285,7 +256,7 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
     $this->setUpTranslations();
     $this->setUpNonTranslations();
 
-    $this->translationExtractor->extract('fr', $this->extractionPath, 'temporary://', TRUE, FALSE, [
+    $this->translationExtractor->extract('fr', $this->extractionPath, TRUE, [
       'exclude-yaml' => TRUE,
       'exclude-twig' => FALSE,
       'exclude-php'  => FALSE,
@@ -305,7 +276,7 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
     $this->setUpTranslations();
     $this->setUpNonTranslations();
 
-    $this->translationExtractor->extract('fr', $this->extractionPath, 'temporary://', TRUE, FALSE, [
+    $this->translationExtractor->extract('fr', $this->extractionPath, TRUE, [
       'exclude-yaml' => FALSE,
       'exclude-twig' => TRUE,
       'exclude-php'  => FALSE,
@@ -325,7 +296,7 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
     $this->setUpTranslations();
     $this->setUpNonTranslations();
 
-    $this->translationExtractor->extract('fr', $this->extractionPath, 'temporary://', TRUE, FALSE, [
+    $this->translationExtractor->extract('fr', $this->extractionPath, TRUE, [
       'exclude-yaml' => FALSE,
       'exclude-twig' => FALSE,
       'exclude-php'  => TRUE,

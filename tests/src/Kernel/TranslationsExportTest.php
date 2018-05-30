@@ -54,7 +54,7 @@ class TranslationsExportTest extends TranslationsTestsBase {
    * @covers \Drupal\potion\TranslationsExport::exportFromDatabase
    */
   public function testReportFormat() {
-    $this->translationExport->exportFromDatabase('fr', 'temporary://');
+    $this->translationExport->exportFromDatabase('fr');
     $report = $this->translationExport->getReport();
 
     $this->assertArraySubset(array_keys($report), [
@@ -70,22 +70,20 @@ class TranslationsExportTest extends TranslationsTestsBase {
   /**
    * @covers \Drupal\potion\TranslationsExport::exportFromDatabase
    */
-  public function testExportDestinationNotFound() {
-    $this->setExpectedException(PotionException::class, "No such file or directory temporary://not-found");
-    $this->translationExport->exportFromDatabase('fr', 'temporary://not-found');
+  public function testExportReturnTemporaryFile() {
+    $this->setUpTranslations();
+    $this->setUpNonTranslations();
+
+    $file = $this->translationExport->exportFromDatabase('fr');
+    $this->assertInstanceOf('SplFileInfo', $file);
   }
 
   /**
    * @covers \Drupal\potion\TranslationsExport::exportFromDatabase
    */
-  public function testExportDestinationNotWritable() {
-    $dest = 'temporary://not-writable';
-    // Prepare a non writable directory.
-    file_prepare_directory($dest, FILE_CREATE_DIRECTORY);
-    @chmod($dest, 0000);
-
-    $this->setExpectedException(PotionException::class, "The path temporary://not-writable is not writable.");
-    $this->translationExport->exportFromDatabase('fr', $dest);
+  public function testExportReturnNull() {
+    $file = $this->translationExport->exportFromDatabase('fr');
+    $this->assertNull($file);
   }
 
   /**
@@ -93,35 +91,7 @@ class TranslationsExportTest extends TranslationsTestsBase {
    */
   public function testExportInvalidLangcode() {
     $this->setExpectedException(PotionException::class, "The langcode ru is not defined. Please create & enabled it before trying to use it.");
-    $this->translationExport->exportFromDatabase('ru', 'temporary://');
-  }
-
-  /**
-   * @covers \Drupal\potion\TranslationsExport::exportFromDatabase
-   */
-  public function testTranslationsExportUriDest() {
-    $this->setUpTranslations();
-    $this->setUpNonTranslations();
-
-    $dest = $this->fileSystem->realpath('temporary://');
-    $file = $dest . DIRECTORY_SEPARATOR . 'fr.po';
-    @unlink($file);
-    $this->assertFalse(file_exists($file));
-    $this->translationExport->exportFromDatabase('fr', $dest);
-    $this->assertTrue(file_exists($file));
-  }
-
-  /**
-   * @covers \Drupal\potion\TranslationsExport::exportFromDatabase
-   */
-  public function testTranslationsExportPathDest() {
-    $this->setUpTranslations();
-    $this->setUpNonTranslations();
-
-    @unlink('temporary://fr.po');
-    $this->assertFalse(file_exists('temporary://fr.po'));
-    $this->translationExport->exportFromDatabase('fr', 'temporary://');
-    $this->assertTrue(file_exists('temporary://fr.po'));
+    $this->translationExport->exportFromDatabase('ru');
   }
 
   /**
@@ -131,7 +101,7 @@ class TranslationsExportTest extends TranslationsTestsBase {
     $this->setUpTranslations();
     $this->setUpNonTranslations();
 
-    $this->translationExport->exportFromDatabase('fr', 'temporary://', [
+    $this->translationExport->exportFromDatabase('fr', [
       'non-customized' => FALSE,
       'customized'     => TRUE,
       'untranslated'   => FALSE,
@@ -149,7 +119,7 @@ class TranslationsExportTest extends TranslationsTestsBase {
     $this->setUpTranslations();
     $this->setUpNonTranslations();
 
-    $this->translationExport->exportFromDatabase('fr', 'temporary://', [
+    $this->translationExport->exportFromDatabase('fr', [
       'non-customized' => TRUE,
       'customized'     => FALSE,
       'untranslated'   => FALSE,
@@ -167,7 +137,7 @@ class TranslationsExportTest extends TranslationsTestsBase {
     $this->setUpTranslations();
     $this->setUpNonTranslations();
 
-    $this->translationExport->exportFromDatabase('fr', 'temporary://', [
+    $this->translationExport->exportFromDatabase('fr', [
       'non-customized' => TRUE,
       'customized'     => TRUE,
       'untranslated'   => FALSE,
@@ -185,7 +155,7 @@ class TranslationsExportTest extends TranslationsTestsBase {
     $this->setUpTranslations();
     $this->setUpNonTranslations();
 
-    $this->translationExport->exportFromDatabase('fr', 'temporary://', [
+    $this->translationExport->exportFromDatabase('fr', [
       'non-customized' => FALSE,
       'customized'     => FALSE,
       'untranslated'   => TRUE,
@@ -203,7 +173,7 @@ class TranslationsExportTest extends TranslationsTestsBase {
     $this->setUpTranslations();
     $this->setUpNonTranslations();
 
-    $this->translationExport->exportFromDatabase('fr', 'temporary://', [
+    $this->translationExport->exportFromDatabase('fr', [
       'non-customized' => TRUE,
       'customized'     => FALSE,
       'untranslated'   => TRUE,
@@ -221,7 +191,7 @@ class TranslationsExportTest extends TranslationsTestsBase {
     $this->setUpTranslations();
     $this->setUpNonTranslations();
 
-    $this->translationExport->exportFromDatabase('fr', 'temporary://', [
+    $this->translationExport->exportFromDatabase('fr', [
       'non-customized' => FALSE,
       'customized'     => TRUE,
       'untranslated'   => TRUE,
@@ -239,7 +209,7 @@ class TranslationsExportTest extends TranslationsTestsBase {
     $this->setUpTranslations();
     $this->setUpNonTranslations();
 
-    $this->translationExport->exportFromDatabase('fr', 'temporary://', [
+    $this->translationExport->exportFromDatabase('fr', [
       'non-customized' => TRUE,
       'customized'     => TRUE,
       'untranslated'   => TRUE,
@@ -257,7 +227,7 @@ class TranslationsExportTest extends TranslationsTestsBase {
     $this->setUpTranslations();
     $this->setUpNonTranslations();
 
-    $this->translationExport->exportFromDatabase('fr', 'temporary://', [
+    $this->translationExport->exportFromDatabase('fr', [
       'non-customized' => FALSE,
       'customized'     => FALSE,
       'untranslated'   => FALSE,

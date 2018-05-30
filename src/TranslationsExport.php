@@ -90,8 +90,6 @@ class TranslationsExport {
    *
    * @param string $langcode
    *   Language code of the language being exported from the database.
-   * @param string $destination
-   *   The destination .po file.
    * @param array $options
    *   The Options.
    *   $options = [
@@ -100,10 +98,10 @@ class TranslationsExport {
    *     'untranslated'   => (bool)
    *   ].
    *
-   * @return array
-   *   Report array..
+   * @return SplFileInfo|null
+   *   The temporary file containing all the exported translations.
    */
-  public function exportFromDatabase($langcode, $destination, array $options = [
+  public function exportFromDatabase($langcode, array $options = [
     'non-customized' => FALSE,
     'customized'     => FALSE,
     'untranslated'   => FALSE,
@@ -111,16 +109,6 @@ class TranslationsExport {
     // Check for existing & enabled langcode.
     if (!$this->utility->isLangcodeEnabled($langcode)) {
       throw PotionException::invalidLangcode($langcode);
-    }
-
-    // Check for existing destination file.
-    if (!is_dir($destination)) {
-      throw PotionException::notFound($destination);
-    }
-
-    // Check for writable destination.
-    if (!is_writable($destination)) {
-      throw PotionException::isNotWritable($destination);
     }
 
     $customized = FALSE;
@@ -153,7 +141,7 @@ class TranslationsExport {
     $item = $reader->readItem();
 
     if (empty($item)) {
-      return $this->report;
+      return NULL;
     }
 
     $uri = $this->fileSystem->tempnam('temporary://', 'po_');
@@ -182,13 +170,7 @@ class TranslationsExport {
 
     $writer->close();
 
-    // Get the final destination path.
-    $fullpath = $this->utility->sanitizePath($this->fileSystem->realpath($destination)) . $langcode . '.po';
-
-    // Perform the move operation.
-    rename($this->fileSystem->realpath($uri), $fullpath);
-
-    return $this->report;
+    return new \SplFileInfo($this->fileSystem->realpath($uri));
   }
 
 }

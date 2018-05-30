@@ -4,6 +4,7 @@ namespace Drupal\potion\Commands;
 
 use Drush\Commands\DrushCommands;
 use Drupal\potion\Utility;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\potion\TranslationsImport;
 use Drupal\potion\TranslationsExport;
 use Drupal\potion\TranslationsExtractor;
@@ -24,6 +25,13 @@ class PotionCommands extends DrushCommands {
    * @var \Drupal\potion\Utility
    */
   protected $utility;
+
+  /**
+   * The file system service.
+   *
+   * @var \Drupal\Core\File\FileSystemInterface
+   */
+  protected $fileSystem;
 
   /**
    * The Translation importer.
@@ -51,6 +59,8 @@ class PotionCommands extends DrushCommands {
    *
    * @param \Drupal\potion\Utility $utility
    *   Utility methods for Potion.
+   * @param \Drupal\Core\File\FileSystemInterface $file_system
+   *   The file system service.
    * @param \Drupal\potion\TranslationsImport $translations_import
    *   The Translation importer service.
    * @param \Drupal\potion\TranslationsExport $translations_export
@@ -58,8 +68,9 @@ class PotionCommands extends DrushCommands {
    * @param \Drupal\potion\TranslationsExtractor $translations_extractor
    *   The Translation extractor service.
    */
-  public function __construct(Utility $utility, TranslationsImport $translations_import, TranslationsExport $translations_export, TranslationsExtractor $translations_extractor) {
+  public function __construct(Utility $utility, FileSystemInterface $file_system, TranslationsImport $translations_import, TranslationsExport $translations_export, TranslationsExtractor $translations_extractor) {
     $this->utility        = $utility;
+    $this->fileSystem     = $file_system;
     $this->transImport    = $translations_import;
     $this->transExport    = $translations_export;
     $this->transExtractor = $translations_extractor;
@@ -218,7 +229,17 @@ class PotionCommands extends DrushCommands {
       throw new UserAbortException();
     }
 
-    $report = $this->transExport->exportFromDatabase($langcode, $destination, $options);
+    $file = $this->transExport->exportFromDatabase($langcode, $options);
+
+    // Get the final destination path.
+    $fullpath = $this->utility->sanitizePath($this->fileSystem->realpath($destination)) . $langcode . '.po';
+
+    // Perform the move operation.
+    rename($file->getRealPath(), $fullpath);
+
+    $this->io()->success($this->t('File created on: @destination', ['@destination' => $fullpath]));
+
+    $report = $this->transExport->getReport();
     $rows = [];
     $rows[] = [
       'total'        => count($report['strings']),
@@ -314,7 +335,7 @@ class PotionCommands extends DrushCommands {
       throw ConsoleException::isNotReadable($source);
     }
 
-    // Check for existing destination file.
+    // Check for existing destination dir.
     if (!is_dir($destination)) {
       throw ConsoleException::notFound($destination);
     }
@@ -324,17 +345,47 @@ class PotionCommands extends DrushCommands {
       throw ConsoleException::isNotWritable($destination);
     }
 
-    // @TODO - Ask questions to merge files togethers in the destination.
-    // If file already exists in dest, ask questions before merging.
-    // $msg = $this->t('You are about to overwrite the @file. Do you want to continue?', ['@file' => $fullpath]);
-    // if (is_file($fullpath) && !$this->io()->confirm($msg)) {
-    //   throw new UserAbortException();
-    // }
-    $report = $this->transExtractor->extract($langcode, $source, $destination, $options['recursive'], [
+    $file = $this->transExtractor->extract($langcode, $source, $options['recursive'], [
       'exclude-yaml' => $options['exclude-yaml'],
       'exclude-twig' => $options['exclude-twig'],
       'exclude-php'  => $options['exclude-php'],
     ]);
+
+    // Get the final destination path.
+    $fullpath = $this->utility->sanitizePath($this->fileSystem->realpath($destination)) . $langcode . '.po';
+
+    // If file final destination already exists, ask to choose a write mode.
+    if (is_file($fullpath)) {
+      $msg = $this->t('A file @destination already exists. Do you want to replace it with the new one?', ['@destination' => $fullpath]);
+      $write_mode = $this->io()->choice($msg, [
+        'merge'    => $this->t('Merge.')->render(),
+        'create'   => $this->t('Keep both.')->render(),
+        'override' => $this->t('Replace.')->render(),
+      ], 'merge');
+    }
+
+    switch ($write_mode) {
+      case 'merge':
+      default:
+        // Perform the backup-merge operations.
+        $this->utility->merge($fullpath, [$file->getRealPath()]);
+        break;
+
+      case 'create':
+        $fullpath = $this->utility->sanitizePath($this->fileSystem->realpath($destination)) . $langcode . '-' . uniqid() . '.po';
+        // Perform the move/create operation.
+        rename($file->getRealPath(), $fullpath);
+        break;
+
+      case 'override':
+        // Perform the move operation.
+        rename($file->getRealPath(), $fullpath);
+        break;
+    }
+
+    $this->io()->success($this->t('File created on: @destination', ['@destination' => $fullpath]));
+
+    $report = $this->transExtractor->getReport();
     $rows = [];
     $rows[] = [
       'total' => count($report['strings']),
