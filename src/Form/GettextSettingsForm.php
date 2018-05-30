@@ -72,7 +72,7 @@ class GettextSettingsForm extends ConfigFormBase {
     $form['gettext_information']['path'] = [
       '#type'          => 'textfield',
       '#title'         => $this->t('Path to gettext binaries files'),
-      '#description'   => $this->t('Enter the full path to <code>gettext</code> executable files. Example: "/var/gettext/bin". This may be overriden in settings.php'),
+      '#description'   => $this->t('Enter the full path to <code>gettext</code> executable files. Example: "/var/gettext/bin". This may be overridden in settings.php'),
       '#required'      => FALSE,
       '#default_value' => $config->get('path'),
     ];

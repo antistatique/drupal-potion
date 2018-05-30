@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\potion\Kernel;
 
-use Drupal\potion\Exception\PotionException;
-
 /**
  * Cover default behaviors of translations.
  *
@@ -11,7 +9,7 @@ use Drupal\potion\Exception\PotionException;
  * @group potion_kernel
  * @group potion_kernel_translations
  */
-class TranslationsTests extends TranslationsTestsBase {
+class TranslationsTest extends TranslationsTestsBase {
 
   /**
    * The Translation importer.
@@ -42,4 +40,5 @@ class TranslationsTests extends TranslationsTestsBase {
     $translations = $this->localStorage->findTranslation([]);
     $this->assertEqual(count($translations), 0, 'Found 0 translations strings in the database.');
   }
+
 }

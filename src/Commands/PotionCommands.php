@@ -6,6 +6,7 @@ use Drush\Commands\DrushCommands;
 use Drupal\potion\Utility;
 use Drupal\potion\TranslationsImport;
 use Drupal\potion\TranslationsExport;
+use Drupal\potion\TranslationsExtractor;
 use Drupal\potion\Exception\ConsoleException;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Consolidation\OutputFormatters\StructuredData\RowsOfFields;
@@ -29,14 +30,21 @@ class PotionCommands extends DrushCommands {
    *
    * @var \Drupal\potion\TranslationsImport
    */
-  protected $translationsImport;
+  protected $transImport;
 
   /**
    * The Translation exporter.
    *
    * @var \Drupal\potion\TranslationsExport
    */
-  protected $translationsExport;
+  protected $transExport;
+
+  /**
+   * The Translation extractor service.
+   *
+   * @var \Drupal\potion\TranslationsExtractor
+   */
+  protected $transExtractor;
 
   /**
    * Class constructor.
@@ -47,11 +55,14 @@ class PotionCommands extends DrushCommands {
    *   The Translation importer service.
    * @param \Drupal\potion\TranslationsExport $translations_export
    *   The Translation exporter service.
+   * @param \Drupal\potion\TranslationsExtractor $translations_extractor
+   *   The Translation extractor service.
    */
-  public function __construct(Utility $utility, TranslationsImport $translations_import, TranslationsExport $translations_export) {
-    $this->utility = $utility;
-    $this->translationsImport = $translations_import;
-    $this->translationsExport = $translations_export;
+  public function __construct(Utility $utility, TranslationsImport $translations_import, TranslationsExport $translations_export, TranslationsExtractor $translations_extractor) {
+    $this->utility        = $utility;
+    $this->transImport    = $translations_import;
+    $this->transExport    = $translations_export;
+    $this->transExtractor = $translations_extractor;
   }
 
   /**
@@ -120,7 +131,7 @@ class PotionCommands extends DrushCommands {
     $options['customized'] = $options['mode'] == 'customized' ? LOCALE_CUSTOMIZED : LOCALE_NOT_CUSTOMIZED;
     unset($options['mode']);
 
-    $report = $this->translationsImport->importFromFile($langcode, $source, $options);
+    $report = $this->transImport->importFromFile($langcode, $source, $options);
 
     $rows = [];
     $rows[] = [
@@ -143,7 +154,7 @@ class PotionCommands extends DrushCommands {
    * @param string $langcode
    *   The langcode to import. Eg. 'en' or 'fr'.
    * @param string $destination
-   *   The destination .po file.
+   *   The destination path.
    * @param array $options
    *   (optional) An array of options.
    *
@@ -161,10 +172,10 @@ class PotionCommands extends DrushCommands {
    *   Include untranslated text
    *   [default: "false"].
    *
-   * @usage drush potion:export langcode path/to/destination.po
+   * @usage drush potion:export langcode path/to/destination/
    *   Export translations in the langcode to the given destination .po file.
-   * @usage drush potion:export fr path/to/export/
-   *   Export French translations to the path/to/export/fr.po file.
+   * @usage drush potion:export fr path/to/destination/
+   *   Export French translations to the path/to/destination/fr.po file.
    *
    * @validate-module-enabled locale, language, file
    *
@@ -207,12 +218,129 @@ class PotionCommands extends DrushCommands {
       throw new UserAbortException();
     }
 
-    $report = $this->translationsExport->exportFromDatabase($langcode, $destination, $options);
+    $report = $this->transExport->exportFromDatabase($langcode, $destination, $options);
     $rows = [];
     $rows[] = [
       'total'        => count($report['strings']),
       'translated'   => $report['translated'],
       'untranslated' => $report['untranslated'],
+    ];
+    return new RowsOfFields($rows);
+  }
+
+  /**
+   * Generate Translations from versatils sources.
+   *
+   * Parse all the files from the source & generate a fresh  langcode.po file.
+   * If a .po file already exists in the destination dir,
+   * merge them & remove duplicates.
+   *
+   * @param string $langcode
+   *   The langcode to import. Eg. 'en' or 'fr'.
+   * @param string $source
+   *   The source folder to scan for translations.
+   * @param string $destination
+   *   The destination path.
+   * @param array $options
+   *   (optional) An array of options.
+   *
+   * @command potion:generate
+   *
+   * @option exclude-yaml
+   *   Exclude YAML files (.yaml) to be scanned for translations.
+   *   [default: "false"].
+   *
+   * @option exclude-twig
+   *   Exclude TWIG files (.twig) to be scanned for translations.
+   *   [default: "false"].
+   *
+   * @option exclude-php
+   *   Exclude PHP files (.php, .module) to be scanned for translations.
+   *   [default: "false"].
+   *
+   * @option recursive
+   *   Enable scan recursion on the source folder.
+   *   [default: "false"].
+   *
+   * @usage drush potion-generate langcode path/to/scan/ path/to/export/
+   *   Generate translations in the langcode from a given folder to the given
+   *   destination.
+   * @usage drush potion-generate fr path/to/scan/ path/to/export/
+   *   Generate French translations from files of path/to/scan/ to the given
+   *   path/to/export/fr.po file.
+   * @usage drush potion-generate fr path/to/scan/ path/to/export/ --recursive
+   *   Generate French translations from all files (recusively) of path/to/scan/
+   *   to the given path/to/export/fr.po file.
+   * @usage drush potion-generate fr path/to/scan/ path/to/export/ --exclude-yaml
+   *   Generate French translations from files of path/to/scan/, excepted Yaml
+   *   ones, to the given path/to/export/fr.po file.
+   *
+   * @validate-module-enabled locale, language, file
+   *
+   * @aliases po:gen
+   *
+   * @return \Consolidation\OutputFormatters\StructuredData\RowsOfFields
+   *   Formatted output summary.
+   *
+   * @throws \Drupal\potion\Exception\ConsoleException
+   *   If no langcode isn't a valid enabled language.
+   * @throws \Drupal\potion\Exception\ConsoleException
+   *   If the given source does not exists.
+   * @throws \Drupal\potion\Exception\ConsoleException
+   *   If the given source is not readable.
+   * @throws \Drupal\potion\Exception\ConsoleException
+   *   If the given destination does not exists.
+   * @throws \Drupal\potion\Exception\ConsoleException
+   *   If the given destination is not writable.
+   */
+  public function translationExtract($langcode, $source, $destination, array $options = [
+    'format'       => 'table',
+    'exclude-yaml' => FALSE,
+    'exclude-twig' => FALSE,
+    'exclude-php'  => FALSE,
+    'recursive'    => FALSE,
+  ]) {
+    // Check for existing & enabled langcode.
+    if (!$this->utility->isLangcodeEnabled($langcode)) {
+      throw ConsoleException::invalidLangcode($langcode);
+    }
+
+    // Check for existing path.
+    if (!is_dir($source)) {
+      throw ConsoleException::notFound($source);
+    }
+
+    if (!is_readable($source)) {
+      throw ConsoleException::isNotReadable($source);
+    }
+
+    // Check for existing destination file.
+    if (!is_dir($destination)) {
+      throw ConsoleException::notFound($destination);
+    }
+
+    // Check for writable destination.
+    if (!is_writable($destination)) {
+      throw ConsoleException::isNotWritable($destination);
+    }
+
+    // @TODO - Ask questions to merge files togethers in the destination.
+    // If file already exists in dest, ask questions before merging.
+    // $msg = $this->t('You are about to overwrite the @file. Do you want to continue?', ['@file' => $fullpath]);
+    // if (is_file($fullpath) && !$this->io()->confirm($msg)) {
+    //   throw new UserAbortException();
+    // }
+    $report = $this->transExtractor->extract($langcode, $source, $destination, $options['recursive'], [
+      'exclude-yaml' => $options['exclude-yaml'],
+      'exclude-twig' => $options['exclude-twig'],
+      'exclude-php'  => $options['exclude-php'],
+    ]);
+    $rows = [];
+    $rows[] = [
+      'total' => count($report['strings']),
+      'twig'  => $report['twig'],
+      'php'   => $report['php'],
+      'yaml'  => $report['yaml'],
     ];
     return new RowsOfFields($rows);
   }

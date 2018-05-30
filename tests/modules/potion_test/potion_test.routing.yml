@@ -1,0 +1,24 @@
+potion_test.overview_page:
+  path: '/admin/test/overview'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Potion overview'
+  requirements:
+    _permission: 'administer site configuration'
+
+potion_test.lorem_page:
+  path: '/admin/test/lorem'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Lorem Ipsum'
+    _title_context: 'Lolspeak'
+  requirements:
+    _permission: 'administer site configuration'
+
+potion_test.ipsum_page:
+  path: '/admin/test/ipsum'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Ipsum'
+  requirements:
+    _permission: 'administer site configuration'

@@ -47,29 +47,42 @@ class PotionException extends \Exception {
   }
 
   /**
-   * The destination path not found.
+   * The destination path or file does not exist.
    *
-   * @param string $destination
-   *   The destination path not exists.
+   * @param string $path
+   *   The file or path.
    *
    * @return PotionException
-   *   Exception because the destination file already exists..
+   *   Exception because of unexisting path or file.
    */
-  public static function notFound($destination) {
-    return new static('No such directory ' . $destination);
+  public static function notFound($path) {
+    return new static('No such file or directory ' . $path);
   }
 
   /**
-   * The destination path is not writable.
+   * The path is not writable.
    *
-   * @param string $destination
-   *   The destination path.
+   * @param string $path
+   *   The path.
    *
    * @return PotionException
-   *   Exception because the destination path is not writable.
+   *   Exception because the path is not writable.
    */
-  public static function isNotWritable($destination) {
-    return new static('The destination ' . $destination . ' is not writable.');
+  public static function isNotWritable($path) {
+    return new static('The path ' . $path . ' is not writable.');
+  }
+
+  /**
+   * The path is not writable.
+   *
+   * @param string $path
+   *   The path.
+   *
+   * @return PotionException
+   *   Exception because the path is not readable.
+   */
+  public static function isNotReadable($path) {
+    return new static('The path ' . $path . ' is not readable.');
   }
 
 }

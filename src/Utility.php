@@ -4,6 +4,8 @@ namespace Drupal\potion;
 
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
+use Drupal\Component\Gettext\PoItem;
 
 /**
  * Contains utility methods for the Potion module.
@@ -47,7 +49,7 @@ class Utility {
   }
 
   /**
-   * From a given langcode, retreive the langname.
+   * From a given langcode, retrieve the langname.
    *
    * @param string $langcode
    *   The langcode.
@@ -118,6 +120,32 @@ class Utility {
       $path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
     }
     return $path;
+  }
+
+  /**
+   * Store the parsed values as a PoItem object.
+   *
+   * @param string|array $msgid
+   *   The translations source string or array of strings if it has plurals.
+   * @param string $msgctxt
+   *   The context this translation belongs to.
+   */
+  public function setItem($msgid, $msgctxt = NULL) {
+    // Save source & translations as stinog or array of strings if it's plural.
+    $source      = is_array($msgid) ? implode(PluralTranslatableMarkup::DELIMITER, $msgid) : trim($msgid);
+    $translation = is_array($msgid) ? implode(PluralTranslatableMarkup::DELIMITER, ['', '']) : '';
+
+    $item = new PoItem();
+    $item->setFromArray([
+      'context'     => $msgctxt,
+      'source'      => $source,
+      'translation' => $translation,
+      'comment'     => NULL,
+    ]);
+
+    // Generate a uniq key by translations to avoid duplicates.
+    $id = md5($source . $msgctxt);
+    return [$id => $item];
   }
 
 }

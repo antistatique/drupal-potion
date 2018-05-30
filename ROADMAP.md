@@ -74,13 +74,15 @@ If a `langcode`.po already exists in the `dest` dir, merge them & remove duplica
 
 *Usage*
 ```
-drush potion-generate [--exclude-yaml] [--exclude-twig] [--exclude-php] [--progress] [--verbose] [--quiet] langcode source dest
+drush potion-generate [--exclude-yaml] [--exclude-twig] [--exclude-php] [--recursive] [-q|--quiet] [-h|--help] langcode source dest
 ```
 
 *Errors handling*
 - Warning on wrong langcode
 - Warning source is not a dir
 - Warning dest is not a dir
+- Warning source is not a readable
+- Warning dest is not a writable
 
 *Parameters*
 - `langcode`: The langcode to generate
@@ -89,8 +91,7 @@ drush potion-generate [--exclude-yaml] [--exclude-twig] [--exclude-php] [--progr
 - `--exclude-yaml`: Exclude YAML files (.yaml) to be scanned for translations
 - `--exclude-twig`: Exclude TWIG files (.twig) to be scanned for translations
 - `--exclude-php`: Exclude PHP files (.php, .module) to be scanned for translations
-- `--progress`: Show progress bar during the importation
-- `--verbose`: Report table when finish (merged or not with the previous file, n° strings found, n° of new strings)
+- `--recursive`: Enable scan recursion on the source folder
 - `-q|--quiet`: Do not ask any interactive question.
 - `-h|--help`: Display usage details.
 
@@ -98,7 +99,7 @@ drush potion-generate [--exclude-yaml] [--exclude-twig] [--exclude-php] [--progr
 
 *Usage*
 ```
-drush potion-fill [--overwrite] [--verbose] [--quiet] langcode source
+drush potion-fill [--overwrite] [--verbose] [-q|--quiet] [-h|--help] langcode source
 ```
 
 From a given `source` po file into a `langcode` read the whole database & fill the same po file with data.
@@ -119,7 +120,7 @@ From a given `source` po file into a `langcode` read the whole database & fill t
 
 *Usage*
 ```
-drush potion-validate [--verbose] [--dry-run] source
+drush potion-validate [-h|--help] source
 ```
 
 From a given `source` po file check his validity.
@@ -129,7 +130,6 @@ From a given `source` po file check his validity.
 
 *Parameters*
 - `source`: The source po file to validate
-- `--verbose`: Report table when finish (strings, translated, untranslated)
 - `-h|--help`: Display usage details.
 
 # Phase 2 - Enhanced Product
