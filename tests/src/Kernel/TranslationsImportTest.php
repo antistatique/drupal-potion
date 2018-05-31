@@ -14,6 +14,13 @@ use Drupal\potion\Exception\PotionException;
 class TranslationsImportTest extends TranslationsTestsBase {
 
   /**
+   * The directory of tests .po files.
+   *
+   * @var array
+   */
+  protected $translationsPath;
+
+  /**
    * The Translation importer.
    *
    * @var \Drupal\potion\TranslationsImport
@@ -38,6 +45,9 @@ class TranslationsImportTest extends TranslationsTestsBase {
 
     /** @var \Drupal\potion\TranslationsImport $translationsImport */
     $this->translationsImport = $this->container->get('potion.translations.import');
+
+    /** @var string $translationsPath */
+    $this->translationsPath = drupal_get_path('module', 'potion_test') . DIRECTORY_SEPARATOR . 'assets';
   }
 
   /**
