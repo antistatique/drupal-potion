@@ -75,7 +75,7 @@ This module relies on the [GNU gettext toolset](https://www.gnu.org/software/get
 * `Symfony Finder Component` is an external PHP library to execute binaries ;
 * `Gettext` utilities are a set of tools that provides a framework to help other packages produce multi-lingual messages. The minimum version of the `gettext` utilities supported is `0.19.8.1`.
 
-We assume, that you have installed `symfony/process`, `symfony/finder` & `gettex`. We also assume `gettext` utilities are accessible throught your `$PATH`.
+We assume, that you have installed `symfony/process`, `symfony/finder` & `gettex`. We also assume `gettext` utilities are accessible through your `$PATH`.
 Otherwise, please see [How to install & setup Gettext](https://www.drupal.org/docs/8/modules/potion/how-to-install-setup-gettext) for more information,
 
 ## Supporting organizations

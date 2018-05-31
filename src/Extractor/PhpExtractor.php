@@ -171,7 +171,7 @@ class PhpExtractor implements ExtractorInterface {
       foreach ($this->sequences as $sequence) {
         // Captured message string.
         $message = NULL;
-        // Optionnal captured context string.
+        // Optional captured context string.
         $context = NULL;
 
         // Go th the next token key.

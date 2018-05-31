@@ -144,7 +144,7 @@ class YamlExtractor implements ExtractorInterface {
       return $translations;
     }
 
-    // Loop throught every top level element of Yaml file.
+    // Loop through every top level element of Yaml file.
     foreach ($data as $item) {
       // Run every file sequence on then element or his direct children.
       foreach ($sequences as $sequence) {
