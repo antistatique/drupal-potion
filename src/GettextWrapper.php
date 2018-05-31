@@ -68,7 +68,7 @@ class GettextWrapper {
     }
 
     try {
-      $process = new Process([$cmd, '--check', $src]);
+      $process = new Process([$cmd, '-o', '/dev/null', '--check', $src]);
       $process->run();
     }
     catch (\Exception $e) {
