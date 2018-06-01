@@ -117,7 +117,7 @@ class Utility {
    */
   public function sanitizePath($path) {
     // Only trim if we're not dealing with a stream.
-    if (!file_stream_wrapper_valid_scheme($this->fileSystem->uriScheme($path))) {
+    if (!file_stream_wrapper_valid_scheme($this->fileSystem->uriScheme($path)) || substr($path, -strlen('://')) !== '://') {
       $path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
     }
     return $path;
@@ -130,11 +130,17 @@ class Utility {
    *   The translations source string or array of strings if it has plurals.
    * @param string $msgctxt
    *   The context this translation belongs to.
+   * @param string $msgstr
+   *   The translation. May be a string or array of strings if it has plurals.
    */
-  public function setItem($msgid, $msgctxt = NULL) {
-    // Save source & translations as stinog or array of strings if it's plural.
+  public function setItem($msgid, $msgctxt = NULL, $msgstr = []) {
+    // Save source & translations as string or array of strings if it's plural.
     $source      = is_array($msgid) ? implode(PluralTranslatableMarkup::DELIMITER, $msgid) : trim($msgid);
     $translation = is_array($msgid) ? implode(PluralTranslatableMarkup::DELIMITER, ['', '']) : '';
+
+    if (!empty($msgstr)) {
+      $translation = is_array($msgstr) ? implode(PluralTranslatableMarkup::DELIMITER, $msgstr) : $msgstr;
+    }
 
     $item = new PoItem();
     $item->setFromArray([
@@ -156,7 +162,7 @@ class Utility {
    *
    * @param string $original
    *   The original PO file.
-   * @param array $files
+   * @param string[] $files
    *   The po files to merges. Those files should not contain a PO Header
    *   to avoid merge conflict.
    *
@@ -178,13 +184,7 @@ class Utility {
     }
 
     // Create an incremental backup of original file.
-    $backup = $original;
-    $suffix = 1;
-    while (file_exists($backup)) {
-      $backup = $original . '.~' . ++$suffix . '~';
-    }
-    // Save the original file as backup file.
-    rename($original, $backup);
+    $backup = $this->backup($original);
 
     // Add the $original file to the list of $files to merge.
     array_unshift($files, $backup);
@@ -212,6 +212,33 @@ class Utility {
 
     // Merge all $files into the $original output.
     return $this->gettextWrapper->msgcat($files, $original);
+  }
+
+  /**
+   * Backup the given original file using an incremental suffix.
+   *
+   * @param string $original
+   *   The original PO file.
+   *
+   * @return string
+   *   The backup file uri.
+   */
+  public function backup($original) {
+    // Don't process when the original file don't exists.
+    if (!file_exists($original)) {
+      return FALSE;
+    }
+
+    // Create an incremental backup of original file.
+    $backup = $original;
+    $suffix = 0;
+    while (file_exists($backup)) {
+      $backup = $original . '.~' . ++$suffix . '~';
+    }
+    // Save the original file as backup file.
+    copy($original, $backup);
+
+    return $backup;
   }
 
 }
