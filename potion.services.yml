@@ -36,6 +36,14 @@ services:
       - '@potion.extractor.annotation'
       - '@potion.extractor.yaml'
 
+  potion.translations.fill:
+    class: \Drupal\potion\TranslationsFill
+    arguments:
+      - '@potion.utility'
+      - '@config.factory'
+      - '@file_system'
+      - '@locale.storage'
+
   # Extractors
   potion.extractor.twig:
     class: Drupal\potion\Extractor\TwigExtractor

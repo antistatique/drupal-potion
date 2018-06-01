@@ -7,5 +7,6 @@ services:
       - '@potion.translations.import'
       - '@potion.translations.export'
       - '@potion.translations.extractor'
+      - '@potion.translations.fill'
     tags:
       - { name: drush.command }
