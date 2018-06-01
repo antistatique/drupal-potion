@@ -56,7 +56,7 @@ drush potion-generate [--exclude-yaml] [--exclude-twig] [--exclude-php] [--recur
 ### Re-fill an existing po file with translations from Drupal database
 
 ```bash
-drush potion-fill [--overwrite] [--verbose] [--quiet] langcode source
+drush potion-fill [--overwrite] [-q|--quiet] [-h|--help] langcode source
 ```
 
 ## Versions
