@@ -3,9 +3,9 @@
 namespace Drupal\potion\Extractor;
 
 /**
- * Interface ExtractorInterface.
+ * Interface ExtractableInterface.
  */
-interface ExtractorInterface {
+interface ExtractableInterface {
 
   /**
    * Extract translations string.
@@ -15,8 +15,8 @@ interface ExtractorInterface {
    * @param bool $recursive
    *   Does the extractor should recursively lookup for files.
    *
-   * @return \Drupal\Component\Gettext\PoItem[]
-   *   Collection of translations keys.
+   * @return \Drupal\potion\MessageCatalogue
+   *   Catalogue of extracted translations messages.
    */
   public function extract($path, $recursive = FALSE);
 

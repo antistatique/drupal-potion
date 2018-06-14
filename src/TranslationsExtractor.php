@@ -174,50 +174,53 @@ class TranslationsExtractor {
       throw PotionException::isNotReadable($source);
     }
 
+    // Will contains every extracted translations messages.
+    $catalogue = new MessageCatalogue();
+
+    if (!$exclusion['exclude-twig']) {
+      $twig_catalogue = $this->twigExtractor->extract($source, $recursive);
+      $this->report['twig'] = $twig_catalogue->count();
+      $catalogue->merge($twig_catalogue);
+    }
+
+    if (!$exclusion['exclude-php']) {
+      $php_catalogue = $this->phpExtractor->extract($source, $recursive);
+      $annotation_catalogue = $this->annotationExtractor->extract($source, $recursive);
+      $this->report['php'] = $php_catalogue->count() + $annotation_catalogue->count();
+      $catalogue->merge($php_catalogue);
+      $catalogue->merge($annotation_catalogue);
+    }
+
+    if (!$exclusion['exclude-yaml']) {
+      $yaml_catalogue = $this->yamlExtractor->extract($source, $recursive);
+      $this->report['yaml'] = $yaml_catalogue->count();
+      $catalogue->merge($yaml_catalogue);
+    }
+
+    $messages = $catalogue->all();
+    if (empty($messages)) {
+      return NULL;
+    }
+
+    // Create a temporay file to write into.
+    $uri = $this->fileSystem->tempnam('temporary://', 'po_');
+
+    // Prepare a reader to generate the futur .po header.
     $reader = new PoDatabaseReader();
     $reader->setLangcode($langcode);
     $header = $reader->getHeader();
     $header->setProjectName($this->siteConfig->get('name'));
     $header->setLanguageName($this->utility->getLangName($langcode));
 
-    $twig_translations = [];
-    if (!$exclusion['exclude-twig']) {
-      $twig_translations = $this->twigExtractor->extract($source, $recursive);
-      $this->report['twig'] = count($twig_translations);
-    }
-
-    $php_translations = [];
-    $annotation_translations = [];
-    if (!$exclusion['exclude-php']) {
-      $php_translations = $this->phpExtractor->extract($source, $recursive);
-      $annotation_translations = $this->annotationExtractor->extract($source, $recursive);
-      $this->report['php'] = count($php_translations) + count($annotation_translations);
-    }
-
-    $yaml_translations = [];
-    if (!$exclusion['exclude-yaml']) {
-      $yaml_translations = $this->yamlExtractor->extract($source, $recursive);
-      $this->report['yaml'] = count($yaml_translations);
-    }
-
-    // Concat every extractors into a single array for write processing.
-    $items = array_merge($twig_translations, $php_translations, $annotation_translations, $yaml_translations);
-
-    if (empty($items)) {
-      return NULL;
-    }
-
-    $uri = $this->fileSystem->tempnam('temporary://', 'po_');
-
     $writer = new PoStreamWriter();
     $writer->setURI($uri);
     $writer->setHeader($header);
     $writer->open();
 
-    // Write every Items one by one.
-    foreach ($items as $item) {
-      $this->report['strings'][] = $item->getSource();
-      $writer->writeItem($item);
+    // Write every message one by one.
+    foreach ($messages as $message) {
+      $this->report['strings'][] = $message->getSource();
+      $writer->writeItem($message);
     }
 
     $writer->close();

@@ -6,6 +6,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\potion\Extractor\YamlExtractor;
 use Drupal\Component\Gettext\PoItem;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
+use Drupal\potion\MessageCatalogue;
 
 /**
  * @coversDefaultClass \Drupal\potion\Extractor\YamlExtractor
@@ -115,11 +116,12 @@ class YamlExtractorTest extends KernelTestBase {
     // Extract with recusrsivity to retrieive the complete set of translations.
     $actual = $this->yamlExtractor->extract($this->extractionPath, TRUE);
 
-    $this->assertContainsOnlyInstancesOf(PoItem::class, $actual);
-    $this->assertCount(7, $actual);
+    $this->assertInstanceOf(MessageCatalogue::class, $actual);
+    $this->assertContainsOnlyInstancesOf(PoItem::class, $actual->all());
+    $this->assertEquals(7, $actual->count());
 
     // Asserts collection of objects are in the same order w/ same properties.
-    $this->assertEquals($this->poItems, $actual);
+    $this->assertEquals($this->poItems, $actual->all());
   }
 
   /**
@@ -128,8 +130,10 @@ class YamlExtractorTest extends KernelTestBase {
   public function testExtractPartial() {
     // Extract whitout recusrsivity to retrieive a partial set of translations.
     $actual = $this->yamlExtractor->extract($this->extractionPath, FALSE);
-    $this->assertContainsOnlyInstancesOf(PoItem::class, $actual);
-    $this->assertCount(7, $actual);
+
+    $this->assertInstanceOf(MessageCatalogue::class, $actual);
+    $this->assertContainsOnlyInstancesOf(PoItem::class, $actual->all());
+    $this->assertEquals(7, $actual->count());
   }
 
 }

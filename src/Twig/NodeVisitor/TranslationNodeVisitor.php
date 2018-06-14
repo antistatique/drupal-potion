@@ -4,7 +4,7 @@ namespace Drupal\potion\Twig\NodeVisitor;
 
 use Drupal\Core\Template\TwigNodeTrans;
 use Twig\NodeVisitor\AbstractNodeVisitor;
-use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
+use Drupal\potion\MessageCatalogue;
 
 /**
  * Extracts translation messages from twig.
@@ -23,11 +23,11 @@ class TranslationNodeVisitor extends AbstractNodeVisitor {
   private $enabled = FALSE;
 
   /**
-   * List of translation messages key extracted from Twig.
+   * The catalogue of messages.
    *
-   * @var \Drupal\Component\Gettext\PoItem[]
+   * @var \Drupal\potion\MessageCatalogue
    */
-  private $messages = [];
+  protected $catalogue;
 
   /**
    * The Utility service of Potion.
@@ -48,7 +48,7 @@ class TranslationNodeVisitor extends AbstractNodeVisitor {
    */
   public function enable() {
     $this->enabled = TRUE;
-    $this->messages = [];
+    $this->catalogue = new MessageCatalogue();
   }
 
   /**
@@ -56,17 +56,16 @@ class TranslationNodeVisitor extends AbstractNodeVisitor {
    */
   public function disable() {
     $this->enabled = FALSE;
-    $this->messages = [];
   }
 
   /**
    * Return the list of translation messages key extracted from Twig.
    *
-   * @return \Drupal\Component\Gettext\PoItem[]
-   *   Collection of PoItem translations keys.
+   * @return \Drupal\potion\MessageCatalogue
+   *   Catalogue of extracted translations messages.
    */
-  public function getMessages() {
-    return $this->messages;
+  public function getCatalogue() {
+    return $this->catalogue;
   }
 
   /**
@@ -84,7 +83,7 @@ class TranslationNodeVisitor extends AbstractNodeVisitor {
       $node->getNode('node') instanceof \Twig_Node_Expression_Constant
     ) {
       // Save the extracted translations in the messages collection.
-      $this->messages = array_merge($this->messages, $this->utility->setItem($node->getNode('node')->getAttribute('value')));
+      $this->catalogue->add($node->getNode('node')->getAttribute('value'));
 
       return $node;
     }
@@ -106,7 +105,7 @@ class TranslationNodeVisitor extends AbstractNodeVisitor {
     // Eg. `{% trans 'Hello sun' %}`.
     if ($node->getNode('body')->hasAttribute('value') && is_null($node->getNode('plural'))) {
       // Save the extracted translations in the messages collection.
-      $this->messages = array_merge($this->messages, $this->utility->setItem($node->getNode('body')->getAttribute('value'), $context));
+      $this->catalogue->add($node->getNode('body')->getAttribute('value'), $context);
       return $node;
     }
 
@@ -114,7 +113,8 @@ class TranslationNodeVisitor extends AbstractNodeVisitor {
     // Eg. `{% trans %}Hello moon.{% endtrans %}`.
     if ($node->getNode('body')->hasAttribute('data') && is_null($node->getNode('plural'))) {
       // Save the extracted translations in the messages collection.
-      $this->messages = array_merge($this->messages, $this->utility->setItem($node->getNode('body')->getAttribute('data'), $context));
+      $this->catalogue->add($node->getNode('body')->getAttribute('data'), $context);
+
       return $node;
     }
 
@@ -128,7 +128,7 @@ class TranslationNodeVisitor extends AbstractNodeVisitor {
 
       $message .= $this->compileString($node->getNode('body'));
       // Save the extracted translations in the messages collection.
-      $this->messages = array_merge($this->messages, $this->utility->setItem($message, $context));
+      $this->catalogue->add($message, $context);
       return $node;
     }
 
@@ -145,7 +145,7 @@ class TranslationNodeVisitor extends AbstractNodeVisitor {
       $singular .= $this->compileString($node->getNode('body'));
       $plural = $this->compileString($node->getNode('plural'));
       // Save the extracted translations in the messages collection.
-      $this->messages = array_merge($this->messages, $this->utility->setItem([0 => trim($singular), 1 => trim($plural)], $context));
+      $this->catalogue->add([0 => trim($singular), 1 => trim($plural)], $context);
 
       return $node;
     }
@@ -248,32 +248,6 @@ class TranslationNodeVisitor extends AbstractNodeVisitor {
     }
 
     return $message;
-  }
-
-  /**
-   * Store the parsed values as a PoItem object.
-   *
-   * @param string|array $msgid
-   *   The translations source string or array of strings if it has plurals.
-   * @param string $msgctxt
-   *   The context this translation belongs to.
-   */
-  protected function setItem($msgid, $msgctxt = NULL) {
-    // Save source & translations as stinog or array of strings if it's plural.
-    $source      = is_array($msgid) ? implode(PluralTranslatableMarkup::DELIMITER, $msgid) : trim($msgid);
-    $translation = is_array($msgid) ? implode(PluralTranslatableMarkup::DELIMITER, ['', '']) : '';
-
-    $item = new PoItem();
-    $item->setFromArray([
-      'context'     => $msgctxt,
-      'source'      => $source,
-      'translation' => $translation,
-      'comment'     => NULL,
-    ]);
-
-    // Generate a uniq key by translations to avoid duplicates.
-    $id = md5($source . $msgctxt);
-    $this->messages[$id] = $item;
   }
 
   /**
