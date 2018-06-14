@@ -11,7 +11,8 @@ use Drupal\potion\Exception\ExtractorException;
 /**
  * Extract Translations from Twig template.
  */
-class TwigExtractor implements ExtractorInterface {
+class TwigExtractor extends ExtractorBase implements ExtractableInterface {
+
   /**
    * The twig environment.
    *
@@ -26,6 +27,8 @@ class TwigExtractor implements ExtractorInterface {
    *   Twig Env.
    */
   public function __construct(Twig_Environment $twig) {
+    parent::__construct();
+
     $this->twig = $twig;
   }
 
@@ -33,32 +36,29 @@ class TwigExtractor implements ExtractorInterface {
    * {@inheritdoc}
    */
   public function extract($path, $recursive = FALSE) {
-    // Collection of unique translations strings.
-    $translations = [];
-
     $files = $this->getFilesFromDirectory($path, $recursive);
     foreach ($files as $file) {
       try {
         // Attempts to extracts translations key from the template.
-        $trans = $this->extractFromTemplate($file->getContents());
-        $translations = array_merge($translations, $trans);
+        $file_catalogue = $this->extractFromTemplate($file->getContents());
+        $this->catalogue->merge($file_catalogue);
       }
       catch (Twig_Error $e) {
         throw new ExtractorException($e->getMessage(), $e->getCode(), $e);
       }
     }
 
-    return array_unique($translations);
+    return $this->catalogue;
   }
 
   /**
-   * Extract from a Twig template.
+   * Extract from a Twig template & store it in the catalogue.
    *
    * @param string $template
    *   Twig content template.
    *
-   * @return \Drupal\Component\Gettext\PoItem[]
-   *   List of translation messages key extracted from twig files.
+   * @return \Drupal\potion\MessageCatalogue
+   *   Catalogue of extracted translations messages.
    */
   protected function extractFromTemplate($template) {
     /** @var \Drupal\potion\Twig\NodeVisitor\TranslationNodeVisitor $visitor */
@@ -67,11 +67,9 @@ class TwigExtractor implements ExtractorInterface {
     $visitor->enable();
 
     $this->twig->parse($this->twig->tokenize(new Twig_Source($template, '')));
-    $translation = $visitor->getMessages();
-
     $visitor->disable();
 
-    return $translation;
+    return $visitor->getCatalogue();
   }
 
   /**

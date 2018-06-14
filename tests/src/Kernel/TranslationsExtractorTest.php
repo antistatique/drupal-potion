@@ -14,7 +14,7 @@ use Drupal\potion\Exception\PotionException;
 class TranslationsExtractorTest extends TranslationsTestsBase {
 
   /**
-   * The Translation exporter.
+   * The Translation Extracter.
    *
    * @var \Drupal\potion\TranslationsExtractor
    */
@@ -132,7 +132,7 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
   /**
    * @covers \Drupal\potion\TranslationsExtractor::extract
    */
-  public function testTranslationsExportAll() {
+  public function testTranslationsExtractAll() {
     $this->setUpTranslations();
     $this->setUpNonTranslations();
 
@@ -152,7 +152,7 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
   /**
    * @covers \Drupal\potion\TranslationsExtractor::extract
    */
-  public function testTranslationsExportRecursivity() {
+  public function testTranslationsExtractRecursivity() {
     $this->setUpTranslations();
     $this->setUpNonTranslations();
 
@@ -172,7 +172,7 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
   /**
    * @covers \Drupal\potion\TranslationsExtractor::extract
    */
-  public function testTranslationsExportNone() {
+  public function testTranslationsExtractNone() {
     $this->setUpTranslations();
     $this->setUpNonTranslations();
 
@@ -192,7 +192,7 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
   /**
    * @covers \Drupal\potion\TranslationsExtractor::extract
    */
-  public function testTranslationsExportTwigOnly() {
+  public function testTranslationsExtractTwigOnly() {
     $this->setUpTranslations();
     $this->setUpNonTranslations();
 
@@ -212,7 +212,7 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
   /**
    * @covers \Drupal\potion\TranslationsExtractor::extract
    */
-  public function testTranslationsExportPhpOnly() {
+  public function testTranslationsExtractPhpOnly() {
     $this->setUpTranslations();
     $this->setUpNonTranslations();
 
@@ -232,7 +232,7 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
   /**
    * @covers \Drupal\potion\TranslationsExtractor::extract
    */
-  public function testTranslationsExportYamlOnly() {
+  public function testTranslationsExtractYamlOnly() {
     $this->setUpTranslations();
     $this->setUpNonTranslations();
 
@@ -252,7 +252,7 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
   /**
    * @covers \Drupal\potion\TranslationsExtractor::extract
    */
-  public function testTranslationsExportPhpTwigOnly() {
+  public function testTranslationsExtractPhpTwigOnly() {
     $this->setUpTranslations();
     $this->setUpNonTranslations();
 
@@ -272,7 +272,7 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
   /**
    * @covers \Drupal\potion\TranslationsExtractor::extract
    */
-  public function testTranslationsExportPhpYamlOnly() {
+  public function testTranslationsExtractPhpYamlOnly() {
     $this->setUpTranslations();
     $this->setUpNonTranslations();
 
@@ -292,7 +292,7 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
   /**
    * @covers \Drupal\potion\TranslationsExtractor::extract
    */
-  public function testTranslationsExportYamlTwigOnly() {
+  public function testTranslationsExtractYamlTwigOnly() {
     $this->setUpTranslations();
     $this->setUpNonTranslations();
 

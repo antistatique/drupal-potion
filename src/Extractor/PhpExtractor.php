@@ -14,7 +14,7 @@ use Drupal\potion\Utility;
  *
  * @see \Symfony\Component\Translation\Extractor\PhpExtractor
  */
-class PhpExtractor implements ExtractorInterface {
+class PhpExtractor extends ExtractorBase implements ExtractableInterface {
 
   const MESSAGE_TOKEN = 300;
   const MESSAGE_PLURAL_TOKEN = 301;
@@ -127,6 +127,8 @@ class PhpExtractor implements ExtractorInterface {
    *   Utility methods for Potion.
    */
   public function __construct(Utility $utility) {
+    parent::__construct();
+
     $this->utility = $utility;
   }
 
@@ -134,36 +136,28 @@ class PhpExtractor implements ExtractorInterface {
    * {@inheritdoc}
    */
   public function extract($path, $recursive = FALSE) {
-    // Collection of unique translations strings.
-    $translations = [];
-
     $files = $this->getFilesFromDirectory($path, $recursive);
 
     foreach ($files as $file) {
       try {
         // Attempts to extracts translations key from the file.
-        $trans = $this->extractFromFile($file->getContents());
-        $translations = array_merge($translations, $trans);
+        $this->extractFromFile($file->getContents());
       }
       catch (Twig_Error $e) {
         throw new ExtractorException($e->getMessage(), $e->getCode(), $e);
       }
     }
-    // Some files could capture the same translations, so uniquify the whole.
-    return array_unique($translations);
+
+    return $this->catalogue;
   }
 
   /**
-   * Extract from a PHP file.
+   * Extract from a PHP file & store the message in the catalogue.
    *
    * @param string $file
    *   File content.
-   *
-   * @return \Drupal\Component\Gettext\PoItem[]
-   *   list of translation messages key extracted from file.
    */
   protected function extractFromFile($file) {
-    $translations = [];
     $tokens = token_get_all($file);
     $tokenIterator = new \ArrayIterator($tokens);
 
@@ -206,13 +200,11 @@ class PhpExtractor implements ExtractorInterface {
 
         // If message has been captured, save it as PoItem.
         if ($message) {
-          $translations = array_merge($translations, $this->utility->setItem($message, $context));
+          $this->catalogue->add($message, $context);
           break;
         }
       }
     }
-
-    return $translations;
   }
 
   /**
@@ -224,7 +216,7 @@ class PhpExtractor implements ExtractorInterface {
    * @return string
    *   the normalized token when needed to be normalized.
    */
-  protected function normalizeToken($token) {
+  private function normalizeToken($token) {
     if (isset($token[1])) {
       return $token[1];
     }
@@ -239,8 +231,8 @@ class PhpExtractor implements ExtractorInterface {
    */
   private function seekToNextRelevantToken(\Iterator $tokenIterator) {
     for (; $tokenIterator->valid(); $tokenIterator->next()) {
-      $t = $tokenIterator->current();
-      if (T_WHITESPACE !== $t[0]) {
+      $token = $tokenIterator->current();
+      if (T_WHITESPACE !== $token[0]) {
         break;
       }
     }
@@ -256,17 +248,17 @@ class PhpExtractor implements ExtractorInterface {
     $openBraces = 0;
 
     for (; $tokenIterator->valid(); $tokenIterator->next()) {
-      $t = $tokenIterator->current();
+      $token = $tokenIterator->current();
 
-      if ('[' === $t[0] || '(' === $t[0]) {
+      if ('[' === $token[0] || '(' === $token[0]) {
         ++$openBraces;
       }
 
-      if (']' === $t[0] || ')' === $t[0]) {
+      if (']' === $token[0] || ')' === $token[0]) {
         --$openBraces;
       }
 
-      if ((0 === $openBraces && ',' === $t[0]) || (-1 === $openBraces && ')' === $t[0])) {
+      if ((0 === $openBraces && ',' === $token[0]) || (-1 === $openBraces && ')' === $token[0])) {
         break;
       }
     }
@@ -287,35 +279,35 @@ class PhpExtractor implements ExtractorInterface {
     $openBraces = 0;
 
     for (; $tokenIterator->valid(); $tokenIterator->next()) {
-      $t = $tokenIterator->current();
+      $token = $tokenIterator->current();
 
       // Detect the end of the options arugments.
-      if ('[' === $t[0] || '(' === $t[0]) {
+      if ('[' === $token[0] || '(' === $token[0]) {
         ++$openBraces;
       }
-      if (']' === $t[0] || ')' === $t[0]) {
+      if (']' === $token[0] || ')' === $token[0]) {
         --$openBraces;
       }
-      if ((0 === $openBraces && '[' === $t[0]) || (-1 === $openBraces && ')' === $t[0])) {
+      if ((0 === $openBraces && '[' === $token[0]) || (-1 === $openBraces && ')' === $token[0])) {
         break;
       }
 
       // Detect the start of 'context' key in the option array arugment.
-      if ($this->normalizeToken($t) === "'context'") {
+      if ($this->normalizeToken($token) === "'context'") {
         $context_found = TRUE;
         continue;
       }
 
       // When we detect the 'context', capture the context string.
       if ($context_found) {
-        switch ($t[0]) {
+        switch ($token[0]) {
           case T_WHITESPACE:
           case T_DOUBLE_ARROW:
             continue;
 
           break;
           case T_CONSTANT_ENCAPSED_STRING:
-            $context = $t[1];
+            $context = $token[1];
             $context = PhpStringTokenParser::parse($context);
             return $context;
 
@@ -343,19 +335,19 @@ class PhpExtractor implements ExtractorInterface {
     $docToken = '';
 
     for (; $tokenIterator->valid(); $tokenIterator->next()) {
-      $t = $tokenIterator->current();
-      if (!isset($t[1])) {
+      $token = $tokenIterator->current();
+      if (!isset($token[1])) {
         break;
       }
 
-      switch ($t[0]) {
+      switch ($token[0]) {
         case T_START_HEREDOC:
-          $docToken = $t[1];
+          $docToken = $token[1];
           break;
 
         case T_ENCAPSED_AND_WHITESPACE:
         case T_CONSTANT_ENCAPSED_STRING:
-          $message .= $t[1];
+          $message .= $token[1];
           break;
 
         case T_END_HEREDOC:

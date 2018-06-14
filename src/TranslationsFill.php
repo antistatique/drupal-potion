@@ -42,6 +42,14 @@ class TranslationsFill {
    *
    * @var \Drupal\locale\StringStorageInterface
    */
+  protected $localeStorage;
+
+  /**
+   * The catalogue of messages.
+   *
+   * @var \Drupal\potion\MessageCatalogue
+   */
+  protected $catalogue;
 
   /**
    * Class constructor.
@@ -60,6 +68,8 @@ class TranslationsFill {
     $this->siteConfig    = $config_factory->get('system.site');
     $this->fileSystem    = $file_system;
     $this->localeStorage = $local_storage;
+
+    $this->catalogue = new MessageCatalogue();
 
     $this->setReport();
   }
@@ -142,8 +152,6 @@ class TranslationsFill {
       throw new PotionException($e->getMessage(), $e->getCode(), $e);
     }
 
-    /** @var \Drupal\locale\TranslationString[] $translations */
-    $translations = [];
     while ($item = $reader->readItem()) {
       // TODO REFACTORING HERE.
       // Get the source from the file & format it.
@@ -174,7 +182,7 @@ class TranslationsFill {
         $trans = $trans->getString();
       }
 
-      $translations = array_merge($translations, $this->utility->setItem($item->getSource(), $item->getContext(), $trans));
+      $this->catalogue->add($item->getSource(), $item->getContext(), $trans);
     }
 
     $reader = new PoDatabaseReader();
@@ -190,7 +198,7 @@ class TranslationsFill {
     $writer->open();
 
     // Write every Items one by one.
-    foreach ($translations as $item) {
+    foreach ($this->catalogue->all() as $item) {
       $this->report['strings'][] = $item->getSource();
 
       $trans = $item->getTranslation();

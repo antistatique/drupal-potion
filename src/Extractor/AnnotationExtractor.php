@@ -17,8 +17,7 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
  * The SimpleAnnotationReader is under refactoring this class may drasticaly
  * change soon @see https://www.drupal.org/project/drupal/issues/2631202
  */
-class AnnotationExtractor implements ExtractorInterface {
-
+class AnnotationExtractor extends ExtractorBase implements ExtractableInterface {
   /**
    * The Utility service of Potion.
    *
@@ -40,6 +39,8 @@ class AnnotationExtractor implements ExtractorInterface {
    *   Utility methods for Potion.
    */
   public function __construct(Utility $utility) {
+    parent::__construct();
+
     $this->utility = $utility;
 
     // Init the annotation reader.
@@ -53,39 +54,28 @@ class AnnotationExtractor implements ExtractorInterface {
    * {@inheritdoc}
    */
   public function extract($path, $recursive = FALSE) {
-    // Collection of unique translations strings between all files.
-    $translations = [];
-
     $files = $this->getFilesFromDirectory($path, $recursive);
 
     foreach ($files as $file) {
       try {
         // Attempts to extracts translations key from the file.
-        $trans = $this->extractFromFile($file);
-        $translations = array_merge($translations, $trans);
+        $this->extractFromFile($file);
       }
       catch (Twig_Error $e) {
         throw new ExtractorException($e->getMessage(), $e->getCode(), $e);
       }
     }
 
-    // Some files could capture the same translations, so uniquify the whole.
-    return array_unique($translations);
+    return $this->catalogue;
   }
 
   /**
-   * Extract from a Annocation Class file.
+   * Extract from a Annocation Class file & store it in the catalogue.
    *
    * @param \Symfony\Component\Finder\SplFileInfo $file
    *   The file to process File.
-   *
-   * @return \Drupal\Component\Gettext\PoItem[]
-   *   list of translation messages key extracted from file.
    */
   protected function extractFromFile(SplFileInfo $file) {
-    // Collection of unique translations strings for this file.
-    $translations = [];
-
     // Get the fully-qualified class name.
     $class = $this->getClassName($file);
 
@@ -121,12 +111,10 @@ class AnnotationExtractor implements ExtractorInterface {
         }
 
         if ($message) {
-          $translations = array_merge($translations, $this->utility->setItem($message, $context));
+          $this->catalogue->add($message, $context);
         }
       }
     }
-
-    return $translations;
   }
 
   /**

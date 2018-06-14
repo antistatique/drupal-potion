@@ -19,7 +19,7 @@ use Drupal\Component\Serialization\SerializationInterface;
  *
  * @see https://www.drupal.org/docs/8/api/translation-api/overview
  */
-class YamlExtractor implements ExtractorInterface {
+class YamlExtractor extends ExtractorBase implements ExtractableInterface {
 
   /**
    * The Utility service of Potion.
@@ -86,7 +86,9 @@ class YamlExtractor implements ExtractorInterface {
    *   Provides a YAML serialization implementation.
    */
   public function __construct(Utility $utility, SerializationInterface $yaml_serialization) {
-    $this->utility        = $utility;
+    parent::__construct();
+
+    $this->utility = $utility;
     $this->yamlSerializer = $yaml_serialization;
   }
 
@@ -94,39 +96,28 @@ class YamlExtractor implements ExtractorInterface {
    * {@inheritdoc}
    */
   public function extract($path, $recursive = FALSE) {
-    // Collection of unique translations strings between all files.
-    $translations = [];
-
     $files = $this->getFilesFromDirectory($path, $recursive);
 
     foreach ($files as $file) {
       try {
         // Attempts to extracts translations key from the file.
-        $trans = $this->extractFromFile($file);
-        $translations = array_merge($translations, $trans);
+        $this->extractFromFile($file);
       }
       catch (Twig_Error $e) {
         throw new ExtractorException($e->getMessage(), $e->getCode(), $e);
       }
     }
 
-    // Some files could capture the same translations, so uniquify the whole.
-    return array_unique($translations);
+    return $this->catalogue;
   }
 
   /**
-   * Extract from a Annocation Class file.
+   * Extract from a Annocation Class file and store in the catalogue.
    *
    * @param \Symfony\Component\Finder\SplFileInfo $file
    *   The file to process File.
-   *
-   * @return \Drupal\Component\Gettext\PoItem[]
-   *   list of translation messages key extracted from file.
    */
   protected function extractFromFile(SplFileInfo $file) {
-    // Collection of unique translations strings for this file.
-    $translations = [];
-
     // Get a multidimensionnal array from Yaml file.
     $data = $this->yamlSerializer->decode($file->getContents());
 
@@ -139,9 +130,9 @@ class YamlExtractor implements ExtractorInterface {
       }
     }
 
-    // Do nothing if no sequences exists for this kind of file.
+    // Do nothing if no sequences exists for this file.
     if (!$sequences) {
-      return $translations;
+      return;
     }
 
     // Loop through every top level element of Yaml file.
@@ -165,12 +156,10 @@ class YamlExtractor implements ExtractorInterface {
         }
 
         if ($message) {
-          $translations = array_merge($translations, $this->utility->setItem($message, $context));
+          $this->catalogue->add($message, $context);
         }
       }
     }
-
-    return $translations;
   }
 
   /**
