@@ -157,6 +157,10 @@ abstract class TranslationsTestsBase extends KernelTestBase {
       'source' => 'yellow',
     ]);
     $source2->save();
+    $source3 = $this->localStorage->createString([
+      'source' => 'Alone in the dark.',
+    ]);
+    $source3->save();
   }
 
 }

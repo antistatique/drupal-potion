@@ -112,8 +112,24 @@ class TranslationsFillTest extends TranslationsTestsBase {
     $report = $this->translationsFill->getReport();
 
     $this->assertEquals(9, $report['translated']);
-    $this->assertEquals(0, $report['untranslated']);
-    $this->assertCount(9, $report['strings']);
+    $this->assertEquals(1, $report['untranslated']);
+    $this->assertCount(10, $report['strings']);
+  }
+
+  /**
+   * @covers \Drupal\potion\TranslationsFill::fillFromDatabase
+   */
+  public function testFillCompleteWithNonTranslation() {
+    $this->setUpTranslations();
+    $this->setUpNonTranslations();
+
+    $source = $this->translationsPath . '/fr.po';
+    $this->translationsFill->fillFromDatabase('fr', $source);
+    $report = $this->translationsFill->getReport();
+
+    $this->assertEquals(9, $report['translated']);
+    $this->assertEquals(1, $report['untranslated']);
+    $this->assertCount(10, $report['strings']);
   }
 
   /**
@@ -127,8 +143,24 @@ class TranslationsFillTest extends TranslationsTestsBase {
     $report = $this->translationsFill->getReport();
 
     $this->assertEquals(8, $report['translated']);
-    $this->assertEquals(1, $report['untranslated']);
-    $this->assertCount(9, $report['strings']);
+    $this->assertEquals(2, $report['untranslated']);
+    $this->assertCount(10, $report['strings']);
+  }
+
+  /**
+   * @covers \Drupal\potion\TranslationsFill::fillFromDatabase
+   */
+  public function testFillPartialWithNonTranslation() {
+    $this->setUpTranslations();
+    $this->setUpNonTranslations();
+
+    $source = $this->translationsPath . '/fill/fr.po';
+    $this->translationsFill->fillFromDatabase('fr', $source);
+    $report = $this->translationsFill->getReport();
+
+    $this->assertEquals(8, $report['translated']);
+    $this->assertEquals(2, $report['untranslated']);
+    $this->assertCount(10, $report['strings']);
   }
 
   /**
@@ -140,8 +172,8 @@ class TranslationsFillTest extends TranslationsTestsBase {
     $report = $this->translationsFill->getReport();
 
     $this->assertEquals(9, $report['translated']);
-    $this->assertEquals(0, $report['untranslated']);
-    $this->assertCount(9, $report['strings']);
+    $this->assertEquals(1, $report['untranslated']);
+    $this->assertCount(10, $report['strings']);
   }
 
   /**
@@ -155,8 +187,8 @@ class TranslationsFillTest extends TranslationsTestsBase {
     $report = $this->translationsFill->getReport();
 
     $this->assertEquals(8, $report['translated']);
-    $this->assertEquals(1, $report['untranslated']);
-    $this->assertCount(9, $report['strings']);
+    $this->assertEquals(2, $report['untranslated']);
+    $this->assertCount(10, $report['strings']);
   }
 
   /**
@@ -168,8 +200,8 @@ class TranslationsFillTest extends TranslationsTestsBase {
     $report = $this->translationsFill->getReport();
 
     $this->assertEquals(5, $report['translated']);
-    $this->assertEquals(4, $report['untranslated']);
-    $this->assertCount(9, $report['strings']);
+    $this->assertEquals(5, $report['untranslated']);
+    $this->assertCount(10, $report['strings']);
   }
 
 }

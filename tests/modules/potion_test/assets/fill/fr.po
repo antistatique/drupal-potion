@@ -43,3 +43,6 @@ msgstr[1] "@count médecins"
 
 msgid "I love @color car"
 msgstr "J'adore les voitures @color"
+
+msgid "Alone in the dark."
+msgstr ""

@@ -179,7 +179,7 @@ class TranslationsFill {
 
         // Get the first translations.
         $trans = reset($trans);
-        $trans = $trans->getString();
+        $trans = $trans ? $trans->getString() : NULL;
       }
 
       $this->catalogue->add($item->getSource(), $item->getContext(), $trans);
