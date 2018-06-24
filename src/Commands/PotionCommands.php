@@ -366,18 +366,18 @@ class PotionCommands extends DrushCommands {
 
     switch ($write_mode) {
       case 'merge':
-      default:
         // Perform the backup-merge operations.
         $this->utility->merge($fullpath, [$file->getRealPath()]);
         break;
 
       case 'create':
         $fullpath = $this->utility->sanitizePath($this->fileSystem->realpath($destination)) . $langcode . '-' . uniqid() . '.po';
-        // Perform the move/create operation.
+        // Perform the create operation.
         rename($file->getRealPath(), $fullpath);
         break;
 
       case 'override':
+      default:
         // Perform the move operation.
         rename($file->getRealPath(), $fullpath);
         break;
