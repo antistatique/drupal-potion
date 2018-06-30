@@ -114,6 +114,11 @@ class Utility {
    *   The path with a trailing director separator when needed.
    */
   public function sanitizePath($path) {
+    // Only trim on non-empty path.
+    if (empty($path)) {
+      return $path;
+    }
+
     // Only trim if we're not dealing with a stream.
     if (!file_stream_wrapper_valid_scheme($this->fileSystem->uriScheme($path)) || substr($path, -strlen('://')) !== '://') {
       $path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
@@ -139,7 +144,7 @@ class Utility {
    * @throws \Drupal\potion\Exception\PotionException
    */
   public function merge($original, array $files) {
-    // Don't process when the original file don't exists.
+    // Don't process when the original file does not exist.
     if (!file_exists($original)) {
       return FALSE;
     }

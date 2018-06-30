@@ -25,6 +25,9 @@ function potion_install() {
  * Implements hook_requirements().
  */
 function potion_requirements($phase) {
+  /** @var \Drupal\potion\Utility $utility */
+  $utility = \Drupal::service('potion.utility');
+
   /** @var \Drupal\Core\Config\Config $gettextConfig */
   $gettextConfig = \Drupal::service('config.factory')->get('potion.gettext.settings');
 
@@ -79,7 +82,7 @@ function potion_requirements($phase) {
   ];
 
   // Path to gettext binaries files. When empty, the $PATH values are used.
-  $path = $gettextConfig->get('path');
+  $path = $utility->sanitizePath($gettextConfig->get('path'));
 
   // Asserts `gettext` utilities are reacheable & executable.
   if ($phase == 'runtime') {

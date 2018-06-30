@@ -37,27 +37,73 @@ Give it a try and feel free to send us feedback in the issue thread.
 
 ### Import standard po files into Drupal database
 
+Expose the [Core feature of translation importation](/admin/config/regional/translate/import) from .po as a command line.
+
 ```bash
 drush potion-import [--mode mode] [--overwrite] [-q|--quiet] [-h|--help] langcode source
 ```
 
+* `source`: The source po file
+* `langcode`: Import the po into the given langcode
+* `--mode`: Define the importation mode from 'customized' or 'non-customized'.
+            Use 'non-customized' when translations are imported from .po files
+            downloaded from localize.drupal.org for example.
+            Use 'customized' when translations are edited from their imported
+            originals on the user interface or are imported as customized.
+            [default: "customized"]
+* `--overwrite`: Overwrite existing translations with value in the source file.
+* `-q|--quiet`: Do not ask any interactive question.
+* `-h|--help`: Display usage details.
+
+
 ### Export standard po files from Drupal database
+
+Expose the [Core feature of translation exportation](/admin/config/regional/translate/export) from .po as a command.
 
 ```bash
 drush potion-export [--non-customized] [--customized] [--untranslated] [--progress] [-q|--quiet] [-h|--help] langcode dest
 ```
 
+* `langcode`: The langcode to export
+* `dest`: The destination folder of po file
+* `--customized`: Export the customized translations.
+* `--non-customized`: Export the non-customized translations
+* `--untranslated`: Export untranslated string
+* `-q|--quiet`: Do not ask any interactive question.
+* `-h|--help`: Display usage details.
+
 ### Generate, scrape & parse your code to generate po file
+
+Parse all the files in into the given `source` & generate a fresh `langcode`.po file.
+If a `langcode`.po already exists in the `dest` dir, merge them & remove duplicates.
 
 ```bash
 drush potion-generate [--exclude-yaml] [--exclude-twig] [--exclude-php] [--recursive] [-q|--quiet] [-h|--help] langcode source dest
 ```
 
+* `langcode`: The langcode to generate
+* `source`: The source folder to scan for translations
+* `dest`: The destination folder of po file
+* `--exclude-yaml`: Exclude YAML files (.yaml) to be scanned for translations
+* `--exclude-twig`: Exclude TWIG files (.twig) to be scanned for translations
+* `--exclude-php`: Exclude PHP files (.php, .module) to be scanned for translations
+* `--recursive`: Enable scan recursion on the source folder
+* `-q|--quiet`: Do not ask any interactive question.
+* `-h|--help`: Display usage details.
+
 ### Re-fill an existing po file with translations from Drupal database
+
+From a given `source` po file into a `langcode` read the whole database & fill the same po file with data.
 
 ```bash
 drush potion-fill [--overwrite] [-q|--quiet] [-h|--help] langcode source
 ```
+
+* `langcode`: The langcode to generate from database
+* `source`: The source folder to scan for translations
+* `--overwrite`: Overwrite existing translations in the po with value from the database.
+* `-q|--quiet`: Do not ask any interactive question.
+* `-h|--help`: Display usage details.
 
 ## Versions
 
@@ -71,8 +117,8 @@ and it is always recommended keeping Drupal core installations up to date.
 
 This module relies on the [GNU gettext toolset](https://www.gnu.org/software/gettext/), the [Symfony Process Component](https://symfony.com/doc/current/components/process.html) & the [Symfony Finder Component](https://symfony.com/doc/current/components/finder.html).
 
-* `Symfony Process Component` is an external PHP library to execute binaries ;
-* `Symfony Finder Component` is an external PHP library to execute binaries ;
+* `Symfony Process Component` is an external PHP library to execute commands in sub-processes.
+* `Symfony Finder Component` is an external PHP library to finds files and directories via an intuitive fluent interface.
 * `Gettext` utilities are a set of tools that provides a framework to help other packages produce multi-lingual messages. The minimum version of the `gettext` utilities supported is `0.19.8.1`.
 
 We assume, that you have installed `symfony/process`, `symfony/finder` & `gettex`. We also assume `gettext` utilities are accessible through your `$PATH`.

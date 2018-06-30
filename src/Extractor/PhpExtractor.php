@@ -168,7 +168,7 @@ class PhpExtractor extends ExtractorBase implements ExtractableInterface {
         // Optional captured context string.
         $context = NULL;
 
-        // Go th the next token key.
+        // Go to the next token key.
         $tokenIterator->seek($key);
         foreach ($sequence as $item) {
           $this->seekToNextRelevantToken($tokenIterator);
