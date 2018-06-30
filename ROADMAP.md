@@ -99,7 +99,7 @@ drush potion-generate [--exclude-yaml] [--exclude-twig] [--exclude-php] [--recur
 
 *Usage*
 ```
-drush potion-fill [--overwrite] [--verbose] [-q|--quiet] [-h|--help] langcode source
+drush potion-fill [--overwrite] [-q|--quiet] [-h|--help] langcode source
 ```
 
 From a given `source` po file into a `langcode` read the whole database & fill the same po file with data.
@@ -112,7 +112,6 @@ From a given `source` po file into a `langcode` read the whole database & fill t
 - `langcode`: The langcode to generate from database
 - `source`: The source folder to scan for translations
 - `--overwrite`: Overwrite existing translations in the po with value from the database.
-- `--verbose`: Report table when finish (translated, untranslated, overwritten)
 - `-q|--quiet`: Do not ask any interactive question.
 - `-h|--help`: Display usage details.
 
