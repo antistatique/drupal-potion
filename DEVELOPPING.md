@@ -10,7 +10,7 @@ https://github.com/antistatique/drupal-potion/pulls
 Drupal repo
 
   ```bash
-  git remote add origin https://wengerk@git.drupal.org:project/potion.git
+  git remote add origin git@git.drupal.org:project/potion.git
   ```
 
 Github repo
