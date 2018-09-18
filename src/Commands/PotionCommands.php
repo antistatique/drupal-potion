@@ -8,6 +8,7 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\potion\TranslationsImport;
 use Drupal\potion\TranslationsExport;
 use Drupal\potion\TranslationsExtractor;
+use Drupal\potion\TranslationsFill;
 use Drupal\potion\Exception\ConsoleException;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Consolidation\OutputFormatters\StructuredData\RowsOfFields;
@@ -55,6 +56,13 @@ class PotionCommands extends DrushCommands {
   protected $transExtractor;
 
   /**
+   * The Translation fill service.
+   *
+   * @var \Drupal\potion\TranslationsFill
+   */
+  protected $transFill;
+
+  /**
    * Class constructor.
    *
    * @param \Drupal\potion\Utility $utility
@@ -67,13 +75,16 @@ class PotionCommands extends DrushCommands {
    *   The Translation exporter service.
    * @param \Drupal\potion\TranslationsExtractor $translations_extractor
    *   The Translation extractor service.
+   * @param \Drupal\potion\TranslationsFill $translations_fill
+   *   The Translation fill service.
    */
-  public function __construct(Utility $utility, FileSystemInterface $file_system, TranslationsImport $translations_import, TranslationsExport $translations_export, TranslationsExtractor $translations_extractor) {
+  public function __construct(Utility $utility, FileSystemInterface $file_system, TranslationsImport $translations_import, TranslationsExport $translations_export, TranslationsExtractor $translations_extractor, TranslationsFill $translations_fill) {
     $this->utility        = $utility;
     $this->fileSystem     = $file_system;
     $this->transImport    = $translations_import;
     $this->transExport    = $translations_export;
     $this->transExtractor = $translations_extractor;
+    $this->transFill      = $translations_fill;
   }
 
   /**
@@ -392,6 +403,95 @@ class PotionCommands extends DrushCommands {
       'twig'  => $report['twig'],
       'php'   => $report['php'],
       'yaml'  => $report['yaml'],
+    ];
+    return new RowsOfFields($rows);
+  }
+
+  /**
+   * Re-fill an existing po file with translations from Drupal database.
+   *
+   * @param string $langcode
+   *   The langcode to import. Eg. 'en' or 'fr'.
+   * @param string $source
+   *   The source .po file.
+   * @param array $options
+   *   (optional) An array of options.
+   *
+   * @command potion:fill
+   *
+   * @option overwrite
+   *   Overwrite existing translations with values from the database file.
+   *   [default: "false"].
+   *
+   * @usage drush potion:fill langcode path/to/source.po
+   *   Fillup the source .po file with langcode translations from the database.
+   * @usage drush potion:fill fr path/to/fr.po
+   *   Fillup fr.po file with French translations from database.
+   * @usage drush potion:fill fr path/to/fr.po --overwrite
+   *   Fillup fr.po file with French translations from database and overwrite
+   *   existing ones on the original fr.po file.
+   *
+   * @validate-module-enabled locale, language, file
+   *
+   * @aliases po:fill
+   *
+   * @return \Consolidation\OutputFormatters\StructuredData\RowsOfFields
+   *   Formatted output summary.
+   *
+   * @throws \Drupal\potion\Exception\ConsoleException
+   *   If the langcode isn't a valid enabled language.
+   * @throws \Drupal\potion\Exception\ConsoleException
+   *   If the given source does not exists.
+   * @throws \Drupal\potion\Exception\ConsoleException
+   *   If the given source isn't a valid or malformed .po file.
+   * @throws \Drupal\potion\Exception\ConsoleException
+   *   If the given source is not readable.
+   * @throws \Drupal\potion\Exception\ConsoleException
+   *   If the given source is not writable.
+   */
+  public function fill($langcode, $source, array $options = [
+    'format'    => 'table',
+    'overwrite' => FALSE,
+  ]) {
+    // Check for existing & enabled langcode.
+    if (!$this->utility->isLangcodeEnabled($langcode)) {
+      throw ConsoleException::invalidLangcode($langcode);
+    }
+
+    // Check for existing path.
+    if (!is_file($source)) {
+      throw ConsoleException::notFound($source);
+    }
+
+    if (!is_readable($source)) {
+      throw ConsoleException::isNotReadable($source);
+    }
+
+    // Check for existing source with valid content.
+    if (!$this->utility->isValidPo($source)) {
+      throw ConsoleException::invalidPo($source);
+    }
+
+    // Check for writable destination.
+    if (!is_writable($source)) {
+      throw ConsoleException::isNotWritable($source);
+    }
+
+    $file = $this->transFill->fillFromDatabase($langcode, $source, $options['overwrite']);
+
+    // Create an incremental backup of original file.
+    $this->utility->backup($source);
+
+    rename($file->getRealPath(), $source);
+
+    $this->io()->success($this->t('File filled on: @destination', ['@destination' => $source]));
+
+    $report = $this->transFill->getReport();
+    $rows = [];
+    $rows[] = [
+      'total'        => count($report['strings']),
+      'translated'   => $report['translated'],
+      'untranslated' => $report['untranslated'],
     ];
     return new RowsOfFields($rows);
   }

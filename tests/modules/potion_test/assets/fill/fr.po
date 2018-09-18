@@ -15,18 +15,18 @@ msgid "last year"
 msgstr "l’année dernière"
 
 msgid "Yesterday"
-msgstr "Hier"
+msgstr ""
 
 msgid "Today"
 msgstr "Aujourd'hui"
 
 msgctxt "Long month name"
 msgid "March"
-msgstr "Mars"
+msgstr ""
 
 msgctxt "Long month name"
 msgid "April"
-msgstr "April"
+msgstr ""
 
 msgctxt "Abbreviated month name"
 msgid "Jul"
@@ -34,11 +34,11 @@ msgstr "Juil."
 
 msgctxt "Abbreviated month name"
 msgid "Jan"
-msgstr "Janv."
+msgstr ""
 
 msgid "@count doctor"
 msgid_plural "@count doctors"
-msgstr[0] "@count médecin"
+msgstr[0] ""
 msgstr[1] "@count médecins"
 
 msgid "I love @color car"

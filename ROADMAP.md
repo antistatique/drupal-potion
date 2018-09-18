@@ -102,7 +102,7 @@ drush potion-generate [--exclude-yaml] [--exclude-twig] [--exclude-php] [--recur
 drush potion-fill [--overwrite] [-q|--quiet] [-h|--help] langcode source
 ```
 
-From a given `source` po file into a `langcode` read the whole database & fill the same po file with data.
+From a given `source` po file on a `langcode` read the whole database & fill the same po file with data.
 
 *Errors handling*
 - Warning on wrong langcode
@@ -115,25 +115,8 @@ From a given `source` po file into a `langcode` read the whole database & fill t
 - `-q|--quiet`: Do not ask any interactive question.
 - `-h|--help`: Display usage details.
 
-### CLI - Validate po file
-
-*Usage*
-```
-drush potion-validate [-h|--help] source
-```
-
-From a given `source` po file check his validity.
-
-*Errors handling*
-- Warning source is not a po file
-
-*Parameters*
-- `source`: The source po file to validate
-- `-h|--help`: Display usage details.
-
 # Phase 2 - Enhanced Product
 
 Implements User Interface for new features:
 - Generate po file from code
 - Fill po file from database
-- Validate po file

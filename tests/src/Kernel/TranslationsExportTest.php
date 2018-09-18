@@ -162,8 +162,8 @@ class TranslationsExportTest extends TranslationsTestsBase {
     ]);
     $report = $this->translationExport->getReport();
     $this->assertEquals(0, $report['translated']);
-    $this->assertEquals(1, $report['untranslated']);
-    $this->assertCount(1, $report['strings']);
+    $this->assertEquals(2, $report['untranslated']);
+    $this->assertCount(2, $report['strings']);
   }
 
   /**
@@ -180,8 +180,8 @@ class TranslationsExportTest extends TranslationsTestsBase {
     ]);
     $report = $this->translationExport->getReport();
     $this->assertEquals(3, $report['translated']);
-    $this->assertEquals(2, $report['untranslated']);
-    $this->assertCount(5, $report['strings']);
+    $this->assertEquals(3, $report['untranslated']);
+    $this->assertCount(6, $report['strings']);
   }
 
   /**
@@ -198,8 +198,8 @@ class TranslationsExportTest extends TranslationsTestsBase {
     ]);
     $report = $this->translationExport->getReport();
     $this->assertEquals(3, $report['translated']);
-    $this->assertEquals(2, $report['untranslated']);
-    $this->assertCount(5, $report['strings']);
+    $this->assertEquals(3, $report['untranslated']);
+    $this->assertCount(6, $report['strings']);
   }
 
   /**
@@ -216,8 +216,8 @@ class TranslationsExportTest extends TranslationsTestsBase {
     ]);
     $report = $this->translationExport->getReport();
     $this->assertEquals(7, $report['translated']);
-    $this->assertEquals(2, $report['untranslated']);
-    $this->assertCount(9, $report['strings']);
+    $this->assertEquals(3, $report['untranslated']);
+    $this->assertCount(10, $report['strings']);
   }
 
   /**
@@ -234,8 +234,8 @@ class TranslationsExportTest extends TranslationsTestsBase {
     ]);
     $report = $this->translationExport->getReport();
     $this->assertEquals(0, $report['translated']);
-    $this->assertEquals(9, $report['untranslated']);
-    $this->assertCount(9, $report['strings']);
+    $this->assertEquals(10, $report['untranslated']);
+    $this->assertCount(10, $report['strings']);
   }
 
 }
