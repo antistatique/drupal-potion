@@ -25,12 +25,6 @@ function potion_install() {
  * Implements hook_requirements().
  */
 function potion_requirements($phase) {
-  /** @var \Drupal\potion\Utility $utility */
-  $utility = \Drupal::service('potion.utility');
-
-  /** @var \Drupal\Core\Config\Config $gettextConfig */
-  $gettextConfig = \Drupal::service('config.factory')->get('potion.gettext.settings');
-
   $requirements = [];
   if ($phase == 'install') {
     // Asserts symfony/process is installed.
@@ -81,11 +75,17 @@ function potion_requirements($phase) {
     'xgettext',
   ];
 
-  // Path to gettext binaries files. When empty, the $PATH values are used.
-  $path = $utility->sanitizePath($gettextConfig->get('path'));
-
   // Asserts `gettext` utilities are reacheable & executable.
   if ($phase == 'runtime') {
+    /** @var \Drupal\Core\Config\Config $gettextConfig */
+    $gettextConfig = \Drupal::service('config.factory')->get('potion.gettext.settings');
+
+    /** @var \Drupal\potion\Utility $utility */
+    $utility = \Drupal::service('potion.utility');
+
+    // Path to gettext binaries files. When empty, the $PATH values are used.
+    $path = $utility->sanitizePath($gettextConfig->get('path'));
+
     $potion_config = Url::fromRoute('potion.settings.gettext');
     $not_found = [];
     $not_executable = [];

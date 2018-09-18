@@ -97,13 +97,13 @@ class TranslationNodeVisitor extends AbstractNodeVisitor {
     // Eg. `%trans%`, plural, multilines, ...
     // Get context on non-filter case (`%trans%`, plural, multilines, ...).
     $context = NULL;
-    if ($node->getNode('options')) {
+    if ($node->hasNode('options') && $node->getNode('options') instanceof \Twig_Node_Expression_Array) {
       $context = $this->getContext($node->getNode('options'));
     }
 
     // If we are on a simple `% trans '' %` whitout token or plural form.
     // Eg. `{% trans 'Hello sun' %}`.
-    if ($node->getNode('body')->hasAttribute('value') && is_null($node->getNode('plural'))) {
+    if ($node->getNode('body')->hasAttribute('value') && !$node->hasNode('plural')) {
       // Save the extracted translations in the messages collection.
       $this->catalogue->add($node->getNode('body')->getAttribute('value'), $context);
       return $node;
@@ -111,7 +111,7 @@ class TranslationNodeVisitor extends AbstractNodeVisitor {
 
     // If we are on a simple `% trans %` whitout token or plural form.
     // Eg. `{% trans %}Hello moon.{% endtrans %}`.
-    if ($node->getNode('body')->hasAttribute('data') && is_null($node->getNode('plural'))) {
+    if ($node->getNode('body')->hasAttribute('data') && !$node->hasNode('plural')) {
       // Save the extracted translations in the messages collection.
       $this->catalogue->add($node->getNode('body')->getAttribute('data'), $context);
 
@@ -120,7 +120,7 @@ class TranslationNodeVisitor extends AbstractNodeVisitor {
 
     // Complex code block with token, multilines whitout plural.
     // Eg. `{% trans %}Hello moon {{ node.id }}{% endtrans %}`.
-    if (is_null($node->getNode('plural'))) {
+    if (!$node->hasNode('plural')) {
       $message = '';
       if ($node->getNode('body')->hasAttribute('data')) {
         $message .= $node->getNode('body')->getAttribute('data');
@@ -137,7 +137,7 @@ class TranslationNodeVisitor extends AbstractNodeVisitor {
      *      {% plural count %}Hello {{ count }} moons.{{ node.id }}
      *      {% endtrans %}`.
      */
-    if (!is_null($node->getNode('plural'))) {
+    if ($node->hasNode('plural') && $node->getNode('plural') instanceof \Twig_Node) {
       $singular = '';
       if ($node->getNode('body')->hasAttribute('data')) {
         $singular .= $node->getNode('body')->getAttribute('data');
