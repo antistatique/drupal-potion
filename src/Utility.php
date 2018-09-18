@@ -4,6 +4,7 @@ namespace Drupal\potion;
 
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\potion\Exception\PotionException;
 
 /**
  * Contains utility methods for the Potion module.
@@ -47,7 +48,7 @@ class Utility {
   }
 
   /**
-   * From a given langcode, retreive the langname.
+   * From a given langcode, retrieve the langname.
    *
    * @param string $langcode
    *   The langcode.
@@ -113,11 +114,102 @@ class Utility {
    *   The path with a trailing director separator when needed.
    */
   public function sanitizePath($path) {
+    // Only trim on non-empty path.
+    if (empty($path)) {
+      return $path;
+    }
+
     // Only trim if we're not dealing with a stream.
-    if (!file_stream_wrapper_valid_scheme($this->fileSystem->uriScheme($path))) {
+    if (!file_stream_wrapper_valid_scheme($this->fileSystem->uriScheme($path)) || substr($path, -strlen('://')) !== '://') {
       $path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
     }
     return $path;
+  }
+
+  /**
+   * Merge all $files in the $original PO file.
+   *
+   * Before merging, generate an incremental backup of $original.
+   *
+   * @param string $original
+   *   The original PO file.
+   * @param string[] $files
+   *   The po files to merges. Those files should not contain a PO Header
+   *   to avoid merge conflict.
+   *
+   * @return bool
+   *   TRUE if the merge works, FALSE otherwise.
+   *
+   * @throws \Drupal\potion\Exception\GettextException
+   * @throws \Drupal\potion\Exception\PotionException
+   */
+  public function merge($original, array $files) {
+    // Don't process when the original file does not exist.
+    if (!file_exists($original)) {
+      return FALSE;
+    }
+
+    // Check for existing source with valid content.
+    if (!$this->isValidPo($original)) {
+      throw PotionException::invalidPo($original);
+    }
+
+    // Create an incremental backup of original file.
+    $backup = $this->backup($original);
+
+    // Add the $original file to the list of $files to merge.
+    array_unshift($files, $backup);
+
+    // Remove headers POT-Creation-Date & PO-Revision-Date
+    // when merge to avoid conflict.
+    foreach ($files as $file) {
+      // Read the file line by line to rewrite it whitout incrimined lines.
+      $lines = [];
+      $read = fopen($file, 'r');
+      while (!feof($read)) {
+        $lines[] = fgets($read);
+      }
+      fclose($read);
+
+      // Rewrite the file line by line.
+      $write = fopen($file, 'w');
+      foreach ($lines as $line) {
+        if (substr($line, 0, 19) !== '"POT-Creation-Date:' && substr($line, 0, 18) !== '"PO-Revision-Date:') {
+          fwrite($write, $line);
+        }
+      }
+      fclose($write);
+    }
+
+    // Merge all $files into the $original output.
+    return $this->gettextWrapper->msgcat($files, $original);
+  }
+
+  /**
+   * Backup the given original file using an incremental suffix.
+   *
+   * @param string $original
+   *   The original PO file.
+   *
+   * @return string
+   *   The backup file uri.
+   */
+  public function backup($original) {
+    // Don't process when the original file don't exists.
+    if (!file_exists($original)) {
+      return FALSE;
+    }
+
+    // Create an incremental backup of original file.
+    $backup = $original;
+    $suffix = 0;
+    while (file_exists($backup)) {
+      $backup = $original . '.~' . ++$suffix . '~';
+    }
+    // Save the original file as backup file.
+    copy($original, $backup);
+
+    return $backup;
   }
 
 }

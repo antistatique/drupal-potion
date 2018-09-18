@@ -11,13 +11,6 @@ use Drupal\language\Entity\ConfigurableLanguage;
 abstract class TranslationsTestsBase extends KernelTestBase {
 
   /**
-   * The directory of tests .po files.
-   *
-   * @var array
-   */
-  protected $translationsPath;
-
-  /**
    * Collection of tests translations strings.
    *
    * @var \Drupal\locale\TranslationString[]
@@ -43,7 +36,6 @@ abstract class TranslationsTestsBase extends KernelTestBase {
       'locales_target',
     ]);
 
-    $this->translationsPath = drupal_get_path('module', 'potion_test') . DIRECTORY_SEPARATOR . 'assets';
     $this->setUpLanguages();
 
     /** @var \Drupal\locale\StringStorageInterface $localStorage */
@@ -165,6 +157,10 @@ abstract class TranslationsTestsBase extends KernelTestBase {
       'source' => 'yellow',
     ]);
     $source2->save();
+    $source3 = $this->localStorage->createString([
+      'source' => 'Alone in the dark.',
+    ]);
+    $source3->save();
   }
 
 }

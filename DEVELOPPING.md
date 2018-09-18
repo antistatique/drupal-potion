@@ -125,7 +125,7 @@ Detect overcomplicated expressions & Unused parameters, methods, properties
   ```bash
   ./vendor/bin/phpmd ./ text ./phpmd.xml --suffixes \
   php,module,inc,install,test,profile,theme,css,info,txt \
-  --exclude vendor,scripts
+  --exclude vendor,scripts,tests
   ```
 
 Copy/Paste Detector

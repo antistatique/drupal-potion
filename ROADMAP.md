@@ -74,13 +74,15 @@ If a `langcode`.po already exists in the `dest` dir, merge them & remove duplica
 
 *Usage*
 ```
-drush potion-generate [--exclude-yaml] [--exclude-twig] [--exclude-php] [--progress] [--verbose] [--quiet] langcode source dest
+drush potion-generate [--exclude-yaml] [--exclude-twig] [--exclude-php] [--recursive] [-q|--quiet] [-h|--help] langcode source dest
 ```
 
 *Errors handling*
 - Warning on wrong langcode
 - Warning source is not a dir
 - Warning dest is not a dir
+- Warning source is not a readable
+- Warning dest is not a writable
 
 *Parameters*
 - `langcode`: The langcode to generate
@@ -89,8 +91,7 @@ drush potion-generate [--exclude-yaml] [--exclude-twig] [--exclude-php] [--progr
 - `--exclude-yaml`: Exclude YAML files (.yaml) to be scanned for translations
 - `--exclude-twig`: Exclude TWIG files (.twig) to be scanned for translations
 - `--exclude-php`: Exclude PHP files (.php, .module) to be scanned for translations
-- `--progress`: Show progress bar during the importation
-- `--verbose`: Report table when finish (merged or not with the previous file, n° strings found, n° of new strings)
+- `--recursive`: Enable scan recursion on the source folder
 - `-q|--quiet`: Do not ask any interactive question.
 - `-h|--help`: Display usage details.
 
@@ -98,10 +99,10 @@ drush potion-generate [--exclude-yaml] [--exclude-twig] [--exclude-php] [--progr
 
 *Usage*
 ```
-drush potion-fill [--overwrite] [--verbose] [--quiet] langcode source
+drush potion-fill [--overwrite] [-q|--quiet] [-h|--help] langcode source
 ```
 
-From a given `source` po file into a `langcode` read the whole database & fill the same po file with data.
+From a given `source` po file on a `langcode` read the whole database & fill the same po file with data.
 
 *Errors handling*
 - Warning on wrong langcode
@@ -111,25 +112,7 @@ From a given `source` po file into a `langcode` read the whole database & fill t
 - `langcode`: The langcode to generate from database
 - `source`: The source folder to scan for translations
 - `--overwrite`: Overwrite existing translations in the po with value from the database.
-- `--verbose`: Report table when finish (translated, untranslated, overwritten)
 - `-q|--quiet`: Do not ask any interactive question.
-- `-h|--help`: Display usage details.
-
-### CLI - Validate po file
-
-*Usage*
-```
-drush potion-validate [--verbose] [--dry-run] source
-```
-
-From a given `source` po file check his validity.
-
-*Errors handling*
-- Warning source is not a po file
-
-*Parameters*
-- `source`: The source po file to validate
-- `--verbose`: Report table when finish (strings, translated, untranslated)
 - `-h|--help`: Display usage details.
 
 # Phase 2 - Enhanced Product
@@ -137,4 +120,3 @@ From a given `source` po file check his validity.
 Implements User Interface for new features:
 - Generate po file from code
 - Fill po file from database
-- Validate po file

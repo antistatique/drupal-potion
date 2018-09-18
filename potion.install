@@ -25,16 +25,24 @@ function potion_install() {
  * Implements hook_requirements().
  */
 function potion_requirements($phase) {
-  /** @var \Drupal\Core\Config\Config $gettextConfig */
-  $gettextConfig = \Drupal::service('config.factory')->get('potion.gettext.settings');
-
   $requirements = [];
   if ($phase == 'install') {
     // Asserts symfony/process is installed.
     if (!class_exists('Symfony\Component\Process\Process')) {
-      $requirements['potion_process_library'] = [
+      $requirements['potion_process_component'] = [
         'description' => t('Potion requires the <a href=":component-url" target="_blank">external Symfony Process Component</a>. The recommended way of solving this dependency is using <a href=":composer-url" target="_blank">Composer</a> running the following from the command line: <br /><code>composer require symfony/process:^3.4</code>.', [
           ':component-url' => 'https://symfony.com/doc/current/components/process.html',
+          ':composer-url' => 'https://getcomposer.org',
+        ]),
+        'severity' => REQUIREMENT_ERROR,
+      ];
+    }
+
+    // Asserts symfony/finder is installed.
+    if (!class_exists('Symfony\Component\Finder\Finder')) {
+      $requirements['potion_finder_component'] = [
+        'description' => t('Potion requires the <a href=":component-url" target="_blank">external Symfony Finder Component</a>. The recommended way of solving this dependency is using <a href=":composer-url" target="_blank">Composer</a> running the following from the command line: <br /><code>composer require symfony/finder:^3.4</code>.', [
+          ':component-url' => 'https://symfony.com/doc/current/components/finder.html',
           ':composer-url' => 'https://getcomposer.org',
         ]),
         'severity' => REQUIREMENT_ERROR,
@@ -67,11 +75,17 @@ function potion_requirements($phase) {
     'xgettext',
   ];
 
-  // Path to gettext binaries files. When empty, the $PATH values are used.
-  $path = $gettextConfig->get('path');
-
   // Asserts `gettext` utilities are reacheable & executable.
   if ($phase == 'runtime') {
+    /** @var \Drupal\Core\Config\Config $gettextConfig */
+    $gettextConfig = \Drupal::service('config.factory')->get('potion.gettext.settings');
+
+    /** @var \Drupal\potion\Utility $utility */
+    $utility = \Drupal::service('potion.utility');
+
+    // Path to gettext binaries files. When empty, the $PATH values are used.
+    $path = $utility->sanitizePath($gettextConfig->get('path'));
+
     $potion_config = Url::fromRoute('potion.settings.gettext');
     $not_found = [];
     $not_executable = [];

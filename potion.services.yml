@@ -1,4 +1,5 @@
 services:
+
   potion.gettext_wrapper:
     class: \Drupal\potion\GettextWrapper
     arguments:
@@ -23,3 +24,47 @@ services:
       - '@potion.utility'
       - '@config.factory'
       - '@file_system'
+
+  potion.translations.extractor:
+    class: \Drupal\potion\TranslationsExtractor
+    arguments:
+      - '@potion.utility'
+      - '@config.factory'
+      - '@file_system'
+      - '@potion.extractor.twig'
+      - '@potion.extractor.php'
+      - '@potion.extractor.annotation'
+      - '@potion.extractor.yaml'
+
+  potion.translations.fill:
+    class: \Drupal\potion\TranslationsFill
+    arguments:
+      - '@potion.utility'
+      - '@config.factory'
+      - '@file_system'
+      - '@locale.storage'
+
+  # Extractors
+  potion.extractor.twig:
+    class: Drupal\potion\Extractor\TwigExtractor
+    arguments:
+      - '@twig'
+  potion.extractor.php:
+    class: Drupal\potion\Extractor\PhpExtractor
+    arguments:
+      - '@potion.utility'
+  potion.extractor.annotation:
+    class: Drupal\potion\Extractor\AnnotationExtractor
+    arguments:
+      - '@potion.utility'
+  potion.extractor.yaml:
+    class: Drupal\potion\Extractor\YamlExtractor
+    arguments:
+      - '@potion.utility'
+      - '@serialization.yaml'
+
+  # Twig Extensions
+  potion.twig.extractor_extension:
+    class: Drupal\potion\Twig\Extension\TransExtractorExtension
+    tags:
+      - { name: twig.extension }
