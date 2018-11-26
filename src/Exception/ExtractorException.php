@@ -7,4 +7,17 @@ namespace Drupal\potion\Exception;
  */
 class ExtractorException extends PotionException {
 
+  /**
+   * Nothing has been extracted from path.
+   *
+   * @param string $path
+   *   The path.
+   *
+   * @return PotionException
+   *   Exception because nothing has been extracted from path.
+   */
+  public static function empty($path) {
+    return new static('No translations strings found in ' . $path . '.');
+  }
+
 }

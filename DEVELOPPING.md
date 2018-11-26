@@ -58,7 +58,7 @@ Eg. `sqlite://localhost/build/template_whisperer.sqlite`.
   ```bash
   # You must be on the drupal-root folder - usually /web.
   cd web
-  SIMPLETEST_DB="sqlite://localhost//tmp/tw.sqlite" \
+  SIMPLETEST_DB="sqlite://localhost//tmp/potion.sqlite" \
   SIMPLETEST_BASE_URL='http://d8.test' \
   ../vendor/bin/phpunit -c core \
   --group potion_functionnal
@@ -69,7 +69,7 @@ Debug using
   ```bash
   # You must be on the drupal-root folder - usually /web.
   cd web
-  SIMPLETEST_DB="sqlite://localhost//tmp/tw.sqlite" \
+  SIMPLETEST_DB="sqlite://localhost//tmp/potion.sqlite" \
   SIMPLETEST_BASE_URL='http://d8.test' \
   ../vendor/bin/phpunit -c core \
   --group potion \

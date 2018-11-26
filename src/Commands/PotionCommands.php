@@ -13,6 +13,7 @@ use Drupal\potion\Exception\ConsoleException;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Consolidation\OutputFormatters\StructuredData\RowsOfFields;
 use Drush\Exceptions\UserAbortException;
+use Drupal\potion\Exception\ExtractorException;
 
 /**
  * Defines Drush commands for Potion.
@@ -361,6 +362,10 @@ class PotionCommands extends DrushCommands {
       'exclude-twig' => $options['exclude-twig'],
       'exclude-php'  => $options['exclude-php'],
     ]);
+
+    if (!$file) {
+      throw ExtractorException::empty($source);
+    }
 
     // Get the final destination path.
     $fullpath = $this->utility->sanitizePath($this->fileSystem->realpath($destination)) . $langcode . '.po';
