@@ -94,7 +94,7 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
   public function testExtractorReturnNull() {
     $dest = 'temporary://empty';
     // Prepare a non readable directory.
-    file_prepare_directory($dest, FILE_CREATE_DIRECTORY);
+    $this->fileSystem->prepareDirectory($dest, FILE_CREATE_DIRECTORY);
 
     $file = $this->translationExtractor->extract('fr', 'temporary://empty', TRUE);
     $this->assertNull($file);
@@ -114,7 +114,7 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
   public function testExtractSourceNotReadable() {
     $dest = 'temporary://not-readable';
     // Prepare a non readable directory.
-    file_prepare_directory($dest, FILE_CREATE_DIRECTORY);
+    $this->fileSystem->prepareDirectory($dest, FILE_CREATE_DIRECTORY);
     @chmod($dest, 0000);
 
     $this->setExpectedException(PotionException::class, "The path temporary://not-readable is not readable.");

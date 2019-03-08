@@ -3,6 +3,7 @@
 namespace Drupal\potion;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\locale\Gettext;
 use Drupal\potion\Exception\PotionException;
 
@@ -26,16 +27,26 @@ class TranslationsImport {
   protected $moduleHandler;
 
   /**
+   * The file system service.
+   *
+   * @var \Drupal\Core\File\FileSystemInterface
+   */
+  protected $fileSystem;
+
+  /**
    * Class constructor.
    *
    * @param \Drupal\potion\Utility $utility
    *   Utility methods for Potion.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler service.
+   * @param \Drupal\Core\File\FileSystemInterface $file_system
+   *   The file system service.
    */
-  public function __construct(Utility $utility, ModuleHandlerInterface $module_handler) {
+  public function __construct(Utility $utility, ModuleHandlerInterface $module_handler, FileSystemInterface $file_system) {
     $this->utility = $utility;
     $this->moduleHandler = $module_handler;
+    $this->fileSystem = $file_system;
   }
 
   /**
@@ -93,7 +104,7 @@ class TranslationsImport {
 
     // Create a valid file class for Gettext::fileToDatabase.
     $file            = new \stdClass();
-    $file->filename  = drupal_basename($source);
+    $file->filename  = $this->fileSystem->basename($source);
     $file->uri       = $source;
     $file->langcode  = $langcode;
     $file->timestamp = filemtime($source);

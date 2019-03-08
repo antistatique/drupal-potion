@@ -17,6 +17,7 @@ services:
     arguments:
       - '@potion.utility'
       - '@module_handler'
+      - '@file_system'
 
   potion.translations.export:
     class: \Drupal\potion\TranslationsExport
