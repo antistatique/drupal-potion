@@ -12,12 +12,12 @@ php:
 
 matrix:
   include:
-    - name: PHP 7.1 & MySQL 5.7, D8.6
-      php: 7.1
-      env: DRUPAL_TI_RUNNERS="phpunit-core" DRUPAL_TI_CORE_BRANCH="8.6.x"
     - name: PHP 7.1 & MySQL 5.7, D8.7
       php: 7.1
       env: DRUPAL_TI_RUNNERS="phpunit-core" DRUPAL_TI_CORE_BRANCH="8.7.x"
+    - name: PHP 7.1 & MySQL 5.7, D8.8
+      php: 7.1
+      env: DRUPAL_TI_RUNNERS="phpunit-core" DRUPAL_TI_CORE_BRANCH="8.8.x"
 
 env:
   global:
@@ -38,8 +38,8 @@ env:
     # The environment to use, supported are: drupal-7, drupal-8
     - DRUPAL_TI_ENVIRONMENT="drupal-8"
 
-    # Switch to 8.6.x versions instead of 8.1.x by default.
-    - DRUPAL_TI_CORE_BRANCH="8.6.x"
+    # Switch to 8.7.x versions instead of 8.1.x by default.
+    - DRUPAL_TI_CORE_BRANCH="8.7.x"
 
     # The installation profile to use:
     #- DRUPAL_TI_INSTALL_PROFILE="testing"
@@ -116,7 +116,7 @@ install:
 before_script:
   - echo "$TRAVIS_BUILD_DIR"
   - drupal-ti before_script
-  # Update from PHPUnit 4.x to 6.x as required by Drupal 8.6.x.
+  # Update from PHPUnit 4.x to 6.x as required by Drupal 8.7.x.
   - composer run-script drupal-phpunit-upgrade --working-dir=/home/travis/build/antistatique/drupal-8/drupal --no-interaction
   # Add symfony/process & symfony/finder as required by potion.
   - composer require "symfony/process:^3.4" --working-dir=/home/travis/build/antistatique/drupal-8/drupal --no-interaction
