@@ -107,7 +107,7 @@ mysql:
 before_install:
   - composer self-update
   - cd ./tests
-  - composer global require "lionsad/drupal_ti:dev-master"
+  - composer global require "lionsad/drupal_ti:dev-master#9f26af8"
   - drupal-ti before_install
 
 install:
@@ -116,10 +116,8 @@ install:
 before_script:
   - echo "$TRAVIS_BUILD_DIR"
   - drupal-ti before_script
-  # Update from PHPUnit 4.x to 6.x as required by Drupal 8.7.x.
-  - composer run-script drupal-phpunit-upgrade --working-dir=/home/travis/build/antistatique/drupal-8/drupal --no-interaction
   # Add symfony/process & symfony/finder as required by potion.
-  - composer require "symfony/process:^3.4" --working-dir=/home/travis/build/antistatique/drupal-8/drupal --no-interaction
+  - composer require "symfony/process:^3.4" --no-interaction --working-dir=${TRAVIS_BUILD_DIR}/../drupal-8/drupal
 
 script:
   - drupal-ti script
