@@ -298,7 +298,8 @@ class TranslationsImportTest extends TranslationsTestsBase {
    * @covers \Drupal\potion\TranslationsImport::importFromFile
    */
   public function testInvalidPo() {
-    $this->setExpectedException(PotionException::class, "File modules/contrib/potion/tests/modules/potion_test/assets/malformed/missing-msgid.po is a malformed .po file.");
+    $this->expectException(PotionException::class);
+    $this->expectExceptionMessage("File modules/contrib/potion/tests/modules/potion_test/assets/malformed/missing-msgid.po is a malformed .po file.");
 
     $source = $this->translationsPath . '/malformed/missing-msgid.po';
     $this->translationsImport->importFromFile('fr', $source);
@@ -308,7 +309,8 @@ class TranslationsImportTest extends TranslationsTestsBase {
    * @covers \Drupal\potion\TranslationsImport::importFromFile
    */
   public function testInvalidLangcode() {
-    $this->setExpectedException(PotionException::class, "The langcode ru is not defined. Please create & enabled it before trying to use it.");
+    $this->expectException(PotionException::class);
+    $this->expectExceptionMessage("The langcode ru is not defined. Please create & enabled it before trying to use it.");
 
     $source = $this->translationsPath . '/fr.po';
     $this->translationsImport->importFromFile('ru', $source);

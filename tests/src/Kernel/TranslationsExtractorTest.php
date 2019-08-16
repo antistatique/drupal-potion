@@ -104,7 +104,8 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
    * @covers \Drupal\potion\TranslationsExtractor::extract
    */
   public function testExtractSourceNotFound() {
-    $this->setExpectedException(PotionException::class, "No such file or directory temporary://not-found");
+    $this->expectException(PotionException::class);
+    $this->expectExceptionMessage("No such file or directory temporary://not-found");
     $this->translationExtractor->extract('fr', 'temporary://not-found', TRUE);
   }
 
@@ -117,7 +118,8 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
     $this->fileSystem->prepareDirectory($dest, FILE_CREATE_DIRECTORY);
     @chmod($dest, 0000);
 
-    $this->setExpectedException(PotionException::class, "The path temporary://not-readable is not readable.");
+    $this->expectException(PotionException::class);
+    $this->expectExceptionMessage("The path temporary://not-readable is not readable.");
     $this->translationExtractor->extract('fr', 'temporary://not-readable', TRUE);
   }
 
@@ -125,7 +127,8 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
    * @covers \Drupal\potion\TranslationsExtractor::extract
    */
   public function testExtractInvalidLangcode() {
-    $this->setExpectedException(PotionException::class, "The langcode ru is not defined. Please create & enabled it before trying to use it.");
+    $this->expectException(PotionException::class);
+    $this->expectExceptionMessage("The langcode ru is not defined. Please create & enabled it before trying to use it.");
     $this->translationExtractor->extract('ru', $this->extractionPath, TRUE);
   }
 

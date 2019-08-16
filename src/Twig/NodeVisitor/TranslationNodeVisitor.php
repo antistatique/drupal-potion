@@ -5,6 +5,7 @@ namespace Drupal\potion\Twig\NodeVisitor;
 use Drupal\Core\Template\TwigNodeTrans;
 use Twig\NodeVisitor\AbstractNodeVisitor;
 use Drupal\potion\MessageCatalogue;
+use Twig\Node\CheckToStringNode;
 
 /**
  * Extracts translation messages from twig.
@@ -172,13 +173,15 @@ class TranslationNodeVisitor extends AbstractNodeVisitor {
   }
 
   /**
-   * Extracts the text for complexe form of "trans" tag.
+   * Extracts the text for complex form of "trans" tag.
    *
    * @param \Twig_Node $body
    *   The node to compile.
    *
    * @return string
    *   The translations strings.
+   *
+   * @throws \Twig_Error_Syntax
    *
    * @see \Drupal\Core\Template\TwigNodeTrans::compileString
    */
@@ -196,6 +199,9 @@ class TranslationNodeVisitor extends AbstractNodeVisitor {
           $n = $n->getNode('node');
         }
 
+        if ($n instanceof CheckToStringNode) {
+          $n = $n->getNode('expr');
+        }
         $args = $n;
 
         // Support TwigExtension->renderVar() function in chain.
@@ -205,25 +211,25 @@ class TranslationNodeVisitor extends AbstractNodeVisitor {
 
         // Detect if a token implements one of the filters reserved for
         // modifying the prefix of a token. The default prefix used for
-        // translations is "@". This escapes the printed token and makes
-        // them // safe for templates.
+        // translations is "@". This escapes the printed token and makes them
+        // safe for templates.
         // @see TwigExtension::getFilters()
         $argPrefix = '@';
         while ($args instanceof \Twig_Node_Expression_Filter) {
-          switch ($args->getNode('filter')->getAttribute(
-            'value'
-          )) {
+          switch ($args->getNode('filter')->getAttribute('value')) {
             case 'placeholder':
               $argPrefix = '%';
               break;
           }
           $args = $args->getNode('node');
         }
+        if ($args instanceof CheckToStringNode) {
+          $args = $args->getNode('expr');
+        }
         if ($args instanceof \Twig_Node_Expression_GetAttr) {
           $argName = [];
           // Assemble a valid argument name by walking through expression.
-          $argName[] = $args->getNode('attribute')
-            ->getAttribute('value');
+          $argName[] = $args->getNode('attribute')->getAttribute('value');
           while ($args->hasNode('node')) {
             $args = $args->getNode('node');
             if ($args instanceof \Twig_Node_Expression_Name) {
