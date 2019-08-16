@@ -55,7 +55,8 @@ class TranslationsFillTest extends TranslationsTestsBase {
    * @covers \Drupal\potion\TranslationsFill::fillFromDatabase
    */
   public function testSourceNotFound() {
-    $this->setExpectedException(PotionException::class, "No such file or directory temporary://not-found");
+    $this->expectException(PotionException::class);
+    $this->expectExceptionMessage("No such file or directory temporary://not-found");
     $this->translationsFill->fillFromDatabase('fr', 'temporary://not-found');
   }
 
@@ -63,7 +64,8 @@ class TranslationsFillTest extends TranslationsTestsBase {
    * @covers \Drupal\potion\TranslationsFill::fillFromDatabase
    */
   public function testInvalidPo() {
-    $this->setExpectedException(PotionException::class, "File modules/contrib/potion/tests/modules/potion_test/assets/malformed/missing-msgid.po is a malformed .po file.");
+    $this->expectException(PotionException::class);
+    $this->expectExceptionMessage("File modules/contrib/potion/tests/modules/potion_test/assets/malformed/missing-msgid.po is a malformed .po file.");
 
     $source = $this->translationsPath . '/malformed/missing-msgid.po';
     $this->translationsFill->fillFromDatabase('fr', $source);
@@ -73,7 +75,8 @@ class TranslationsFillTest extends TranslationsTestsBase {
    * @covers \Drupal\potion\TranslationsFill::fillFromDatabase
    */
   public function testInvalidLangcode() {
-    $this->setExpectedException(PotionException::class, "The langcode ru is not defined. Please create & enabled it before trying to use it.");
+    $this->expectException(PotionException::class);
+    $this->expectExceptionMessage("The langcode ru is not defined. Please create & enabled it before trying to use it.");
 
     $source = $this->translationsPath . '/fr.po';
     $this->translationsFill->fillFromDatabase('ru', $source);

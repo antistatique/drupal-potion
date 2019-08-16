@@ -90,7 +90,9 @@ class TranslationsExportTest extends TranslationsTestsBase {
    * @covers \Drupal\potion\TranslationsExport::exportFromDatabase
    */
   public function testExportInvalidLangcode() {
-    $this->setExpectedException(PotionException::class, "The langcode ru is not defined. Please create & enabled it before trying to use it.");
+    $this->expectException(PotionException::class);
+    $this->expectExceptionMessage("The langcode ru is not defined. Please create & enabled it before trying to use it.");
+
     $this->translationExport->exportFromDatabase('ru');
   }
 
