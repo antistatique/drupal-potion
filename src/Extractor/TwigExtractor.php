@@ -59,6 +59,9 @@ class TwigExtractor extends ExtractorBase implements ExtractableInterface {
    *
    * @return \Drupal\potion\MessageCatalogue
    *   Catalogue of extracted translations messages.
+   *
+   * @throws \Twig\Error\RuntimeError
+   * @throws \Twig\Error\SyntaxError
    */
   protected function extractFromTemplate($template) {
     /** @var \Drupal\potion\Twig\NodeVisitor\TranslationNodeVisitor $visitor */
@@ -78,7 +81,7 @@ class TwigExtractor extends ExtractorBase implements ExtractableInterface {
    * @param string $directory
    *   Directory to dig in.
    * @param bool $recursive
-   *   Enable or disable scan with recusrsion.
+   *   Enable or disable scan with recursion.
    *
    * @return \Iterator|SplFileInfo[]
    *   An iterator.
