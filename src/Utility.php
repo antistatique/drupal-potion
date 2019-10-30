@@ -29,7 +29,7 @@ class Utility {
    * 
    * @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface
    */
-  protected $streamWrapper;
+  protected $streamWrapperManager;
 
   /**
    * Class constructor.
@@ -41,10 +41,10 @@ class Utility {
    * @param \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface
    *   The stream wrapper manager
    */
-  public function __construct(LanguageManagerInterface $language_manager, GettextWrapper $gettext_wrapper, StreamWrapperManagerInterface $stream_wrapper) {
-    $this->languageManager = $language_manager;
-    $this->gettextWrapper  = $gettext_wrapper;
-    $this->streamWrapper    = $stream_wrapper;
+  public function __construct(LanguageManagerInterface $language_manager, GettextWrapper $gettext_wrapper, StreamWrapperManagerInterface $stream_wrapper_manager) {
+    $this->languageManager      = $language_manager;
+    $this->gettextWrapper       = $gettext_wrapper;
+    $this->streamWrapperManager = $stream_wrapper_manager;
   }
 
   /**
@@ -120,7 +120,7 @@ class Utility {
     }
 
     // Only trim if we're not dealing with a stream.
-    if (!$this->streamWrapper->isValidScheme(($this->streamWrapper->getScheme($path))) || substr($path, -strlen('://')) !== '://') {
+    if (!$this->streamWrapperManager->isValidScheme(($this->streamWrapperManager->getScheme($path))) || substr($path, -strlen('://')) !== '://') {
       $path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
     }
     return $path;
