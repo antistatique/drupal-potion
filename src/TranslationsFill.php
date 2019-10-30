@@ -10,6 +10,7 @@ use Drupal\locale\PoDatabaseReader;
 use Drupal\Component\Gettext\PoStreamWriter;
 use Drupal\potion\Exception\PotionException;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
+use Drupal\Component\Gettext\PoItem;
 
 /**
  * Translations Fill.
@@ -157,13 +158,13 @@ class TranslationsFill {
       // Get the source from the file & format it.
       $source = $item->getSource();
       if ($item->isPlural()) {
-        $source = implode(PluralTranslatableMarkup::DELIMITER, $source);
+        $source = implode(PoItem::DELIMITER, $source);
       }
 
       // Get the translation from the file & format it.
       $trans = $item->getTranslation();
       if ($item->isPlural()) {
-        $trans = implode(PluralTranslatableMarkup::DELIMITER, $trans);
+        $trans = implode(PoItem::DELIMITER, $trans);
       }
 
       /** @var \Drupal\locale\SourceString $string */

@@ -47,7 +47,6 @@ class AnnotationExtractor extends ExtractorBase implements ExtractableInterface 
     $this->annotationReader = new SimpleAnnotationReader();
     // Add the Core annotation classes like @Translation & @PluralTranslation.
     $this->annotationReader->addNamespace('Drupal\Core\Annotation');
-    AnnotationRegistry::registerLoader('class_exists');
   }
 
   /**
