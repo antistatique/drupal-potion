@@ -11,14 +11,14 @@ use Drupal\Core\Url;
  * Implements hook_install().
  */
 function potion_install() {
-  \Drupal\Core\Messenger\MessengerInterface::addMessage(t("Potion is installed and ready for action."));
+  \Drupal::messenger()->addMessage(t("Potion is installed and ready for action."));
 
   // Rebuild the route cache before accessing new route.
   \Drupal::service("router.builder")->rebuild();
 
   // Display the new route for configuration.
   $url = Url::fromRoute('potion.settings.gettext');
-  \Drupal\Core\Messenger\MessengerInterface::addMessage(t('Potion settings are available under <a href="@administer-page">Administer > Configuration > Regional and language > Potion</a>', ['@administer-page' => $url->toString()]));
+  \Drupal::messenger()->addMessage(t('Potion settings are available under <a href="@administer-page">Administer > Configuration > Regional and language > Potion</a>', ['@administer-page' => $url->toString()]));
 }
 
 /**

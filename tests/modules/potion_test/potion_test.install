@@ -9,5 +9,5 @@
  * Implements hook_install().
  */
 function potion_test_install() {
-  \Drupal\Core\Messenger\MessengerInterface::addMessage(t('php.foo.bar @var', ['@var' => 'baz']));
+  \Drupal::messenger()->addMessage(t('php.foo.bar @var', ['@var' => 'baz']));
 }
