@@ -56,7 +56,7 @@ class PotionException extends \Exception {
    *   Exception because of unexisting path or file.
    */
   public static function notFound($path) {
-    return new static('No such file or directory ' . $path);
+    return new static('No such file or directory ' . $path . '. Please specify an absolute path.');
   }
 
   /**
