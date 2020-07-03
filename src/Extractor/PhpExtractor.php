@@ -301,17 +301,15 @@ class PhpExtractor extends ExtractorBase implements ExtractableInterface {
       // When we detect the 'context', capture the context string.
       if ($context_found) {
         switch ($token[0]) {
-          case T_WHITESPACE:
-          case T_DOUBLE_ARROW:
-            continue;
-
-          break;
           case T_CONSTANT_ENCAPSED_STRING:
             $context = $token[1];
             $context = PhpStringTokenParser::parse($context);
             return $context;
 
           break;
+
+          case T_WHITESPACE:
+          case T_DOUBLE_ARROW:
           default:
             break;
         }
