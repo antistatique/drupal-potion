@@ -14,15 +14,15 @@ Ensure an better Developer Experience (DX) when dealing with translations & mult
 * You want to use the Drupal Core built-in translation importation feature directly from your CLI,
 * You want to use the Drupal Core built-in translation exportation feature directly from your CLI,
 * You want to use a module based on the Core [Translation API](https://www.drupal.org/docs/8/api/translation-api/overview),
-* You want to retrieive translation strings from your [Twig templates](https://www.drupal.org/docs/8/api/translation-api/overview) in theme(s),
-* You want to retrieive translation strings from code,
-* You want to retrieive translation strings from your shipped configuration and configuration schemas files formatted in YML(s),
+* You want to retrieve translation strings from your [Twig templates](https://www.drupal.org/docs/8/api/translation-api/overview) in theme(s),
+* You want to retrieve translation strings from code,
+* You want to retrieve translation strings from your shipped configuration and configuration schemas files formatted in YML(s),
 * You want to make your life easier by generating final client-friendly .po files by scrapping your code looking for custom translations,
 * You want to be able to re-play a .po file by filling it with data from your database,
 * You are a CLI lover & don't like to click in an UI to deal with translations.
 
 Potion can do a lot more than that,
-but those are some of the obvious uses of this module.
+but those are some obvious uses of this module.
 
 ## Features
 
@@ -107,11 +107,19 @@ drush potion-fill [--overwrite] [-q|--quiet] [-h|--help] langcode source
 
 ## Versions
 
-Potion is only available for Drupal 8 !
-The module is ready to be used in Drupal 8, there are no known issues.
+The version `8.x-1.x` is not compatible with Drupal `8.8.x`.
+Drupal `8.8.x` brings some breaking change with tests and so you
+must upgrade to `8.x-2.x` version of **Potion**.
 
-This version should work with all Drupal 8 releases using Drush 9+,
-and it is always recommended keeping Drupal core installations up to date.
+Potion is available for both Drupal 8 & Drupal 9 !
+
+## Which version should I use?
+
+|Drupal Core|Potion|Drush|
+|:---------:|:-----|:---:|
+|8.7.x      |1.x   |9.x  |
+|8.8.x      |2.x   |10.x |
+|9.x        |2.x   |10.x |
 
 ## Dependencies
 

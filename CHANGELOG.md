@@ -3,6 +3,7 @@ CHANGELOG
 
 ## NEXT RELEASE
  - fix Issue #3116170 by wengerk: Warning: "continue" targeting switch is equivalent to "break". Did you mean to use "continue 2"?
+ - replace drupal_ti by wengerk/docker-drupal-for-contrib 
 
 ## 8.x-1.0-alpha1 (2018-11-26)
 
