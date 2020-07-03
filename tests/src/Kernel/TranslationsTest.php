@@ -35,10 +35,11 @@ class TranslationsTest extends TranslationsTestsBase {
    */
   public function testNoTranslationsOnSetup() {
     // Assert there is not translations in the database.
-    $strings = $this->localStorage->getStrings([]);
+    $strings = $this->localStorage->getStrings();
     $this->assertEquals(count($strings), 0, 'Found 0 source strings in the database.');
+
     $translations = $this->localStorage->findTranslation([]);
-    $this->assertEquals(count($translations), 0, 'Found 0 translations strings in the database.');
+    $this->assertNull($translations);
   }
 
 }
