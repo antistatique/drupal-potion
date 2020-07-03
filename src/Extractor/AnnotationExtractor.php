@@ -4,7 +4,7 @@ namespace Drupal\potion\Extractor;
 
 use Symfony\Component\Finder\Finder;
 use Drupal\potion\Exception\ExtractorException;
-use Doctrine\Common\Annotations\SimpleAnnotationReader;
+use Drupal\Component\Annotation\Doctrine\SimpleAnnotationReader;
 use Drupal\potion\Utility;
 use Doctrine\Common\Reflection\StaticReflectionParser;
 use Drupal\Component\Annotation\Reflection\MockFileFinder;

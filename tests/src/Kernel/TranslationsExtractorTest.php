@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\potion\Kernel;
 
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\potion\Exception\PotionException;
 
 /**
@@ -94,7 +95,7 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
   public function testExtractorReturnNull() {
     $dest = 'temporary://empty';
     // Prepare a non readable directory.
-    $this->fileSystem->prepareDirectory($dest, FILE_CREATE_DIRECTORY);
+    $this->fileSystem->prepareDirectory($dest, FileSystemInterface::CREATE_DIRECTORY);
 
     $file = $this->translationExtractor->extract('fr', 'temporary://empty', TRUE);
     $this->assertNull($file);
@@ -115,7 +116,7 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
   public function testExtractSourceNotReadable() {
     $dest = 'temporary://not-readable';
     // Prepare a non readable directory.
-    $this->fileSystem->prepareDirectory($dest, FILE_CREATE_DIRECTORY);
+    $this->fileSystem->prepareDirectory($dest, FileSystemInterface::CREATE_DIRECTORY);
     @chmod($dest, 0000);
 
     $this->expectException(PotionException::class);
