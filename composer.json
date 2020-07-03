@@ -39,7 +39,7 @@
     "wapmorgan/php-code-fixer": "^2.0"
   },
   "require": {
-    "symfony/process": "^3.4",
-    "symfony/finder": "^3.4"
+    "symfony/process": "^3.4 || ^4.4",
+    "symfony/finder": "^3.4 || ^4.4"
   }
 }
