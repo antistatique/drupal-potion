@@ -57,14 +57,14 @@ class TranslationsExportTest extends TranslationsTestsBase {
     $this->translationExport->exportFromDatabase('fr');
     $report = $this->translationExport->getReport();
 
-    $this->assertArraySubset(array_keys($report), [
+    $this->assertSame(array_keys($report), [
       'translated',
       'untranslated',
       'strings',
     ]);
-    $this->assertInternalType('integer', $report['translated']);
-    $this->assertInternalType('integer', $report['untranslated']);
-    $this->assertInternalType('array', $report['strings']);
+    $this->assertIsInt($report['translated']);
+    $this->assertIsInt($report['untranslated']);
+    $this->assertIsArray($report['strings']);
   }
 
   /**
