@@ -2,7 +2,6 @@
 
 namespace Drupal\potion;
 
-use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Component\Gettext\PoItem;
 
 /**
@@ -36,11 +35,11 @@ class MessageCatalogue {
    */
   public function add($msgid, $msgctxt = NULL, $msgstr = []) {
     // Save source & translations as string or array of strings if it's plural.
-    $source      = is_array($msgid) ? implode(PluralTranslatableMarkup::DELIMITER, $msgid) : trim($msgid);
-    $translation = is_array($msgid) ? implode(PluralTranslatableMarkup::DELIMITER, ['', '']) : '';
+    $source      = is_array($msgid) ? implode(PoItem::DELIMITER, $msgid) : trim($msgid);
+    $translation = is_array($msgid) ? implode(PoItem::DELIMITER, ['', '']) : '';
 
     if (!empty($msgstr)) {
-      $translation = is_array($msgstr) ? implode(PluralTranslatableMarkup::DELIMITER, $msgstr) : $msgstr;
+      $translation = is_array($msgstr) ? implode(PoItem::DELIMITER, $msgstr) : $msgstr;
     }
 
     $item = new PoItem();

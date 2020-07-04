@@ -43,7 +43,7 @@ class UtilityBackupTest extends UtilityTestBase {
     $backup   = $dir . 'fr.po.~1~';
 
     $result = $this->utility->backup($filepath);
-    $this->assertInternalType('string', $result);
+    $this->assertIsString($result);
 
     $this->assertFileExists($filepath);
     $this->assertFileExists($backup);
@@ -61,8 +61,8 @@ class UtilityBackupTest extends UtilityTestBase {
 
     $backup = $this->utility->backup($filepath);
 
-    $this->assertInternalType('string', $backup);
-    $this->assertContains($backup, $should_backup);
+    $this->assertIsString($backup);
+    $this->assertStringContainsString($backup, $should_backup);
   }
 
   /**

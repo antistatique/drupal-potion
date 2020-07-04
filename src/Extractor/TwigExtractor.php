@@ -4,7 +4,7 @@ namespace Drupal\potion\Extractor;
 
 use Twig_Environment;
 use Twig_Error;
-use Twig_Source;
+use Twig\Source;
 use Symfony\Component\Finder\Finder;
 use Drupal\potion\Exception\ExtractorException;
 
@@ -69,7 +69,7 @@ class TwigExtractor extends ExtractorBase implements ExtractableInterface {
       ->getTranslationNodeVisitor();
     $visitor->enable();
 
-    $this->twig->parse($this->twig->tokenize(new Twig_Source($template, '')));
+    $this->twig->parse($this->twig->tokenize(new Source($template, '')));
     $visitor->disable();
 
     return $visitor->getCatalogue();

@@ -69,16 +69,16 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
     $this->translationExtractor->extract('fr', $this->extractionPath, TRUE);
     $report = $this->translationExtractor->getReport();
 
-    $this->assertArraySubset(array_keys($report), [
+    $this->assertSame(array_keys($report), [
       'twig',
       'php',
       'yaml',
       'strings',
     ]);
-    $this->assertInternalType('integer', $report['twig']);
-    $this->assertInternalType('integer', $report['php']);
-    $this->assertInternalType('integer', $report['yaml']);
-    $this->assertInternalType('array', $report['strings']);
+    $this->assertIsInt($report['twig']);
+    $this->assertIsInt($report['php']);
+    $this->assertIsInt($report['yaml']);
+    $this->assertIsArray($report['strings']);
   }
 
   /**

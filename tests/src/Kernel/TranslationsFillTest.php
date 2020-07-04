@@ -90,9 +90,9 @@ class TranslationsFillTest extends TranslationsTestsBase {
     $this->translationsFill->fillFromDatabase('fr', $source);
     $report = $this->translationsFill->getReport();
 
-    $this->assertInternalType('integer', $report['translated']);
-    $this->assertInternalType('integer', $report['untranslated']);
-    $this->assertInternalType('array', $report['strings']);
+    $this->assertIsInt($report['translated']);
+    $this->assertIsInt($report['untranslated']);
+    $this->assertIsArray($report['strings']);
   }
 
   /**
