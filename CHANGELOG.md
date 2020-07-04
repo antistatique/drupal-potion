@@ -1,7 +1,7 @@
 CHANGELOG
 ---------
 
-## NEXT RELEASE
+## 8.x-2.0-beta1 (2020-04-07):
  - fix Issue #3116170 by wengerk: Warning: "continue" targeting switch is equivalent to "break". Did you mean to use "continue 2"?
  - replace drupal_ti by wengerk/docker-drupal-for-contrib 
  - fix Issue #3090755 by wengerk, StevenAvelino: Drupal 9 Readiness
