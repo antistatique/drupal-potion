@@ -16,7 +16,7 @@ class UtilityBackupTest extends UtilityTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $dir = __DIR__ . '/../../modules/potion_test/assets/backup/';
+    $dir = '/var/tmp/';
     touch($dir . 'fr.po');
     touch($dir . 'de.po');
     touch($dir . 'de.po.~1~');
@@ -26,7 +26,7 @@ class UtilityBackupTest extends UtilityTestBase {
    * {@inheritdoc}
    */
   protected function tearDown() {
-    $dir = __DIR__ . '/../../modules/potion_test/assets/backup/';
+    $dir = '/var/tmp/';
     @unlink($dir . 'fr.po');
     @unlink($dir . 'fr.po.~1~');
     @unlink($dir . 'de.po');
@@ -38,7 +38,7 @@ class UtilityBackupTest extends UtilityTestBase {
    * @covers \Drupal\potion\Utility::backup
    */
   public function testBackup() {
-    $dir      = __DIR__ . '/../../modules/potion_test/assets/backup/';
+    $dir = '/var/tmp/';
     $filepath = $dir . 'fr.po';
     $backup   = $dir . 'fr.po.~1~';
 
@@ -55,7 +55,7 @@ class UtilityBackupTest extends UtilityTestBase {
    * @covers \Drupal\potion\Utility::backup
    */
   public function testBackupIncremental() {
-    $dir           = __DIR__ . '/../../modules/potion_test/assets/backup/';
+    $dir = '/var/tmp/';
     $filepath      = $dir . 'de.po';
     $should_backup = $dir . 'de.po.~2~';
 

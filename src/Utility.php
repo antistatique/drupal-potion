@@ -3,8 +3,8 @@
 namespace Drupal\potion;
 
 use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\Core\File\FileSystemInterface;
 use Drupal\potion\Exception\PotionException;
+use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 
 /**
  * Contains utility methods for the Potion module.
@@ -25,11 +25,11 @@ class Utility {
   protected $gettextWrapper;
 
   /**
-   * The file system service.
+   * The stream wrapper manager.
    *
-   * @var \Drupal\Core\File\FileSystemInterface
+   * @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface
    */
-  protected $fileSystem;
+  protected $ManagestreamWrapperr;
 
   /**
    * Class constructor.
@@ -38,13 +38,13 @@ class Utility {
    *   The language manager.
    * @param \Drupal\potion\GettextWrapper $gettext_wrapper
    *   The Gettext wrapper.
-   * @param \Drupal\Core\File\FileSystemInterface $file_system
-   *   The file system service.
+   * @param \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager
+   *   The stream wrapper manager.
    */
-  public function __construct(LanguageManagerInterface $language_manager, GettextWrapper $gettext_wrapper, FileSystemInterface $file_system) {
+  public function __construct(LanguageManagerInterface $language_manager, GettextWrapper $gettext_wrapper, StreamWrapperManagerInterface $stream_wrapper_manager) {
     $this->languageManager = $language_manager;
     $this->gettextWrapper  = $gettext_wrapper;
-    $this->fileSystem      = $file_system;
+    $this->streamWrapperManager = $stream_wrapper_manager;
   }
 
   /**
@@ -120,7 +120,7 @@ class Utility {
     }
 
     // Only trim if we're not dealing with a stream.
-    if (!file_stream_wrapper_valid_scheme($this->fileSystem->uriScheme($path)) || substr($path, -strlen('://')) !== '://') {
+    if (!$this->streamWrapperManager->isValidScheme(($this->streamWrapperManager->getScheme($path))) || substr($path, -strlen('://')) !== '://') {
       $path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
     }
     return $path;
