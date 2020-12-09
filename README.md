@@ -7,7 +7,7 @@ Ensure an better Developer Experience (DX) when dealing with translations & mult
 
 |       Travis-CI        |        Style-CI         |        Downloads        |         Releases         |
 |:----------------------:|:-----------------------:|:-----------------------:|:------------------------:|
-| [![Travis](https://img.shields.io/travis/antistatique/drupal-potion.svg?style=flat-square)](https://travis-ci.org/antistatique/drupal-potion) | [![StyleCI](https://styleci.io/repos/104479458/shield)](https://styleci.io/repos/104479458) | [![Downloads](https://img.shields.io/badge/downloads-8.x--1.x--dev-green.svg?style=flat-square)](https://ftp.drupal.org/files/projects/potion-8.x-1.x-dev.tar.gz) | [![Latest Stable Version](https://img.shields.io/badge/release-v1.x--dev-blue.svg?style=flat-square)](https://www.drupal.org/project/potion/releases) |
+| [![Build Status](https://travis-ci.com/antistatique/drupal-potion.svg?branch=8.x-2.x)](https://travis-ci.com/antistatique/drupal-potion) | [![StyleCI](https://styleci.io/repos/104479458/shield)](https://styleci.io/repos/104479458) | [![Downloads](https://img.shields.io/badge/downloads-8.x--1.x--dev-green.svg?style=flat-square)](https://ftp.drupal.org/files/projects/potion-8.x-1.x-dev.tar.gz) | [![Latest Stable Version](https://img.shields.io/badge/release-v1.x--dev-blue.svg?style=flat-square)](https://www.drupal.org/project/potion/releases) |
 
 ## You need Potion if
 
