@@ -1,10 +1,12 @@
-echo "\n🚔  \033[0;32mRunning Code Sniffer Drupal & DrupalPractice for /web/modules/custom ...\033[0m"
-./vendor/bin/phpcs --config-set installed_paths `pwd`/vendor/drupal/coder/coder_sniffer
-./vendor/bin/phpcs --standard=Drupal --colors --extensions=php,module,inc,install,test,profile,theme,css,info,txt --ignore=*/node_modules/*,*/vendor/*,*/scripts/* --encoding=utf-8 ./
-./vendor/bin/phpcs --standard=DrupalPractice --colors --extensions=php,module,inc,install,test,profile,theme,css,info,txt --ignore=*/node_modules/*,*/vendor/*,*/scripts/*,*/potion_test/* --encoding=utf-8 ./
+echo "\n🚔  \033[0;32mRunning Code Sniffer Drupal & DrupalPractice for ./web/modules/contrib/potion/ ...\033[0m"
+docker-compose exec drupal ./vendor/bin/phpcs ./web/modules/contrib/potion/
 
 echo "\n💩  \033[0;32mRunning PHP Mess Detector ...\033[0m"
-./vendor/bin/phpmd ./ text ./phpmd.xml --suffixes php,module,inc,install,test,profile,theme,css,info,txt --exclude vendor,scripts,tests,potion_test
+docker-compose exec drupal phpmd ./web/modules/contrib/potion/ text ./phpmd.xml --suffixes php,module,inc,install,test,profile,theme,css,info,txt --exclude *Test.php,*vendor/*
 
 echo "\n🛂  \033[0;32mRunning PHP Copy/Paste Detector ...\033[0m"
-./vendor/bin/phpcpd ./ --names=*.php,*.module,*.inc,*.install,*.test,*.profile,*.theme,*.css,*.info,*.txt --names-exclude=*.md,*.info.yml --progress --ansi --exclude=scripts --exclude=vendor --exclude=tests --exclude=potion_test
+docker-compose exec drupal phpcpd ./web/modules/contrib/potion/src --suffix .php --suffix .module --suffix .inc --suffix .install --suffix .test --suffix .profile --suffix .theme --suffix .css --suffix .info --suffix .txt --exclude *.md --exclude *.info.yml --exclude tests --exclude vendor/
+
+echo "\n🍫  \033[0;32mRunning PhpDeprecationDetector ...\033[0m"
+docker-compose exec drupal phpdd ./web/modules/contrib/potion/ --file-extensions php,module,inc,install,test,profile,theme,info --exclude vendor
+
