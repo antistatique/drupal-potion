@@ -87,7 +87,8 @@ class AnnotationExtractor extends ExtractorBase implements ExtractableInterface 
     $parser = new StaticReflectionParser($class, $finder, TRUE);
 
     // Get all annotations from the Class.
-    if ($annotations = $this->annotationReader->getClassAnnotations($parser->getReflectionClass())) {
+    $annotations = $this->annotationReader->getClassAnnotations($parser->getReflectionClass());
+    if ($annotations) {
       foreach ($annotations as $annot) {
         $message = NULL;
         $context = NULL;

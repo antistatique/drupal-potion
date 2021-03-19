@@ -2,8 +2,6 @@
 
 namespace Drupal\potion\Extractor;
 
-use Twig_Environment;
-use Twig_Error;
 use Twig\Source;
 use Symfony\Component\Finder\Finder;
 use Drupal\potion\Exception\ExtractorException;
@@ -26,7 +24,7 @@ class TwigExtractor extends ExtractorBase implements ExtractableInterface {
    * @param \Twig_Environment $twig
    *   Twig Env.
    */
-  public function __construct(Twig_Environment $twig) {
+  public function __construct(\Twig_Environment $twig) {
     parent::__construct();
 
     $this->twig = $twig;
@@ -43,7 +41,7 @@ class TwigExtractor extends ExtractorBase implements ExtractableInterface {
         $file_catalogue = $this->extractFromTemplate($file->getContents());
         $this->catalogue->merge($file_catalogue);
       }
-      catch (Twig_Error $e) {
+      catch (\Twig_Error $e) {
         throw new ExtractorException($e->getMessage(), $e->getCode(), $e);
       }
     }

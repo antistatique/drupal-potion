@@ -306,8 +306,6 @@ class PhpExtractor extends ExtractorBase implements ExtractableInterface {
             $context = PhpStringTokenParser::parse($context);
             return $context;
 
-          break;
-
           case T_WHITESPACE:
           case T_DOUBLE_ARROW:
           default:

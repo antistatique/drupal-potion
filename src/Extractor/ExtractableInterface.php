@@ -3,7 +3,7 @@
 namespace Drupal\potion\Extractor;
 
 /**
- * Interface ExtractableInterface.
+ * Defines the Extractable interface.
  */
 interface ExtractableInterface {
 

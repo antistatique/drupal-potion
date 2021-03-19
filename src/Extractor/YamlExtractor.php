@@ -137,7 +137,7 @@ class YamlExtractor extends ExtractorBase implements ExtractableInterface {
 
     // Loop through every top level element of Yaml file.
     foreach ($data as $item) {
-      // Run every file sequence on then element or his direct children.
+      // Run every file sequence on the element or its direct children.
       foreach ($sequences as $sequence) {
         $message = '';
         $context = '';

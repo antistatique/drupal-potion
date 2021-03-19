@@ -5,9 +5,9 @@
 Provides a normalized way to collect internationalization strings to export, merge & create .po files from versatile sources such as Twig, PHP or YML files.
 Ensure an better Developer Experience (DX) when dealing with translations & multilingual websites.
 
-|       Travis-CI        |        Style-CI         |        Downloads        |         Releases         |
-|:----------------------:|:-----------------------:|:-----------------------:|:------------------------:|
-| [![Build Status](https://travis-ci.com/antistatique/drupal-potion.svg?branch=8.x-2.x)](https://travis-ci.com/antistatique/drupal-potion) | [![StyleCI](https://styleci.io/repos/104479458/shield)](https://styleci.io/repos/104479458) | [![Downloads](https://img.shields.io/badge/downloads-8.x--1.x--dev-green.svg?style=flat-square)](https://ftp.drupal.org/files/projects/potion-8.x-1.x-dev.tar.gz) | [![Latest Stable Version](https://img.shields.io/badge/release-v1.x--dev-blue.svg?style=flat-square)](https://www.drupal.org/project/potion/releases) |
+|       Test-CI        |        Downloads        |         Releases         |
+|:----------------------:|:-----------------------:|:------------------------:|
+| [![Build Status](https://github.com/antistatique/drupal-potion/actions/workflows/ci.yml/badge.svg)](https://github.com/antistatique/drupal-potion/actions/workflows/ci.yml) | [![Code styles](https://github.com/antistatique/drupal-potion/actions/workflows/styles.yml/badge.svg)](https://github.com/antistatique/drupal-potion/actions/workflows/styles.yml) | [![Latest Stable Version](https://img.shields.io/badge/release-v2.0-blue.svg?style=flat-square)](https://www.drupal.org/project/potion/releases) |
 
 ## You need Potion if
 

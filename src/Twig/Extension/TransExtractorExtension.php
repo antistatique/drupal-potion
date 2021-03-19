@@ -28,19 +28,6 @@ class TransExtractorExtension extends \Twig_Extension {
   }
 
   /**
-   * Returns the name of the extension.
-   *
-   * @return string
-   *   The extension name
-   *
-   * @deprecated since 1.26 (to be removed in 2.0), not used anymore internally
-   */
-  public function getName() {
-    // For backward compatibility.
-    return self::class;
-  }
-
-  /**
    * Returns the node visitor instances to add to the existing list.
    *
    * @return Twig_NodeVisitorInterface[]

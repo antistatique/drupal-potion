@@ -153,7 +153,7 @@ class TranslationsFill {
     }
 
     while ($item = $reader->readItem()) {
-      // TODO REFACTORING HERE.
+      // @todo REFACTORING HERE.
       // Get the source from the file & format it.
       $source = $item->getSource();
       if ($item->isPlural()) {
@@ -167,7 +167,11 @@ class TranslationsFill {
       }
 
       /** @var \Drupal\locale\SourceString $string */
-      $local = $this->localeStorage->findString(['source' => $source, 'context' => $item->getContext()]);
+      $local = $this->localeStorage->findString(
+        [
+          'source' => $source,
+          'context' => $item->getContext(),
+        ]);
 
       if ($local && empty($trans) || $local && $overwrite) {
         /** @var \Drupal\locale\TranslationString[] $trans */

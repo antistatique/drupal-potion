@@ -3,9 +3,7 @@
 namespace Drupal\potion\tests\Kernel\Extractor;
 
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\potion\Extractor\YamlExtractor;
 use Drupal\Component\Gettext\PoItem;
-use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\potion\MessageCatalogue;
 
 /**
@@ -16,6 +14,9 @@ use Drupal\potion\MessageCatalogue;
  */
 class YamlExtractorTest extends KernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   public static $modules = [
     'locale',
     'language',
@@ -93,7 +94,8 @@ class YamlExtractorTest extends KernelTestBase {
     foreach ($po_items as $po_item) {
       // Save source & translations as string for both singular & plural.
       $source      = is_array($po_item['source']) ? implode(PoItem::DELIMITER, $po_item['source']) : $po_item['source'];
-      $translation = is_array($po_item['source']) ? implode(PoItem::DELIMITER, ['', '']) : '';
+      $translation = is_array($po_item['source']) ?
+        implode(PoItem::DELIMITER, ['', '']) : '';
 
       $item = new PoItem();
       $item->setFromArray([
