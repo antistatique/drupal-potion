@@ -29,7 +29,7 @@ class Utility {
    *
    * @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface
    */
-  protected $ManagestreamWrapperr;
+  protected $streamWrapperManager;
 
   /**
    * Class constructor.
@@ -43,7 +43,7 @@ class Utility {
    */
   public function __construct(LanguageManagerInterface $language_manager, GettextWrapper $gettext_wrapper, StreamWrapperManagerInterface $stream_wrapper_manager) {
     $this->languageManager = $language_manager;
-    $this->gettextWrapper  = $gettext_wrapper;
+    $this->gettextWrapper = $gettext_wrapper;
     $this->streamWrapperManager = $stream_wrapper_manager;
   }
 

@@ -30,16 +30,23 @@ class TestHtmlBlock extends BlockBase {
     // Test translatable markup with tokens.
     new TranslatableMarkup('Hello sunshine @bar', ['@bar' => 'bar']);
     new TranslatableMarkup('Hello sunshine :bar', [':bar' => 'bar']);
-    new TranslatableMarkup('Hello sunshine @bar :baz', ['@bar' => 'bar', 'baz' => 'baz']);
+    new TranslatableMarkup('Hello sunshine @bar :baz', [
+      '@bar' => 'bar',
+      'baz' => 'baz',
+    ]);
 
     // Test translatable markup with context.
     new TranslatableMarkup('php.context', [], ['context' => 'Lolspeak']);
 
     // Test translatable markup with context & others options.
-    new TranslatableMarkup('php.context.ru', [], ['langcode' => 'ru', 'context' => 'Lolspeak']);
+    new TranslatableMarkup('php.context.ru', [], [
+      'langcode' => 'ru',
+      'context' => 'Lolspeak',
+    ]);
 
     // Test translatable t.
     $this->t('Hello dawn');
+    // phpcs:ignore
     t('Hello dawny');
 
     // Test duplicate t.
@@ -47,20 +54,26 @@ class TestHtmlBlock extends BlockBase {
 
     // Test t with token.
     $this->t('Hello dawn @bar', ['@bar' => 'bar']);
+    // phpcs:ignore
     t('Hello dawny @bar', ['@bar' => 'bar']);
 
     // Test t with context.
     $this->t('Hello dawn @bar', ['@bar' => 'bar'], ['context' => 'Lolspeak']);
+    // phpcs:ignore
     t('Hello dawny @bar', ['@bar' => 'bar'], ['context' => 'Lolspeak']);
 
     // Test plural.
     new PluralTranslatableMarkup(1, 'singular @count', 'plural @count');
 
     // Test plural with token.
-    new PluralTranslatableMarkup(1, 'singular @count @foo', 'plural @count @foo', ['@foo' => 'foo']);
+    new PluralTranslatableMarkup(1, 'singular @count @foo', 'plural @count @foo', [
+      '@foo' => 'foo',
+    ]);
 
     // Test plural with context.
-    new PluralTranslatableMarkup(1, 'singular @count', 'plural @count', [], ['context' => 'Lolspeak']);
+    new PluralTranslatableMarkup(1, 'singular @count', 'plural @count', [], [
+      'context' => 'Lolspeak',
+    ]);
 
     // Test duplicate plural.
     new PluralTranslatableMarkup(9, 'singular @count', 'plural @count');
@@ -69,7 +82,9 @@ class TestHtmlBlock extends BlockBase {
     $this->formatPlural(1, '1 byte', '@count bytes');
 
     // Test formatPlural with context.
-    $this->formatPlural(1, '1 byte', '@count bytes', [], ['context' => 'Lolspeak']);
+    $this->formatPlural(1, '1 byte', '@count bytes', [], [
+      'context' => 'Lolspeak',
+    ]);
 
     // Test translate.
     $this->translate('Hello moonlight');
@@ -81,7 +96,9 @@ class TestHtmlBlock extends BlockBase {
     $this->translate('Hello moonlight @foobar', ['@foobar' => 'foobar']);
 
     // Test translate. with token & context.
-    $this->translate('Hello moonlight @foobar', ['@foobar' => 'foobar'], ['context' => 'Lolspeak']);
+    $this->translate('Hello moonlight @foobar', ['@foobar' => 'foobar'], [
+      'context' => 'Lolspeak',
+    ]);
 
     // dt()
     return ['#markup' => 'Hello world!'];

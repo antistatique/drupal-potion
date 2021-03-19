@@ -90,13 +90,19 @@ class MessageCatalogueTest extends KernelTestBase {
         'transaltion' => ['', ''],
       ],
       ],
-      [['singular @count @foo', 'plural @count @foo'], NULL, ['singular @count foobar', 'plural @count foobar'], [
+      [['singular @count @foo', 'plural @count @foo'], NULL, [
+        'singular @count foobar',
+        'plural @count foobar',
+      ], [
         'source'      => ['singular @count @foo', 'plural @count @foo'],
         'context'     => '',
         'transaltion' => ['singular @count foobar', 'plural @count foobar'],
       ],
       ],
-      [['singular @count @foo', 'plural @count @foo'], 'Lolspeak', ['singular @count foobar', 'plural @count foobar'], [
+      [['singular @count @foo', 'plural @count @foo'], 'Lolspeak', [
+        'singular @count foobar',
+        'plural @count foobar',
+      ], [
         'source'      => ['singular @count @foo', 'plural @count @foo'],
         'context'     => 'Lolspeak',
         'transaltion' => ['singular @count foobar', 'plural @count foobar'],

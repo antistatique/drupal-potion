@@ -38,7 +38,7 @@ class UtilityBackupTest extends UtilityTestBase {
    * @covers \Drupal\potion\Utility::backup
    */
   public function testBackup() {
-    $dir = '/var/tmp/';
+    $dir      = '/var/tmp/';
     $filepath = $dir . 'fr.po';
     $backup   = $dir . 'fr.po.~1~';
 
@@ -55,7 +55,7 @@ class UtilityBackupTest extends UtilityTestBase {
    * @covers \Drupal\potion\Utility::backup
    */
   public function testBackupIncremental() {
-    $dir = '/var/tmp/';
+    $dir           = '/var/tmp/';
     $filepath      = $dir . 'de.po';
     $should_backup = $dir . 'de.po.~2~';
 
