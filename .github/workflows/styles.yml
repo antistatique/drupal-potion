@@ -2,26 +2,6 @@ name: Code styles
 on: [pull_request]
 
 jobs:
-  eslint:
-    name: eslint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install modules
-        run: yarn
-      - name: Run ESLint
-        run: yarn run lint:core-js-passing
-
-  prettier:
-    name: prettier
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install modules
-        run: yarn
-      - name: Run ESLint
-        run: yarn run prettier-check
-
   phpcs:
     name: phpcs
     runs-on: ubuntu-latest
