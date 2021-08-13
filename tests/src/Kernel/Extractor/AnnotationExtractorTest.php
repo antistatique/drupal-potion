@@ -17,7 +17,7 @@ class AnnotationExtractorTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'locale',
     'language',
     'potion',
@@ -51,7 +51,7 @@ class AnnotationExtractorTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     /** @var string $extractionPath */

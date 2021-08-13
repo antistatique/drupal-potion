@@ -30,7 +30,7 @@ class TranslationsImportTest extends TranslationsTestsBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'locale',
     'language',
     'file',
@@ -40,7 +40,7 @@ class TranslationsImportTest extends TranslationsTestsBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     /** @var \Drupal\potion\TranslationsImport $translationsImport */
@@ -73,7 +73,7 @@ class TranslationsImportTest extends TranslationsTestsBase {
       'lid' => $source->lid,
     ]);
     $this->assertEquals($string->customized, LOCALE_NOT_CUSTOMIZED);
-    $this->assertNotEqual($string->translation, 'l’année dernière');
+    $this->assertNotEquals($string->translation, 'l’année dernière');
 
     // Assert unexisting source w/ context is imported as "customized".
     $source = $this->localStorage->findString([
@@ -94,7 +94,7 @@ class TranslationsImportTest extends TranslationsTestsBase {
       'lid' => $source->lid,
     ]);
     $this->assertEquals($string->customized, LOCALE_NOT_CUSTOMIZED);
-    $this->assertNotEqual($string->translation, 'Juil.');
+    $this->assertNotEquals($string->translation, 'Juil.');
 
     // Existing "customized" trans w/o context has not been overrided.
     $source = $this->localStorage->findString(['source' => 'Jan']);
@@ -103,7 +103,7 @@ class TranslationsImportTest extends TranslationsTestsBase {
       'lid' => $source->lid,
     ]);
     $this->assertEquals($string->customized, LOCALE_CUSTOMIZED);
-    $this->assertNotEqual($string->translation, 'Janv.');
+    $this->assertNotEquals($string->translation, 'Janv.');
 
     // Assert strings with vars are imported as "customized".
     $source = $this->localStorage->findString([
@@ -137,7 +137,7 @@ class TranslationsImportTest extends TranslationsTestsBase {
       'lid' => $source->lid,
     ]);
     $this->assertEquals($string->customized, LOCALE_NOT_CUSTOMIZED);
-    $this->assertNotEqual($string->translation, 'Mars');
+    $this->assertNotEquals($string->translation, 'Mars');
 
     // Existing "customized" translations w/ context has not been overrided.
     $source = $this->localStorage->findString([
@@ -149,7 +149,7 @@ class TranslationsImportTest extends TranslationsTestsBase {
       'lid' => $source->lid,
     ]);
     $this->assertEquals($string->customized, LOCALE_CUSTOMIZED);
-    $this->assertNotEqual($string->translation, 'April');
+    $this->assertNotEquals($string->translation, 'April');
   }
 
   /**
@@ -177,7 +177,7 @@ class TranslationsImportTest extends TranslationsTestsBase {
       'lid' => $source->lid,
     ]);
     $this->assertEquals($string->customized, LOCALE_NOT_CUSTOMIZED);
-    $this->assertNotEqual($string->translation, 'l’année dernière');
+    $this->assertNotEquals($string->translation, 'l’année dernière');
 
     // Assert unexisting source w/ context is imported as "customized".
     $source = $this->localStorage->findString([
@@ -198,7 +198,7 @@ class TranslationsImportTest extends TranslationsTestsBase {
       'lid' => $source->lid,
     ]);
     $this->assertEquals($string->customized, LOCALE_NOT_CUSTOMIZED);
-    $this->assertNotEqual($string->translation, 'Juil.');
+    $this->assertNotEquals($string->translation, 'Juil.');
 
     // Existing "customized" trans w/o context has not been overrided.
     $source = $this->localStorage->findString(['source' => 'Jan']);
@@ -207,7 +207,7 @@ class TranslationsImportTest extends TranslationsTestsBase {
       'lid' => $source->lid,
     ]);
     $this->assertEquals($string->customized, LOCALE_CUSTOMIZED);
-    $this->assertNotEqual($string->translation, 'Janv.');
+    $this->assertNotEquals($string->translation, 'Janv.');
 
     // Assert strings with vars are imported as "non-customized".
     $source = $this->localStorage->findString(['source' => 'I love @color car']);
@@ -237,7 +237,7 @@ class TranslationsImportTest extends TranslationsTestsBase {
       'lid' => $source->lid,
     ]);
     $this->assertEquals($string->customized, LOCALE_NOT_CUSTOMIZED);
-    $this->assertNotEqual($string->translation, 'Mars');
+    $this->assertNotEquals($string->translation, 'Mars');
 
     // Existing "customized" translations w/ context has not been overrided.
     $source = $this->localStorage->findString([
@@ -249,7 +249,7 @@ class TranslationsImportTest extends TranslationsTestsBase {
       'lid' => $source->lid,
     ]);
     $this->assertEquals($string->customized, LOCALE_CUSTOMIZED);
-    $this->assertNotEqual($string->translation, 'April');
+    $this->assertNotEquals($string->translation, 'April');
   }
 
   /**
@@ -275,7 +275,7 @@ class TranslationsImportTest extends TranslationsTestsBase {
       'lid' => $source->lid,
     ]);
     $this->assertEquals($string->customized, LOCALE_NOT_CUSTOMIZED);
-    $this->assertNotEqual($string->translation, 'l’année dernière');
+    $this->assertNotEquals($string->translation, 'l’année dernière');
 
     // Assert unexisting source w/ context is imported as "customized".
     $source = $this->localStorage->findString([
@@ -296,7 +296,7 @@ class TranslationsImportTest extends TranslationsTestsBase {
       'lid' => $source->lid,
     ]);
     $this->assertEquals($string->customized, LOCALE_NOT_CUSTOMIZED);
-    $this->assertNotEqual($string->translation, 'Juil.');
+    $this->assertNotEquals($string->translation, 'Juil.');
 
     // Existing "customized" trans w/o context has not been overrided.
     $source = $this->localStorage->findString(['source' => 'Jan']);
@@ -305,7 +305,7 @@ class TranslationsImportTest extends TranslationsTestsBase {
       'lid' => $source->lid,
     ]);
     $this->assertEquals($string->customized, LOCALE_CUSTOMIZED);
-    $this->assertNotEqual($string->translation, 'Janv.');
+    $this->assertNotEquals($string->translation, 'Janv.');
 
     // Assert strings with vars are imported as "customized".
     $source = $this->localStorage->findString(['source' => 'I love @color car']);
@@ -337,7 +337,7 @@ class TranslationsImportTest extends TranslationsTestsBase {
       'lid' => $source->lid,
     ]);
     $this->assertEquals($string->customized, LOCALE_NOT_CUSTOMIZED);
-    $this->assertNotEqual($string->translation, 'Mars');
+    $this->assertNotEquals($string->translation, 'Mars');
 
     // Existing "customized" translations w/ context has been overrided.
     $source = $this->localStorage->findString([
@@ -392,7 +392,7 @@ class TranslationsImportTest extends TranslationsTestsBase {
       'lid' => $source->lid,
     ]);
     $this->assertEquals($string->customized, LOCALE_NOT_CUSTOMIZED);
-    $this->assertNotEqual($string->translation, 'Juil.');
+    $this->assertNotEquals($string->translation, 'Juil.');
 
     // Existing "customized" trans w/o context has not been overrided.
     $source = $this->localStorage->findString(['source' => 'Jan']);
@@ -401,7 +401,7 @@ class TranslationsImportTest extends TranslationsTestsBase {
       'lid' => $source->lid,
     ]);
     $this->assertEquals($string->customized, LOCALE_CUSTOMIZED);
-    $this->assertNotEqual($string->translation, 'Janv.');
+    $this->assertNotEquals($string->translation, 'Janv.');
 
     // Assert strings with vars are imported as "non-customized".
     $source = $this->localStorage->findString(['source' => 'I love @color car']);
@@ -445,7 +445,7 @@ class TranslationsImportTest extends TranslationsTestsBase {
       'lid' => $source->lid,
     ]);
     $this->assertEquals($string->customized, LOCALE_CUSTOMIZED);
-    $this->assertNotEqual($string->translation, 'April');
+    $this->assertNotEquals($string->translation, 'April');
   }
 
   /**

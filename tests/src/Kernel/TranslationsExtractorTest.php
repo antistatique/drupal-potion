@@ -31,7 +31,7 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'locale',
     'language',
     'system',
@@ -49,7 +49,7 @@ class TranslationsExtractorTest extends TranslationsTestsBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     /** @var \Drupal\potion\TranslationsExtractor $translationExtractor */

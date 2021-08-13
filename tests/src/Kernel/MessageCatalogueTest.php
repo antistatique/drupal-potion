@@ -24,7 +24,7 @@ class MessageCatalogueTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->catalogue = new MessageCatalogue();

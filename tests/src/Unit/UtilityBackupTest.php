@@ -13,7 +13,7 @@ class UtilityBackupTest extends UtilityTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $dir = '/var/tmp/';
@@ -25,7 +25,7 @@ class UtilityBackupTest extends UtilityTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function tearDown() {
+  protected function tearDown(): void {
     $dir = '/var/tmp/';
     @unlink($dir . 'fr.po');
     @unlink($dir . 'fr.po.~1~');

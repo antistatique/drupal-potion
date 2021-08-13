@@ -21,7 +21,7 @@ class TranslationsTest extends TranslationsTestsBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'locale',
     'language',
     'file',
