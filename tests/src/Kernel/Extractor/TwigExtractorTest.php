@@ -18,7 +18,7 @@ class TwigExtractorTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'locale',
     'language',
     'potion',
@@ -52,7 +52,7 @@ class TwigExtractorTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     /** @var \Twig_Environment $twig */
